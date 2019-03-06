@@ -34,7 +34,6 @@ else
     OS=$(uname -s)
     VER=$(uname -r)
 fi
-echo ${OS}
 
 if [[ $string == *"Red Hat"* ]]; then
     source /etc/profile.d/bash_completion.sh
