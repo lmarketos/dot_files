@@ -1,10 +1,6 @@
 " set colors
-syntax on
-let g:solarized_termcolors=256
-set t_Co=256
-set background=dark
-
 colorscheme solarized
+set background=dark
 
 " enable syntax highlighting
 syntax enable
@@ -41,6 +37,9 @@ set wrap linebreak nolist
 
 " set the ruler on
 set ruler
+
+" allow hidden buffers to be modified
+set hidden
 
 " key mapping
 " set caps lock to ctrl and unset it when exiting
