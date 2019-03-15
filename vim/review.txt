@@ -75,3 +75,9 @@ print ("hello");
     
    { Reformat just this line.
    
+put the cursor on the 'r' of 'word'. delete the whole word with one command
+put the cursor on the 'r' of 'word'. delete the word and quotes with command
+from the start of the line, delete 'word' without using /
+a (select [ inside { the "quotes" then} each ] of the ) others
+b (select [ outside { the "quotes" then} each ] of the ) others
+<head>change the text inside this tag from anywhere on this line</head>
