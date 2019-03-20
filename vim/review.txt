@@ -35,7 +35,9 @@ Search backward for the identifier in quotes 'this'
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
-Jump back to the last modification
+Jump back to the last modification, then jump back here,using jump list cmds.
+Print the jump list
+Go back two items in jump list, then back here.
 Record a (macro) to (convert) the first (set) of parens to {}.  Then run it to fix the others.
 Jump to the matching [ where ever it is.
 Jump to the end ] of the file. Then back here using a bookmark.
