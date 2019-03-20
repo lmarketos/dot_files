@@ -64,6 +64,15 @@ to make one line.
 Remove the newline on the last 3 lines.
 Delete 'x' the x and enter insert mode
 Delete this line and enter instert mode
+Scroll up one line at a time, keeping the cursor on this line
+Scroll down one line at a time, keeping the cursor on this line
+Scroll this line to the top of the window, keeping the cursor on this line
+Scroll this line to the middle of the window, keeping the cursor on this line
+Scroll this line to the bottom of the window, keeping the cursor on this line
+Scroll up half a page, moving the cursor
+Scroll down half a page, moving the cursor
+Move up a full page, moving the cursor
+Move down a full page, moving the cursor
 Indent this line.
 Indent the last 3 lines
         Unindent this line.
