@@ -42,3 +42,6 @@ elif [[ $string == *"Ubunut"* ]]; then
 fi
 
 export EDITOR="vim"
+source /opt/ros/melodic/setup.bash
+export DISPLAY=:0
+source ~/projects/ros_test/devel/setup.bash
