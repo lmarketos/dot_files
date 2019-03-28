@@ -92,3 +92,12 @@ from the start of the line, delete 'word' without using /
 a (select [ inside { the "quotes" then} each ] of the ) others
 b (select [ outside { the "quotes" then} each ] of the ) others
 <head>change the text inside this tag from anywhere on this line</head>
+Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
+Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
+Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
+
+
+Code folding
+Tabs
+Splits
+
