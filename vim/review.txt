@@ -100,4 +100,8 @@ Use f to find the next.  Then without using a number, find the last.  Yes, this 
 Code folding
 Tabs
 Splits
+ns - substitute the next n chars
+I - insert at first non-blank of line
+I - in visual block mode
 
+| command

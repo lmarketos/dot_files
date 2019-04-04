@@ -1,7 +1,5 @@
 #!/bin/bash
 set -o vi
-export TERM=xterm-256color
-eval `dircolors ${HOME}/.dir_colors/dircolors`
 
 if [ -f /etc/os-release ]; then
 # freedesktop.org and systemd
@@ -37,7 +35,7 @@ fi
 
 if [[ $string == *"Red Hat"* ]]; then
     source /etc/profile.d/bash_completion.sh
-elif [[ $string == *"Ubunut"* ]]; then
+elif [[ $string == *"Ubuntu"* ]]; then
     source /etc/bash_completion
 fi
 
