@@ -76,7 +76,13 @@ Move down a full page, moving the cursor
 Indent this line.
 Indent the last 3 lines
         Unindent this line.
-Toggle the case of tHIS.
+Toggle the case of tHIS whole word
+Toggle This Whole Line to Lower Case
+Toggle This Whole Line to Upper Case
+Use visual select to upper case 'this'
+Use visual select to lower case 'THIs'
+Invert The Case of This Whole Line
+Move to the 5th character of this line, then move to the 15th.
 Reformat the below code
 
 void    test
@@ -103,5 +109,5 @@ Splits
 ns - substitute the next n chars
 I - insert at first non-blank of line
 I - in visual block mode
-
+:s
 | command
