@@ -40,6 +40,9 @@ Paste the alternate file name
 Enter insert mode and paste the last yanked item
 Paste from register 1, then paste then next 5 registers using one keystroke each
 Paste from the register 1 then paste each subsequent register in its place using 2 keystrokes each
+delete this line into a named register
+ then delete this line appending it to the previous line
+paste the combined line
 
 Use the expression register to enter the result of 2+2
 Use the expression register to enter the results of ls
@@ -56,6 +59,7 @@ Search backward for the identifier in quotes 'this'
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
+Edit the alternate file, then jump back here with a jump command
 Repeat the last executed command using 2 keystrokes, then come back here
 Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
