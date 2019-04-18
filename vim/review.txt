@@ -6,6 +6,7 @@ Put the cursor after 'o' and delete it.
 Add text at the end of this line.
 Undo the previous edit.
 Redo the previous edit.
+
     Move to the end of this line, then the beginning, then to the first non-space
 Move-a-word-at-a-time, forward, then back, then move a WORD at a time.
 Overwrite everything after 'this' on this line.
@@ -21,28 +22,49 @@ Change this whole line.
 Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
+
 Copy to-the-end-of-this and paste it on the next line.
 Copy this whole line and paste it to the previous line.
-Copy this line and then the previous line and paste this line above and the previous line below using different yank buffers
+Copy this line and then the previous line and paste this line above and the previous line below using different registers
+Delete this line
+Delete this line too
+Copy the last deleted line into the system clipboard
+Paste the first deleted line above this line
+Paste the second deleted line below this line
+Paste the last copied line above this line
 Copy this line to the system clipboard.
-Copy this line.  Then copy the next line.  Then paste this line using the registers.
+List the contents of all registers
+Paste the last inserted text
+Paste the file name
+Paste the alternate file name
+Enter insert mode and paste the last yanked item
 Paste from register 1, then paste then next 5 registers using one keystroke each
 Paste from the register 1 then paste each subsequent register in its place using 2 keystrokes each
- 
+
+Use the expression register to enter the result of 2+2
+Use the expression register to enter the results of ls
+
 Insert a new line after this line.
 Insert a new line before this line.
-Search for 'q' in this file, then the next occurence, then the previous
-Search backwards for 'i', then the previous, then the next
+
+Search for 'jump list' in this file, then the next occurence, then the previous
+Search backwards for 'previous', then the previous, then the next
+Substitute preceding for previous without typing previous
 Search forward for the identifier in quotes 'tmp'
 Search backward for the identifier in quotes 'this'
 
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
+Repeat the last executed command using 2 keystrokes, then come back here
 Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
 Go back two items in jump list, then back here.
+
 Record a (macro) to (convert) the first (set) of parens to {}.  Then run it to fix the others.
+Now change the macro to add a ';' after the closing } and run it (on) this line.
+Now change the macro to convert to [] instead of {} and (run) it on this line.
+
 Jump to the matching [ where ever it is.
 Jump to the end ] of the file. Then back here using a bookmark.
 Jump to the top, middle, and bottom of the screen.
@@ -66,8 +88,10 @@ func 2
 Remove the newline at the end of this line 
 to make one line.
 Remove the newline on the last 3 lines.
+
 Delete 'x' the x and enter insert mode
 Delete this line and enter instert mode
+
 Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
 Scroll this line to the top of the window, keeping the cursor on this line
@@ -77,16 +101,20 @@ Scroll up half a page, moving the cursor
 Scroll down half a page, moving the cursor
 Move up a full page, moving the cursor
 Move down a full page, moving the cursor
+
 Indent this line.
 Indent the last 3 lines
         Unindent this line.
+
 Toggle the case of tHIS whole word
 Toggle This Whole Line to Lower Case
 Toggle This Whole Line to Upper Case
 Use visual select to upper case 'this'
 Use visual select to lower case 'THIs'
 Invert The Case of This Whole Line
+
 Move to the 5th character of this line, then move to the 15th.
+
 Reformat the below code
 
 void    test
@@ -125,3 +153,4 @@ I - insert at first non-blank of line
 I - in visual block mode
 :s
 buffer manipulation (:bd,...)
+registers - https://www.brianstorti.com/vim-registers/
