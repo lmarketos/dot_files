@@ -23,8 +23,12 @@ Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
 Copy to-the-end-of-this and paste it on the next line.
 Copy this whole line and paste it to the previous line.
-Copy this line and then the previous line and paste this line above and the previous line below.
+Copy this line and then the previous line and paste this line above and the previous line below using different yank buffers
 Copy this line to the system clipboard.
+Copy this line.  Then copy the next line.  Then paste this line using the registers.
+Paste from register 1, then paste then next 5 registers using one keystroke each
+Paste from the register 1 then paste each subsequent register in its place using 2 keystrokes each
+ 
 Insert a new line after this line.
 Insert a new line before this line.
 Search for 'q' in this file, then the next occurence, then the previous
@@ -102,6 +106,16 @@ Go to the next line is this very long line that will ultimately wrap at least on
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
 Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
 
+Split the window horizontally keeping this file in both splits
+Split the window vertically loading a new file in the new split
+Move focus between all three by cycling between them
+Move focus between all three by moving
+Make the original window bigger by 3 lines
+Make the vertical window smaller by 2 columns
+Maximize a window height
+Maximize a window width
+Reset to equal sized windows
+Close all windows but this one
 
 Code folding
 Tabs
@@ -110,4 +124,4 @@ ns - substitute the next n chars
 I - insert at first non-blank of line
 I - in visual block mode
 :s
-| command
+buffer manipulation (:bd,...)
