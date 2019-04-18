@@ -1,0 +1,7 @@
+
+bash
+sed
+eclipse
+linux, general
+regex
+
