@@ -22,6 +22,7 @@ Change this whole line.
 Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
+Swap thsee two letters
 
 Copy to-the-end-of-this and paste it on the next line.
 Copy this whole line and paste it to the previous line.
@@ -158,3 +159,4 @@ I - in visual block mode
 :s
 buffer manipulation (:bd,...)
 registers - https://www.brianstorti.com/vim-registers/
+    "1p <followed by> u.
