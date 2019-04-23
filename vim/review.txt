@@ -1,9 +1,11 @@
 Move right on this line one character at a time, then move left.
 Move down several lines, one line at a time, then back up to this line.
 Add some text after here on this line.
+Put the cursor on 'o' and replace it with an x.
 Put the cursor on 'o' and delete it.
 Put the cursor after 'o' and delete it.
 Add text at the end of this line.
+Display the file status and % through file.
 Undo the previous edit.
 Redo the previous edit.
 
@@ -13,6 +15,7 @@ Overwrite everything after 'this' on this line.
 Move to this 'q', then back to 'i'.
 Move right before this 'q', then after the 'i'.
 Delete 'this' word. Then del back to the start of the line. Then del fwd to the second '.'
+Undo the all edits on the previous line with one command.
 Delete up to the 'q'. Then delete to the end of the line.
 Delete 'this', 'that', 'another'  words up to the 'w' of 'word'.
 Change 'this' word to 'tmp'.  Then change the end of the line to something else.
@@ -54,6 +57,11 @@ Insert a new line before this line.
 Search for 'jump list' in this file, then the next occurence, then the previous
 Search backwards for 'previous', then the previous, then the next
 Substitute preceding for previous without typing previous
+Use a case insensitive search, just for this search, and search for 'Jump' in this file
+Turn on case insensitive search
+Turn on search highlighting
+Turn on incremental seach an search for jump list
+Turn off case insensitive, highlighting, and incremental search
 Search forward for the identifier in quotes 'tmp'
 Search backward for the identifier in quotes 'this'
 
@@ -139,6 +147,15 @@ Go to the next line is this very long line that will ultimately wrap at least on
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
 Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
 
+Replace all uses of 'all' with 'most' all over this line.
+Replace all uses of 'most' over this line and the last, confirming each one
+Replace all uses of visual in the file with optical, confirming each one
+
+Execute 'ls' as a shell command.
+Save the last 5 lines to another file
+Insert the contents of the saved file below this line
+Insert the results of 'ls' below this line
+
 Split the window horizontally keeping this file in both splits
 Split the window vertically loading a new file in the new split
 Move focus between all three by cycling between them
@@ -152,11 +169,10 @@ Close all windows but this one
 
 Code folding
 Tabs
-Splits
 ns - substitute the next n chars
 I - insert at first non-blank of line
 I - in visual block mode
-:s
 buffer manipulation (:bd,...)
+navigating tags
 registers - https://www.brianstorti.com/vim-registers/
     "1p <followed by> u.
