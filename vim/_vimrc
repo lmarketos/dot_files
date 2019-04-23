@@ -41,6 +41,9 @@ set ruler
 " allow hidden buffers to be modified
 set hidden
 
+"set kj to Esc to leave insert mode
+:imap kj <Esc>
+
 " key mapping
 " set caps lock to ctrl and unset it when exiting
 au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
