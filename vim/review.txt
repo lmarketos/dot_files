@@ -176,3 +176,4 @@ buffer manipulation (:bd,...)
 navigating tags
 registers - https://www.brianstorti.com/vim-registers/
     "1p <followed by> u.
+is there a way to have searches no end up at bottom of screen?
