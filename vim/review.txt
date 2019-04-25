@@ -88,6 +88,7 @@ List all the loaded buffers
 Switch to a buffer by buffer number
 Switch to the previous buffer
 Switch to the next buffer
+Switch to a buffer by name (tab complete)
 Close a buffer that is not this one
 Switch to the first buffer in the list
 
