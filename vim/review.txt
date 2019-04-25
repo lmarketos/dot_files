@@ -177,3 +177,20 @@ navigating tags
 registers - https://www.brianstorti.com/vim-registers/
     "1p <followed by> u.
 is there a way to have searches no end up at bottom of screen?
+ge
+gE
+:set number
+:scriptnames
+:set showmode
+:set ruler
+:set scrolloff=10
+/the\>
+/\<the\>
+g* g#
+:set nowrapscan
+reg expressions for search ^$. (escape w/ \)
+:marks
+``
+`"
+`[
+`]

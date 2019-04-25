@@ -41,6 +41,9 @@ set ruler
 " allow hidden buffers to be modified
 set hidden
 
+" keep the cursor from going to the very top or bottom
+set scrolloff=7
+
 "set kj to Esc to leave insert mode
 :imap kj <Esc>
 
