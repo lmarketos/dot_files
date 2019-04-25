@@ -11,6 +11,7 @@ Redo the previous edit.
 
     Move to the end of this line, then the beginning, then to the first non-space
 Move-a-word-at-a-time, forward, then back, then move a WORD at a time.
+Move-to-the-end-a word at a time forward, then back, then a WORD at a time.
 Overwrite everything after 'this' on this line.
 Move to this 'q', then back to 'i'.
 Move right before this 'q', then after the 'i'.
@@ -64,12 +65,33 @@ Turn on incremental seach an search for jump list
 Turn off case insensitive, highlighting, and incremental search
 Search forward for the identifier in quotes 'tmp'
 Search backward for the identifier in quotes 'this'
+Search for "Search" at the start of a line only
+Search for "only" at the end of a line
+Search for words that end in "or"
+Search for words that start with "in"
+Search for "on" as a whole word only.
+
+Turn off/on line numbers
+Turn off/on mode indication in status line
+Turn off/on cursor position in status line
+Change the distance of the cursor from the top/bottom of the screen when scrolling starts.
+Show all the startup scripts that ran for this instance of vim
 
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
 Edit the alternate file, then jump back here with a jump command
 Repeat the last executed command using 2 keystrokes, then come back here
+Open a new file in this window
+Load a new file into a buffer without showing it
+List all the loaded buffers
+Switch to a buffer by buffer number
+Switch to the previous buffer
+Switch to the next buffer
+Close a buffer that is not this one
+Switch to the first buffer in the list
+
+
 Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
 Go back two items in jump list, then back here.
@@ -157,7 +179,9 @@ Insert the contents of the saved file below this line
 Insert the results of 'ls' below this line
 
 Split the window horizontally keeping this file in both splits
-Split the window vertically loading a new file in the new split
+Split the window vertically loading a file in the new split
+Split the window horizontally, loading a new file
+Split that window virtically, opening another new file
 Move focus between all three by cycling between them
 Move focus between all three by moving
 Make the original window bigger by 3 lines
@@ -165,6 +189,7 @@ Make the vertical window smaller by 2 columns
 Maximize a window height
 Maximize a window width
 Reset to equal sized windows
+Close one of the windows
 Close all windows but this one
 
 Code folding
@@ -172,25 +197,16 @@ Tabs
 ns - substitute the next n chars
 I - insert at first non-blank of line
 I - in visual block mode
-buffer manipulation (:bd,...)
 navigating tags
 registers - https://www.brianstorti.com/vim-registers/
     "1p <followed by> u.
-is there a way to have searches no end up at bottom of screen?
-ge
-gE
-:set number
-:scriptnames
-:set showmode
-:set ruler
-:set scrolloff=10
-/the\>
-/\<the\>
 g* g#
 :set nowrapscan
-reg expressions for search ^$. (escape w/ \)
+reg expressions . (escape w/ \)
 :marks
 ``
 `"
 `[
 `]
+:ver
+reg expressions
