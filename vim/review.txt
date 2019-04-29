@@ -80,6 +80,7 @@ Show all the startup scripts that ran for this instance of vim
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
+Print the list of book marks
 Edit the alternate file, then jump back here with a jump command
 Repeat the last executed command using 2 keystrokes, then come back here
 Open a new file in this window
@@ -204,7 +205,6 @@ registers - https://www.brianstorti.com/vim-registers/
 g* g#
 :set nowrapscan
 reg expressions . (escape w/ \)
-:marks
 ``
 `"
 `[
