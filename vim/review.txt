@@ -183,7 +183,7 @@ Insert the results of 'ls' below this line
 Split the window horizontally keeping this file in both splits
 Split the window vertically loading a file in the new split
 Split the window horizontally, loading a new file
-Split that window virtically, opening another new file
+Split that window vertically, opening another new file
 Move focus between all three by cycling between them
 Move focus between all three by moving
 Make the original window bigger by 3 lines
