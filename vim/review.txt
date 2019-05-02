@@ -194,6 +194,20 @@ Reset to equal sized windows
 Close one of the windows
 Close all windows but this one
 
+Open a file in the path in this window, then return to this buffer
+Open a file in the path in a new tab
+Open a new file in a new tab
+Open this buffer in a new tab
+Display a list of the tabs
+Switch to the next tab, close it
+Switch to the previous tab, then to the first tab
+From this tab, close the next tab
+Close all tabs except this one
+Open all buffers in their own tabs
+Open a new help window in its own tab
+
+
+
 Code folding
 Tabs
 ns - substitute the next n chars
