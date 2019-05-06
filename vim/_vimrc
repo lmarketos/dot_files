@@ -52,3 +52,5 @@ set scrolloff=7
 au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
 au VimLeave * silent! !setxkbmap -option
 
+" set the path to all subdirectories from current directory
+set path=$PWD/**

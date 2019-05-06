@@ -209,7 +209,6 @@ Open a new help window in its own tab
 
 
 Code folding
-Tabs
 ns - substitute the next n chars
 I - insert at first non-blank of line
 I - in visual block mode
@@ -224,4 +223,6 @@ reg expressions . (escape w/ \)
 `[
 `]
 :ver
+:wall
 reg expressions
+sessions
