@@ -1,5 +1,5 @@
 
-bash
+bash (xargs)
 sed
 eclipse
 linux, general
