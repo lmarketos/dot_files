@@ -1,0 +1,3 @@
+change ls color scheme so full permission files have reasonable contrast
+add .bashrc that calls .bash files in .bash directory
+
