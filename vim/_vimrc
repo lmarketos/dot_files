@@ -1,6 +1,8 @@
 " set colors
-colorscheme solarized
-set background=dark
+"colorscheme solarized
+"solarized8 from https://vimawesome.com/plugin/solarized-8
+set background=light
+colorscheme solarized8
 
 " enable syntax highlighting
 syntax enable
