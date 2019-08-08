@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+#if .bash dir doesn't exist, create it
+rootdir=$HOME"/.bash"
+repobashhome=$PWD
+if [ ! -d $rootdir ] 
+then
+    echo "Creating $rootdir"
+    mkdir $rootdir
+fi
+
+dirs="functions vars aliases completion"
+for dir in $dirs; do
+    if [ ! -d $rootdir"/"$dir ]
+    then
+        echo "Linking $rootdir/$dir to $PWD/bash/$dir"
+        ln -s $PWD"/bash/"$dir $rootdir"/"$dir
+    fi
+done
+
+customdir=$rootdir"/custom"
+if [ ! -d $customdir ]
+then
+    echo "Creating $customdir"
+    mkdir $customdir
+fi
