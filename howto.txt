@@ -1,0 +1,3 @@
+Change ls colors
+    dircolors -b > .bash/custom/colors.bash
+    [edit colors.bash; for 777 dirs edit ow background to 90]

@@ -1,0 +1,12 @@
+
+bash (xargs)
+sed
+eclipse
+linux, general
+regex
+
+python 
+qt
+tmux vs terminator vs screen
+python virtualenv
+terminator

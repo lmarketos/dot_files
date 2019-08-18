@@ -1,17 +1,22 @@
 Move right on this line one character at a time, then move left.
 Move down several lines, one line at a time, then back up to this line.
 Add some text after here on this line.
+Put the cursor on 'o' and replace it with an x.
 Put the cursor on 'o' and delete it.
 Put the cursor after 'o' and delete it.
 Add text at the end of this line.
+Display the file status and % through file.
 Undo the previous edit.
 Redo the previous edit.
+
     Move to the end of this line, then the beginning, then to the first non-space
 Move-a-word-at-a-time, forward, then back, then move a WORD at a time.
+Move-to-the-end-a word at a time forward, then back, then a WORD at a time.
 Overwrite everything after 'this' on this line.
 Move to this 'q', then back to 'i'.
 Move right before this 'q', then after the 'i'.
 Delete 'this' word. Then del back to the start of the line. Then del fwd to the second '.'
+Undo the all edits on the previous line with one command.
 Delete up to the 'q'. Then delete to the end of the line.
 Delete 'this', 'that', 'another'  words up to the 'w' of 'word'.
 Change 'this' word to 'tmp'.  Then change the end of the line to something else.
@@ -21,24 +26,82 @@ Change this whole line.
 Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
+Swap thsee two letters
+
 Copy to-the-end-of-this and paste it on the next line.
 Copy this whole line and paste it to the previous line.
-Copy this line and then the previous line and paste this line above and the previous line below.
+Copy this line and then the previous line and paste this line above and the previous line below using different registers
+Delete this line
+Delete this line too
+Copy the last deleted line into the system clipboard
+Paste the first deleted line above this line
+Paste the second deleted line below this line
+Paste the last copied line above this line
 Copy this line to the system clipboard.
+List the contents of all registers
+Paste the last inserted text
+Paste the file name
+Paste the alternate file name
+Enter insert mode and paste the last yanked item
+Paste from register 1, then paste then next 5 registers using one keystroke each
+Paste from the register 1 then paste each subsequent register in its place using 2 keystrokes each
+delete this line into a named register
+ then delete this line appending it to the previous line
+paste the combined line
+
+Use the expression register to enter the result of 2+2
+Use the expression register to enter the results of ls
+
 Insert a new line after this line.
 Insert a new line before this line.
-Search for 'q' in this file, then the next occurence, then the previous
-Search backwards for 'i', then the previous, then the next
+
+Search for 'jump list' in this file, then the next occurence, then the previous
+Search backwards for 'previous', then the previous, then the next
+Substitute preceding for previous without typing previous
+Use a case insensitive search, just for this search, and search for 'Jump' in this file
+Turn on case insensitive search
+Turn on search highlighting
+Turn on incremental seach an search for jump list
+Turn off case insensitive, highlighting, and incremental search
 Search forward for the identifier in quotes 'tmp'
 Search backward for the identifier in quotes 'this'
+Search for "Search" at the start of a line only
+Search for "only" at the end of a line
+Search for words that end in "or"
+Search for words that start with "in"
+Search for "on" as a whole word only.
+
+Turn off/on line numbers
+Turn off/on mode indication in status line
+Turn off/on cursor position in status line
+Change the distance of the cursor from the top/bottom of the screen when scrolling starts.
+Show all the startup scripts that ran for this instance of vim
 
 Set a bookmark here, move to the start of the file and jump back to the bookmark
 Jump back to the start of the line of the previous bookmark
 Set a global book mark here.  Open a new file and jump back to this bookmark
+Print the list of book marks
+Edit the alternate file, then jump back here with a jump command
+Repeat the last executed command using 2 keystrokes, then come back here
+Open a new file in this window
+Load a new file into a buffer without showing it
+List all the loaded buffers
+Switch to a buffer by buffer number
+Switch to the previous buffer
+Switch to the next buffer
+Switch to a buffer by name (tab complete)
+Close a buffer that is not this one
+Switch to the first buffer in the list
+
+
 Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
 Go back two items in jump list, then back here.
+
 Record a (macro) to (convert) the first (set) of parens to {}.  Then run it to fix the others.
+Now change the macro to add a ';' after the closing } and run it (on) this line.
+Now change the macro to convert to [] instead of {} and (run) it on this line.
+
 Jump to the matching [ where ever it is.
 Jump to the end ] of the file. Then back here using a bookmark.
 Jump to the top, middle, and bottom of the screen.
@@ -62,8 +125,10 @@ func 2
 Remove the newline at the end of this line 
 to make one line.
 Remove the newline on the last 3 lines.
+
 Delete 'x' the x and enter insert mode
 Delete this line and enter instert mode
+
 Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
 Scroll this line to the top of the window, keeping the cursor on this line
@@ -73,10 +138,20 @@ Scroll up half a page, moving the cursor
 Scroll down half a page, moving the cursor
 Move up a full page, moving the cursor
 Move down a full page, moving the cursor
+
 Indent this line.
 Indent the last 3 lines
         Unindent this line.
-Toggle the case of tHIS.
+
+Toggle the case of tHIS whole word
+Toggle This Whole Line to Lower Case
+Toggle This Whole Line to Upper Case
+Use visual select to upper case 'this'
+Use visual select to lower case 'THIs'
+Invert The Case of This Whole Line
+
+Move to the 5th character of this line, then move to the 15th.
+
 Reformat the below code
 
 void    test
@@ -92,3 +167,62 @@ from the start of the line, delete 'word' without using /
 a (select [ inside { the "quotes" then} each ] of the ) others
 b (select [ outside { the "quotes" then} each ] of the ) others
 <head>change the text inside this tag from anywhere on this line</head>
+Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
+Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
+Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
+
+Replace all uses of 'all' with 'most' all over this line.
+Replace all uses of 'most' over this line and the last, confirming each one
+Replace all uses of visual in the file with optical, confirming each one
+
+Execute 'ls' as a shell command.
+Save the last 5 lines to another file
+Insert the contents of the saved file below this line
+Insert the results of 'ls' below this line
+
+Split the window horizontally keeping this file in both splits
+Split the window vertically loading a file in the new split
+Split the window horizontally, loading a new file
+Split that window vertically, opening another new file
+Move focus between all three by cycling between them
+Move focus between all three by moving
+Make the original window bigger by 3 lines
+Make the vertical window smaller by 2 columns
+Maximize a window height
+Maximize a window width
+Reset to equal sized windows
+Close one of the windows
+Close all windows but this one
+
+Open a file in the path in this window, then return to this buffer
+Open a file in the path in a new tab
+Open a new file in a new tab
+Open this buffer in a new tab
+Display a list of the tabs
+Switch to the next tab, close it
+Switch to the previous tab, then to the first tab
+From this tab, close the next tab
+Close all tabs except this one
+Open all buffers in their own tabs
+Open a new help window in its own tab
+
+
+
+Code folding
+ns - substitute the next n chars
+I - insert at first non-blank of line
+I - in visual block mode
+navigating tags
+registers - https://www.brianstorti.com/vim-registers/
+    "1p <followed by> u.
+g* g#
+:set nowrapscan
+reg expressions . (escape w/ \)
+``
+`"
+`[
+`]
+:ver
+:wall
+reg expressions
+sessions

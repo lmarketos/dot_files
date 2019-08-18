@@ -1,6 +1,8 @@
 " set colors
-colorscheme solarized
-set background=dark
+"colorscheme solarized
+"solarized8 from https://vimawesome.com/plugin/solarized-8
+set background=light
+colorscheme solarized8
 
 " enable syntax highlighting
 syntax enable
@@ -41,8 +43,16 @@ set ruler
 " allow hidden buffers to be modified
 set hidden
 
+" keep the cursor from going to the very top or bottom
+set scrolloff=7
+
+"set kj to Esc to leave insert mode
+:imap kj <Esc>
+
 " key mapping
 " set caps lock to ctrl and unset it when exiting
 au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
 au VimLeave * silent! !setxkbmap -option
 
+" set the path to all subdirectories from current directory
+set path=$PWD/**

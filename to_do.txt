@@ -1,0 +1,9 @@
+set up script in dot_files to configure links in home directory for environment
+    vimrc
+    bashrc + subdirs with customizations
+    add standard way to configure solarized colors in bash and vi
+    fix ls colors for file with all permissions
+    tmux - persistent sessions
+    history, saved per shell?
+
+
