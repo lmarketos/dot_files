@@ -51,6 +51,8 @@ paste the combined line
 
 Use the expression register to enter the result of 2+2
 Use the expression register to enter the results of ls
+Use a command line special to display the results of ls
+Use a command line special to enter the results of ls on the line below the cursor
 
 Insert a new line after this line.
 Insert a new line before this line.
@@ -84,7 +86,7 @@ Print the list of book marks
 Edit the alternate file, then jump back here with a jump command
 Repeat the last executed command using 2 keystrokes, then come back here
 Open a new file in this window
-Load a new file into a buffer without showing it
+Load a new file into a buffer
 List all the loaded buffers
 Switch to a buffer by buffer number
 Switch to the previous buffer

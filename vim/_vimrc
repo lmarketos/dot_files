@@ -1,7 +1,7 @@
 " set colors
 "colorscheme solarized
 "solarized8 from https://vimawesome.com/plugin/solarized-8
-set background=light
+set background=dark
 colorscheme solarized8
 
 " enable syntax highlighting
@@ -46,8 +46,16 @@ set hidden
 " keep the cursor from going to the very top or bottom
 set scrolloff=7
 
+" set highlight search and incremental search
+set hls
+set is
+
 "set kj to Esc to leave insert mode
 :imap kj <Esc>
+
+"set enter to execure :noh to remove highlighted searches
+"and remove :noh from the status line
+"nnoremap <esc> :noh<return><esc>:<backspace>
 
 " key mapping
 " set caps lock to ctrl and unset it when exiting
@@ -56,3 +64,5 @@ au VimLeave * silent! !setxkbmap -option
 
 " set the path to all subdirectories from current directory
 set path=$PWD/**
+
+
