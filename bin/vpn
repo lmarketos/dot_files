@@ -1,0 +1,2 @@
+sudo openvpn --config ~/cameo/twc-vpn-client.ovpn
+

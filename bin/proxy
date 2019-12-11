@@ -1,0 +1,7 @@
+export http_proxy=http://proxy-lmi.global.lmco.com:80/
+export FTP_PROXY=http://proxy-lmi.global.lmco.com:80/
+export ftp_proxy=http://proxy-lmi.global.lmco.com:80/
+export https_proxy=http://proxy-lmi.global.lmco.com:80/
+export HTTPS_PROXY=http://proxy-lmi.global.lmco.com:80/
+export no_proxy=gitlab.us.lmco.com,gitlab.vs.lmco.com,lit3fox.vs.lmco.com,dragon.vs.lmco.com,localhost,127.0.0.1,localaddress
+export HTTP_PROXY=http://proxy-lmi.global.lmco.com:80/

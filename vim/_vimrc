@@ -1,8 +1,10 @@
 " set colors
 "colorscheme solarized
 "solarized8 from https://vimawesome.com/plugin/solarized-8
-set background=dark
+set background=light
+set t_Co=256
 colorscheme solarized8
+
 
 " enable syntax highlighting
 syntax enable
@@ -10,17 +12,17 @@ syntax enable
 " show line numbers
 set number
 
-" set tabs to have 4 spaces
-set ts=4
+" set tabs to have 2 spaces
+set ts=2
 
 " indent when moving to the next line while writing code
-set autoindent
+set smartindent
 
 " expand tabs into spaces
 set expandtab
 
 " when using the >> or << commands, shift lines by 4 spaces
-set shiftwidth=4
+set shiftwidth=2
 
 " show a visual line under the cursor's current line
 set cursorline
@@ -65,4 +67,35 @@ au VimLeave * silent! !setxkbmap -option
 " set the path to all subdirectories from current directory
 set path=$PWD/**
 
+function! HeaderToggle() " bang for overwrite when saving vimrc
+  let file_path = expand("%")
+  let file_name = expand("%<")
+  let extension = split(file_path, '\.')[-1] " '\.' is how you really split on dot
+  let err_msg = "There is no file "
 
+  if extension == "c" || extension == "cpp" || extension == "cxx"
+      let next_file = join([file_name, ".h"], "")
+
+      if filereadable(next_file)
+        :e %<.h
+      else
+          echo join([err_msg, next_file], "")
+      endif
+  elseif extension == "h"
+      let next_file = join([file_name, ".cpp"], "")
+
+      if filereadable(next_file)
+          :e %<.cpp
+      else
+          echo join([err_msg, next_file], "")
+      endif
+  endif
+endfunction
+nnoremap <Leader>h :call HeaderToggle()<CR>
+
+" Load all plugins now.
+" Plugins need to be added to runtimepath before helptags can be generated.
+packloadall
+" Load all of the helptags now, after plugins have been loaded.
+" All messages and errors will be ignored.
+silent! helptags ALL
