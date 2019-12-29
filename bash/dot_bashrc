@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "$HOME/.bashrc"
-
 # Uncomment this to get very verbose debugging output.
 #set -x
 
