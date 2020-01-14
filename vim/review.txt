@@ -228,3 +228,4 @@ reg expressions . (escape w/ \)
 :wall
 reg expressions
 sessions
+:buffdo e
