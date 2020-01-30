@@ -1,7 +1,7 @@
 " set colors
 "colorscheme solarized
 "solarized8 from https://vimawesome.com/plugin/solarized-8
-set background=light
+set background=dark
 set t_Co=256
 colorscheme solarized8
 
@@ -52,6 +52,8 @@ set scrolloff=7
 set hls
 set is
 
+" open netrw files in previous window
+let g:netrw_browse_split = 4
 "set kj to Esc to leave insert mode
 :imap kj <Esc>
 
