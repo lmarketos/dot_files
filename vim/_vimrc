@@ -34,7 +34,8 @@ set showmatch
 let python_highlight_all = 1
 
 " set column 80 to color (python style guide says no line longer than 79
-set colorcolumn=80
+"set colorcolumn=80
+set colorcolumn=0
 
 " wrap lines longer than width of screen
 set wrap linebreak nolist
@@ -51,6 +52,10 @@ set scrolloff=7
 " set highlight search and incremental search
 set hls
 set is
+
+" open splits below and right
+:set splitright
+:set splitbelow
 
 " open netrw files in previous window
 let g:netrw_browse_split = 4
