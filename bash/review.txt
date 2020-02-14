@@ -1,5 +1,0 @@
-cd -
-
-Find way to tell if your in subshell in terminal or parent shell
-ps -fH
-

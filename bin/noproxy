@@ -1,7 +1,0 @@
-export http_proxy=
-export FTP_PROXY=
-export ftp_proxy=
-export https_proxy=
-export HTTPS_PROXY=
-export no_proxy=
-export HTTP_PROXY=

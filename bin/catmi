@@ -1,2 +1,0 @@
-cd ~/local/src/autonomy/ros
-catkin_make install

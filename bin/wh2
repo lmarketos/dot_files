@@ -1,2 +1,0 @@
-#!/bin/bash
-ls -g $(which $1)
