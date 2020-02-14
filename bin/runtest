@@ -1,0 +1,12 @@
+#/usr/bin/bash
+
+pushd $(pwd)
+if [ "$1" != "" ]; then
+    TEST_FILE="$(pwd)/$1"
+    echo $TEST_FILE
+    echo "running  $TEST_FILE"
+    (cd ~/local && $TEST_FILE $2)
+else
+    echo "specify test script to run"
+fi
+popd

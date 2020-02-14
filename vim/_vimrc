@@ -1,0 +1,108 @@
+" set colors
+"colorscheme solarized
+"solarized8 from https://vimawesome.com/plugin/solarized-8
+set background=dark
+set t_Co=256
+colorscheme solarized8
+
+
+" enable syntax highlighting
+syntax enable
+
+" show line numbers
+set number
+
+" set tabs to have 2 spaces
+set ts=2
+
+" indent when moving to the next line while writing code
+set smartindent
+
+" expand tabs into spaces
+set expandtab
+
+" when using the >> or << commands, shift lines by 4 spaces
+set shiftwidth=2
+
+" show a visual line under the cursor's current line
+set cursorline
+
+" show the matching part of the pair for [] {} and ()
+set showmatch
+
+" enable all Python syntax highlighting features
+let python_highlight_all = 1
+
+" set column 80 to color (python style guide says no line longer than 79
+"set colorcolumn=80
+set colorcolumn=0
+
+" wrap lines longer than width of screen
+set wrap linebreak nolist
+
+" set the ruler on
+set ruler
+
+" allow hidden buffers to be modified
+set hidden
+
+" keep the cursor from going to the very top or bottom
+set scrolloff=7
+
+" set highlight search and incremental search
+set hls
+set is
+
+" open splits below and right
+:set splitright
+:set splitbelow
+
+" open netrw files in previous window
+let g:netrw_browse_split = 4
+"set kj to Esc to leave insert mode
+:imap kj <Esc>
+
+"set enter to execure :noh to remove highlighted searches
+"and remove :noh from the status line
+"nnoremap <esc> :noh<return><esc>:<backspace>
+
+" key mapping
+" set caps lock to ctrl and unset it when exiting
+au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
+au VimLeave * silent! !setxkbmap -option
+
+" set the path to all subdirectories from current directory
+set path=$PWD/**
+
+function! HeaderToggle() " bang for overwrite when saving vimrc
+  let file_path = expand("%")
+  let file_name = expand("%<")
+  let extension = split(file_path, '\.')[-1] " '\.' is how you really split on dot
+  let err_msg = "There is no file "
+
+  if extension == "c" || extension == "cpp" || extension == "cxx"
+      let next_file = join([file_name, ".h"], "")
+
+      if filereadable(next_file)
+        :e %<.h
+      else
+          echo join([err_msg, next_file], "")
+      endif
+  elseif extension == "h"
+      let next_file = join([file_name, ".cpp"], "")
+
+      if filereadable(next_file)
+          :e %<.cpp
+      else
+          echo join([err_msg, next_file], "")
+      endif
+  endif
+endfunction
+nnoremap <Leader>h :call HeaderToggle()<CR>
+
+" Load all plugins now.
+" Plugins need to be added to runtimepath before helptags can be generated.
+packloadall
+" Load all of the helptags now, after plugins have been loaded.
+" All messages and errors will be ignored.
+silent! helptags ALL
