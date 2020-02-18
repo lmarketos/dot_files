@@ -54,8 +54,14 @@ set hls
 set is
 
 " open splits below and right
-:set splitright
-:set splitbelow
+set splitright
+set splitbelow
+
+" autowrite files
+set autowrite
+
+" set folding method to syntax
+set foldmethod=syntax
 
 " open netrw files in previous window
 let g:netrw_browse_split = 4
@@ -64,7 +70,8 @@ let g:netrw_browse_split = 4
 
 "set enter to execure :noh to remove highlighted searches
 "and remove :noh from the status line
-"nnoremap <esc> :noh<return><esc>:<backspace>
+"nnoremap <silent> <Esc><Esc> :let @/=""<CR>"
+nnoremap <silent> <esc><esc> :noh<return>
 
 " key mapping
 " set caps lock to ctrl and unset it when exiting
@@ -73,6 +80,10 @@ au VimLeave * silent! !setxkbmap -option
 
 " set the path to all subdirectories from current directory
 set path=$PWD/**
+
+" set the titelstring to the pwd and put it in the terminal title
+set titlestring=%{getcwd()}
+set title
 
 function! HeaderToggle() " bang for overwrite when saving vimrc
   let file_path = expand("%")
