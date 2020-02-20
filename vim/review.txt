@@ -101,9 +101,9 @@ Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
 Go back two items in jump list, then back here.
 
-Record a {macro} to {convert} the first {set} of parens to {}.  Then run it to fix the others.
-Now change the macro to add a ';' after the closing } and run it {on}; this line.
-Now change the macro to convert to [] instead of {} and [run]; it on this line.
+Record a {macro} to {convert} the first (set) of parens to {}.  Then run it to fix the others.
+Now change the macro to add a ';' after the closing } and run it (on) this line.
+Now change the macro to convert to [] instead of {} and (run) it on this line.
 
 Jump to the matching [ where ever it is.
 Jump to the end ] of the file. Then back here using a bookmark.
@@ -123,11 +123,14 @@ func 2
 
 }
 
-  Move to the first non-blank on the next line using 1 key.  Move to the first non-blank on the previous line, using 1 key.  Remove the newline at the end of this line to make one line.
+  Move to the first non-blank on the next line using 1 key.  
+    Move to the first non-blank on the previous line, using 1 key.  
+Remove the newline at the end of this line 
+to make one line.
 Remove the newline on the last 3 lines.
 
-Delete 'insert' the x and enter insert mode
-insert
+Delete 'x' the x and enter insert mode
+Delete this line and enter insert mode with one key
 
 Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
@@ -136,44 +139,44 @@ Scroll this line to the middle of the window, keeping the cursor on this line
 Scroll this line to the bottom of the window, keeping the cursor on this line
 Scroll up half a page, moving the cursor
 Scroll down half a page, moving the cursor
-  Move up a full page, moving the cursor
-    Move down a full page, moving the cursor
+Move up a full page, moving the cursor
+Move down a full page, moving the cursor
 
-      Indent this line.
+Indent this line.
 Indent the last 3 lines
       Unindent this line.
 
-Toggle the case of This whole word
-toggle this whole line to lower case
-TOGGLE THIS WHOLE LINE TO UPPER CASE
-Use optical select to upper case 'THIS'
-Use optical select to lower case 'this'
-iNVERT tHE cASE OF tHIS wHOLE lINE
+Toggle the case of tHIS whole word
+Toggle This Whole Line To Lower Case
+Toggle This Whole Line To Upper Case
+Use visual select to upper case 'This'
+Use visual select to lower case 'tHIS'
+Invert The Case of This Whole Line
 
 Move to the 5th character of this line, then move to the 15th.
 
 Reformat the below code
 
 void    test
-{ 
+  { 
   print ("hello");
-}    
+  }    
     
-{ Reformat just this line.
+    { Reformat just this line.
    
-put the cursor on the 'r' of ''. delete the whole word with one command
-put the cursor on the 'r' of. delete the word and quotes with command
-from the start of the line, delete '' without using /
+put the cursor on the 'r' of 'word'. delete the whole word with one command
+put the cursor on the 'r' of 'word'. delete the word and quotes with command
+from the start of the line, delete 'word' without using /
 a (select [ inside { the "quotes" then} each ] of the ) others
 b (select [ outside { the "quotes" then} each ] of the ) others
-<head>changed</head>
+<head>change the text inside the tag from anywhere on this line</head>
 Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
 Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
 
-Replace all uses of 'all' with 'all' all over this line.
-Replace all uses of 'all' over this line and the last, confirming each one
-Replace all uses of optical in the file with optical, confirming each one
+Replace all uses of 'all' with 'most' all over this line.
+Replace all uses of 'most' over this line and the last, confirming each one
+Replace all uses of visual in the file with optical, confirming each one
 
 Execute 'ls' as a shell command.
 Save the last 5 lines to another file
@@ -217,10 +220,16 @@ open and close the next fold and the ones above
   close all folds in the file then open them 
   close one level of fold in the file then another, then open 1 level
 
+ execute the 2nd to last command without using arrow keys
+move forward and back in command history without arrow keys
+edit a command without using arrow keys
+
+set a terminal buffer to normal mode
+
 
 ns - substitute the next n chars
 I - insert at first non-blank of line
-I - in optical block mode
+I - in visual block mode
 navigating tags
 registers - https://www.brianstorti.com/vim-registers/
     "1p <followed by> u.
@@ -235,4 +244,5 @@ reg expressions . (escape w/ \)
 :wall
 reg expressions
 sessions
+(command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 :buffdo e
