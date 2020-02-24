@@ -246,3 +246,5 @@ reg expressions
 sessions
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 :buffdo e
+Delete/change to end of line from current position (D, C)
+paste a non-line yank to next/previous line (:pu, :pu!)
