@@ -16,7 +16,9 @@ set number
 set ts=2
 
 " indent when moving to the next line while writing code
-set smartindent
+"set smartindent
+set autoindent
+set cindent
 
 " expand tabs into spaces
 set expandtab

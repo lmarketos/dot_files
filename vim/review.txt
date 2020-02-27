@@ -1,6 +1,9 @@
 Move right on this line one character at a time, then move left.
 Move down several lines, one line at a time, then back up to this line.
 Add some text after here on this line.
+  Add some text before the 'A' of 'Add' from anywhere on the line.
+  Add some text at the start of the line from anywhere on the line.
+Add some text starting from where the last insert ended.
 Put the cursor on 'o' and replace it with an x.
 Put the cursor on 'o' and delete it.
 Put the cursor after 'o' and delete it.
@@ -101,7 +104,7 @@ Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
 Go back two items in jump list, then back here.
 
-Record a {macro} to {convert} the first (set) of parens to {}.  Then run it to fix the others.
+Record a (macro) to (convert) the first (set) of parens to {}.  Then run it to fix the others.
 Now change the macro to add a ';' after the closing } and run it (on) this line.
 Now change the macro to convert to [] instead of {} and (run) it on this line.
 
@@ -131,6 +134,7 @@ Remove the newline on the last 3 lines.
 
 Delete 'x' the x and enter insert mode
 Delete this line and enter insert mode with one key
+Delete onlythisnotthis and enter insert mode using 2 keys
 
 Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
@@ -227,12 +231,8 @@ edit a command without using arrow keys
 set a terminal buffer to normal mode
 
 
-ns - substitute the next n chars
-I - insert at first non-blank of line
-I - in visual block mode
-navigating tags
-registers - https://www.brianstorti.com/vim-registers/
-    "1p <followed by> u.
+I and A - in visual block mode (:h v_b_I)
+navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 g* g#
 :set nowrapscan
 reg expressions . (escape w/ \)
@@ -248,3 +248,12 @@ sessions
 :buffdo e
 Delete/change to end of line from current position (D, C)
 paste a non-line yank to next/previous line (:pu, :pu!)
+navigate change list (g; g, '' `` `^ :changes gi)
+list all completions of a help topic (ctrl-D after :h num)
+start/end of last change marks [ ] 
+moving windows (ctrl-W_[LHJK])
+open filename under cursor ctrl_f/ctrl_F
+
+spoilers
+  walk delete registers --   "1p u.
+
