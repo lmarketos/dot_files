@@ -20,19 +20,20 @@ Move to this 'q', then back to 'i'.
 Move right before this 'q', then after the 'i'.
 Delete 'this' word. Then del back to the start of the line. Then del fwd to the second '.'
 Undo the all edits on the previous line with one command.
-Delete up to the 'q'. Then delete to the end of the line.
+Delete up to the 'q'. Then delete to the end of the line (1 keystroke).
 Delete 'this', 'that', 'another'  words up to the 'w' of 'word'.
-Change 'this' word to 'tmp'.  Then change the end of the line to something else.
+Change 'this' word to 'tmp'.  Then change the end of the line to something else (1 keystroke).
 Change from 'here' to the end by repeating the last command.
 Delete this whole line.
-Change this whole line.
+Change this whole line (one keystroke, not C).
 Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
 Swap thsee two letters
 
-Copy to-the-end-of-this and paste it on the next line.
-Copy this whole line and paste it to the previous line.
+Copy to-the-end-of-this (including the space) and paste it on the next line.
+Copy to-the-end-of-this (not including the space) and paste it on the next line.
+Copy this whole line (with one keystroke) and paste it to the previous line.
 Copy this line and then the previous line and paste this line above and the previous line below using different registers
 Delete this line
 Delete this line too
@@ -173,6 +174,8 @@ put the cursor on the 'r' of 'word'. delete the word and quotes with command
 from the start of the line, delete 'word' without using /
 a (select [ inside { the "quotes" then} each ] of the ) others
 b (select [ outside { the "quotes" then} each ] of the ) others
+Use visual select to select "to select" on this line.  Extend the selection to the right, then to the left.
+User visual block mode to select a block in the middle of this text. Extend the selection from all four corners of the selection.
 <head>change the text inside the tag from anywhere on this line</head>
 Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
