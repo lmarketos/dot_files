@@ -77,6 +77,7 @@ Search for "only" at the end of a line
 Search for words that end in "or"
 Search for words that start with "in"
 Search for "on" as a whole word only.
+Search for "or" not as a while word.
 
 Turn off/on line numbers
 Turn off/on mode indication in status line
@@ -137,7 +138,7 @@ Delete 'x' the x and enter insert mode
 Delete this line and enter insert mode with one key
 Delete onlythisnotthis and enter insert mode using 2 keys
 
-Scroll up one line at a time, keeping the cursor on this line
+||Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
 Scroll this line to the top of the window, keeping the cursor on this line
 Scroll this line to the middle of the window, keeping the cursor on this line
@@ -174,9 +175,13 @@ put the cursor on the 'r' of 'word'. delete the word and quotes with command
 from the start of the line, delete 'word' without using /
 a (select [ inside { the "quotes" then} each ] of the ) others
 b (select [ outside { the "quotes" then} each ] of the ) others
-Use visual select to select "to select" on this line.  Extend the selection to the right, then to the left.
-User visual block mode to select a block in the middle of this text. Extend the selection from all four corners of the selection.
 <head>change the text inside the tag from anywhere on this line</head>
+Use visual select to select "to select" on this line.  Extend the selection to the right, then to the left.
+Use visual block mode to select a block in the middle of this text. Extend the selection from all four corners of the selection.
+Use visual select to insert a # at the start of every selected line
+Use visual select to insert a ; at the end of every selected line
+Use visual block mode to insert a + at the start of selection on each line
+
 Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
 Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
@@ -234,7 +239,6 @@ edit a command without using arrow keys
 set a terminal buffer to normal mode
 
 
-I and A - in visual block mode (:h v_b_I)
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 g* g#
 :set nowrapscan

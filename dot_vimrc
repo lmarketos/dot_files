@@ -1,6 +1,17 @@
 " set colors
 "colorscheme solarized
 "solarized8 from https://vimawesome.com/plugin/solarized-8
+
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+call vundle#end()            " required
+filetype plugin indent on    " required
+filetype plugin on
+
+
 set background=dark
 set t_Co=256
 colorscheme solarized8
@@ -9,8 +20,9 @@ colorscheme solarized8
 " enable syntax highlighting
 syntax enable
 
-" show line numbers
-set number
+" show relative line numbers
+set relativenumber
+"set number
 
 " set tabs to have 2 spaces
 set ts=2
