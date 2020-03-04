@@ -26,12 +26,14 @@ Change 'this' word to 'tmp'.  Then change the end of the line to something else 
 Change from 'here' to the end by repeating the last command.
 Delete this whole line.
 Change this whole line (one keystroke, not C).
+Move to here. Delete to the end of the line.
 Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
 Swap thsee two letters
 
-Copy to-the-end-of-this (including the space) and paste it on the next line.
+Copy to-the-end-of-this (including the space) and paste it on the next line, by itself.(1 command,no motion)
+Copy this word.  paste in on the previous line, by itself (1 command,no motion)
 Copy to-the-end-of-this (not including the space) and paste it on the next line.
 Copy this whole line (with one keystroke) and paste it to the previous line.
 Copy this line and then the previous line and paste this line above and the previous line below using different registers
@@ -138,7 +140,7 @@ Delete 'x' the x and enter insert mode
 Delete this line and enter insert mode with one key
 Delete onlythisnotthis and enter insert mode using 2 keys
 
-||Scroll up one line at a time, keeping the cursor on this line
+Scroll up one line at a time, keeping the cursor on this line
 Scroll down one line at a time, keeping the cursor on this line
 Scroll this line to the top of the window, keeping the cursor on this line
 Scroll this line to the middle of the window, keeping the cursor on this line
@@ -148,7 +150,7 @@ Scroll down half a page, moving the cursor
 Move up a full page, moving the cursor
 Move down a full page, moving the cursor
 
-Indent this line.
+||Indent this line.
 Indent the last 3 lines
       Unindent this line.
 
@@ -238,29 +240,28 @@ edit a command without using arrow keys
 
 set a terminal buffer to normal mode
 
+display the options enabled in this build of vim.
+
 
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
-g* g#
+g* g# gd gD
 :set nowrapscan
 reg expressions . (escape w/ \)
 ``
 `"
 `[
 `]
-:ver
 :wall
 reg expressions
 sessions
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 :buffdo e
-Delete/change to end of line from current position (D, C)
-paste a non-line yank to next/previous line (:pu, :pu!)
 navigate change list (g; g, '' `` `^ :changes gi)
 list all completions of a help topic (ctrl-D after :h num)
 start/end of last change marks [ ] 
-moving windows (ctrl-W_[LHJK])
 open filename under cursor ctrl_f/ctrl_F
 
 spoilers
   walk delete registers --   "1p u.
+  :ver
 

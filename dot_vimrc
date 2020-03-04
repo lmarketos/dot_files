@@ -6,7 +6,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+"Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
 call vundle#end()            " required
 filetype plugin indent on    " required
 filetype plugin on
@@ -16,6 +16,11 @@ set background=dark
 set t_Co=256
 colorscheme solarized8
 
+" enable backup file
+set backup
+
+" enable persistent undo
+set undofile
 
 " enable syntax highlighting
 syntax enable
@@ -126,6 +131,9 @@ endfunction
 nnoremap <Leader>h :call HeaderToggle()<CR>
 
 " Load all plugins now.
+" plugins distributed with Vim
+packadd! matchit
+
 " Plugins need to be added to runtimepath before helptags can be generated.
 packloadall
 " Load all of the helptags now, after plugins have been loaded.
