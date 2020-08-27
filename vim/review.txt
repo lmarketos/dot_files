@@ -264,4 +264,5 @@ open filename under cursor ctrl_f/ctrl_F
 spoilers
   walk delete registers --   "1p u.
   :ver
-
+  \(\<\)\@<!or\(\>\)\@<!
+  \(\<or\>\)\@<!\&or

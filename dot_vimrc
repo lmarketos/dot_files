@@ -8,8 +8,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 "Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
 call vundle#end()            " required
-filetype plugin indent on    " required
-filetype plugin on
+"filetype plugin indent on    " required
+"filetype plugin on
 
 
 set background=dark
@@ -34,8 +34,8 @@ set ts=2
 
 " indent when moving to the next line while writing code
 "set smartindent
-set autoindent
-set cindent
+"set autoindent
+"set cindent
 
 " expand tabs into spaces
 set expandtab
@@ -94,8 +94,8 @@ nnoremap <silent> <esc><esc> :noh<return>
 
 " key mapping
 " set caps lock to ctrl and unset it when exiting
-au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
-au VimLeave * silent! !setxkbmap -option
+"au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
+"au VimLeave * silent! !setxkbmap -option
 
 " set the path to all subdirectories from current directory
 set path=$PWD/**
