@@ -20,7 +20,7 @@ Move to this 'q', then back to 'i'.
 Move right before this 'q', then after the 'i'.
 Delete 'this' word. Then del back to the start of the line. Then del fwd to the second '.'
 Undo the all edits on the previous line with one command.
-Delete up to the 'q'. Then delete to the end of the line (1 keystroke).
+Delete up to the 'q'. Then delete to the end of the line (1 keystroke, not stored in delete reg).
 Delete 'this', 'that', 'another'  words up to the 'w' of 'word'.
 Change 'this' word to 'tmp'.  Then change the end of the line to something else (1 keystroke).
 Change from 'here' to the end by repeating the last command.
@@ -66,6 +66,7 @@ Insert a new line before this line.
 Search for 'jump list' in this file, then the next occurence, then the previous
 Search backwards for 'previous', then the previous, then the next
 Substitute preceding for previous without typing previous
+Repeat the previous substitution (1 key, no enter)
 Use a case insensitive search, just for this search, and search for 'Jump' in this file
 Turn on case insensitive search
 Turn on search highlighting
@@ -82,6 +83,7 @@ Search for "on" as a whole word only.
 Search for "or" not as a while word.
 
 Turn off/on line numbers
+Turn off/on relative line numbers
 Turn off/on mode indication in status line
 Turn off/on cursor position in status line
 Change the distance of the cursor from the top/bottom of the screen when scrolling starts.
@@ -241,6 +243,8 @@ edit a command without using arrow keys
 set a terminal buffer to normal mode
 
 display the options enabled in this build of vim.
+
+indent this line through the end of the file
 
 
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
