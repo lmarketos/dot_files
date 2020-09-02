@@ -9,7 +9,14 @@ Plugin 'VundleVim/Vundle.vim'
 "Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
 call vundle#end()            " required
 "filetype plugin indent on    " required
-"filetype plugin on
+
+filetype plugin on
+
+" join the 21st century
+set nocompatible
+
+" enable syntax highlighting
+syntax enable
 
 
 set background=dark
@@ -25,9 +32,6 @@ set undofile
 " set paths for backups and undofiles
 set backupdir=~/.vim/tmp//,.
 set directory=~/.vim/tmp//,.
-
-" enable syntax highlighting
-syntax enable
 
 " show relative line numbers
 set relativenumber
@@ -86,6 +90,9 @@ set autowrite
 " set folding method to syntax
 set foldmethod=syntax
 
+" start with all folds open
+set foldlevel=20
+
 " open netrw files in previous window
 let g:netrw_browse_split = 4
 "set kj to Esc to leave insert mode
@@ -143,3 +150,6 @@ packloadall
 " Load all of the helptags now, after plugins have been loaded.
 " All messages and errors will be ignored.
 silent! helptags ALL
+
+" load project.vimrc if it exists
+source ./project.vimrc
