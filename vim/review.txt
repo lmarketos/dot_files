@@ -108,7 +108,9 @@ Switch to the first buffer in the list
 
 Jump back to the last modification, then jump back here,using jump list cmds.
 Print the jump list
+Print the change list
 Go back two items in jump list, then back here.
+Go back two items in the change list, then back here.
 
 Record a (macro) to (convert) the first (set) of parens to {}.  Then run it to fix the others.
 Now change the macro to add a ';' after the closing } and run it (on) this line.
@@ -240,6 +242,8 @@ open and close the next fold and the ones above
  execute the 2nd to last command without using arrow keys
 move forward and back in command history without arrow keys
 edit a command without using arrow keys
+open the search history window
+exit history window
 
 set a terminal buffer to normal mode
 
@@ -272,3 +276,10 @@ spoilers
   \(\<\)\@<!or\(\>\)\@<!
   \(\<or\>\)\@<!\&or
 :set path?
+visual block mode I and A work for each line of selection
+q: to open command history
+q/ to open search history
+ctrl-f on command to open it in command history for editing
+ctrl-w N to set terminal buffer to normal mode
+two ways to exit history window :q and ctrl-c ctrl-c
+display options built with :ve
