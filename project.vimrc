@@ -8,3 +8,7 @@ set wildmenu
 " Add MakeTags command
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --language-force=c++  .
 
+let make_command_file = "./makeprg.vim"
+if filereadable(make_command_file)
+  exec 'source '.fnameescape(make_command_file)
+endif

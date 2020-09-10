@@ -152,4 +152,7 @@ packloadall
 silent! helptags ALL
 
 " load project.vimrc if it exists
-source ./project.vimrc
+let project_settings = "./project.vimrc"
+if filereadable(project_settings)
+  exec 'source '.fnameescape(project_settings)
+endif

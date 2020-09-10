@@ -248,8 +248,10 @@ exit history window
 set a terminal buffer to normal mode
 
 display the options enabled in this build of vim.
+open a shell and determine if the shell is running as a subprocess of vim or not
 
 indent this line through the end of the file
+
 
 
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
