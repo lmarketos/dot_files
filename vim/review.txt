@@ -252,9 +252,23 @@ open a shell and determine if the shell is running as a subprocess of vim or not
 
 indent this line through the end of the file
 
+remake the tags for the project
+build the project
+open the compiler output window
+display the command that will execute when building
+open main.cpp in the project without specifying path to file
+jump to a tag, then another tag, then back to starting point
+use tab completion to complete a name in the file
+display completion default options
+use tab completion to complete a filename
+use tab completion to complete a tag
+navigate in completion popup up and down
+toggle the compiler output window (only if errors exist)
+close the compiler output window
 
 
-navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
+
+
 g* g# gd gD
 :set nowrapscan
 reg expressions . (escape w/ \)
@@ -265,9 +279,7 @@ reg expressions . (escape w/ \)
 :wall
 reg expressions
 sessions
-(command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 :buffdo e
-navigate change list (g; g, '' `` `^ :changes gi)
 list all completions of a help topic (ctrl-D after :h num)
 start/end of last change marks [ ] 
 open filename under cursor ctrl_f/ctrl_F
@@ -285,3 +297,8 @@ ctrl-f on command to open it in command history for editing
 ctrl-w N to set terminal buffer to normal mode
 two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
+completion ^z^n; ^z^f; ^z^[; ^n;
+navigate completion list ^n ^p
+navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
+(command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
+navigate change list (g; g, '' `` `^ :changes gi)
