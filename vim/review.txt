@@ -258,17 +258,29 @@ open the compiler output window
 display the command that will execute when building
 open main.cpp in the project without specifying path to file
 jump to a tag, then another tag, then back to starting point
+open a header file that the cursor is on
+open a header file in a new window
+open a header file in a new tab
 use tab completion to complete a name in the file
 display completion default options
 use tab completion to complete a filename
 use tab completion to complete a tag
 navigate in completion popup up and down
 toggle the compiler output window (only if errors exist)
+list the errors
+jump to an error by number
+move forward and back along errors
 close the compiler output window
+open file browser
+
+add three to the '5' on this line from the start of the line
+subtract two from 7
 
 
 
-
+to add
+--------
+gdb commands
 g* g# gd gD
 :set nowrapscan
 reg expressions . (escape w/ \)
@@ -285,6 +297,7 @@ start/end of last change marks [ ]
 open filename under cursor ctrl_f/ctrl_F
 
 spoilers
+----------
   walk delete registers --   "1p u.
   :ver
   \(\<\)\@<!or\(\>\)\@<!
@@ -302,3 +315,4 @@ navigate completion list ^n ^p
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 navigate change list (g; g, '' `` `^ :changes gi)
+:copen :cclose :cl :cc# :cn :cp

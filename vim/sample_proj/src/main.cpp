@@ -1,6 +1,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <chrono>
+#include "header.h"
 
 
 using std::cout;
@@ -53,7 +54,10 @@ int main(int argc, char**argv)
   using std::chrono::high_resolution_clock;  
   using std::cerr;
   const int reps{10};
+  Test t;
 
+  t.i;
+  t.j;
   std::ios::sync_with_stdio(false);
 
   std::string test{"Test"};
