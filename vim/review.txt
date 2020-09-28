@@ -310,9 +310,10 @@ ctrl-f on command to open it in command history for editing
 ctrl-w N to set terminal buffer to normal mode
 two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
-completion ^z^n; ^z^f; ^z^[; ^n;
+completion ^x^n; ^x^f; ^x^[; ^n;
 navigate completion list ^n ^p
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 navigate change list (g; g, '' `` `^ :changes gi)
 :copen :cclose :cl :cc# :cn :cp
+open file under cursor gf ctrl-w+f ctrl-w+gf
