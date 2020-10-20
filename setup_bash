@@ -22,5 +22,9 @@ customdir=$rootdir"/custom"
 if [ ! -d $customdir ]
 then
     echo "Creating $customdir"
-    mkdir $customdir
+    ln -s $PWD"/bash/"$customdir $rootdir"/"$customdir
 fi
+
+#add tmux.conf
+#add vimrc
+#add bin
