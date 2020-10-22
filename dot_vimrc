@@ -119,6 +119,10 @@ set path=$PWD/**
 set titlestring=%{getcwd()}
 set title
 
+" turn on spell check and set the spell file
+set spell spelllang=en_us
+set spellfile=~/.vim/spell/en.utf-8.add
+
 function! HeaderToggle() " bang for overwrite when saving vimrc
   let file_path = expand("%")
   let file_name = expand("%<")
