@@ -31,6 +31,7 @@ Select up to 'this' and delete it.
 Select the last 2 lines and delete them.
 Select the first character of the last 5 lines and delete them.
 Swap thsee two letters
+Delete this paragraph
 
 Copy to-the-end-of-this (including the space) and paste it on the next line, by itself.(1 command,no motion)
 Copy this word.  paste in on the previous line, by itself (1 command,no motion)
@@ -275,6 +276,14 @@ open file browser
 
 add three to the '5' on this line from the start of the line
 subtract two from 7
+
+enter insert mode and type some text. Delete the last character typed without using backspace.
+still in insert mode Delete the last word.
+still in insert mode delete to the start of line
+repeat the last three line on a command mode command line (works in bash as well)
+
+enter insert mode and then using insert normal mode shift the cursor to the middle of the window.
+
 
 
 
