@@ -1,0 +1,7 @@
+vim
+
+create link to dot_vimrc
+create link to dot_vim
+create dirs "tmp"and "plugged"under dot_vim
+run vim and :PlugInstall
+run dot_vim/plugged/YouCompleteMe/install.py

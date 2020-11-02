@@ -1,27 +1,43 @@
-" set colors
-"colorscheme solarized
-"solarized8 from https://vimawesome.com/plugin/solarized-8
-
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-"Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
-call vundle#end()            " required
-"filetype plugin indent on    " required
-
-filetype plugin on
-
 " join the 21st century
 set nocompatible
+set encoding=utf-8
+
+"windows specific settings
+if has('win32') || has('win64')
+"allow access to windows clipboard
+  set clipboard=unnamed
+endif
+
+"set fonts
+if has("gui_running")
+  if has("gui_gtk2")
+    set guifont=Inconsolata\ 12
+  elseif has("gui_macvim")
+    set guifont=Menlo\ Regular:h14
+  elseif has("gui_win32")
+    set guifont=Consolas:h11:cANSI
+  endif
+endif
+
+"use space as leader key. mapped versus setting directly as leader to allow
+"the leader icon to show up in status line
+map <Space> <Leader>
 
 " enable syntax highlighting
 syntax enable
 
+" set tabs
+set tabstop=2 softtabstop=2
+set shiftwidth=2
+set expandtab
 
-set background=dark
-set t_Co=256
-colorscheme solarized8
+"indenting scheme
+set smartindent
+"set autoindent
+"set cindent
+
+" show a visual line under the cursor's current line
+set cursorline
 
 " enable backup file
 set backup
@@ -32,40 +48,17 @@ set undofile
 " set paths for backups and undofiles
 set backupdir=~/.vim/tmp//,.
 set directory=~/.vim/tmp//,.
+set undodir=~/.vim/tmp//,.
 
 " show relative line numbers
 set relativenumber
-"set number
-
-" set tabs to have 2 spaces
-set ts=2
-
-" indent when moving to the next line while writing code
-"set smartindent
-"set autoindent
-"set cindent
-
-" expand tabs into spaces
-set expandtab
-
-" when using the >> or << commands, shift lines by 4 spaces
-set shiftwidth=2
-
-" show a visual line under the cursor's current line
-set cursorline
 
 " show the matching part of the pair for [] {} and ()
 set showmatch
 
-" enable all Python syntax highlighting features
-let python_highlight_all = 1
-
 " set column 80 to color (python style guide says no line longer than 79
-"set colorcolumn=80
-set colorcolumn=0
-
-" wrap lines longer than width of screen
-set wrap linebreak nolist
+set colorcolumn=80
+"set colorcolumn=0
 
 " set the ruler on
 set ruler
@@ -79,6 +72,18 @@ set scrolloff=7
 " set highlight search and incremental search
 set hls
 set is
+
+
+filetype plugin on
+
+"set background=dark
+set t_Co=256
+
+" enable all Python syntax highlighting features
+let python_highlight_all = 1
+
+" wrap lines longer than width of screen
+set wrap linebreak nolist
 
 " open splits below and right
 set splitright
@@ -98,6 +103,7 @@ let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 let g:netrw_altv=1
+let g:netrw_winsize=25
 
 "set kj to Esc to leave insert mode
 :imap kj <Esc>
@@ -105,7 +111,7 @@ let g:netrw_altv=1
 "set enter to execure :noh to remove highlighted searches
 "and remove :noh from the status line
 "nnoremap <silent> <Esc><Esc> :let @/=""<CR>"
-nnoremap <silent> <esc><esc> :noh<return>
+nnoremap <silent> <space><space> :noh<return>
 
 " key mapping
 " set caps lock to ctrl and unset it when exiting
@@ -116,7 +122,7 @@ nnoremap <silent> <esc><esc> :noh<return>
 set path=$PWD/**
 
 " set the titelstring to the pwd and put it in the terminal title
-set titlestring=%{getcwd()}
+set titlestring=%{getcwd()}\ :\ %<%F%=%l/%L-%P 
 set title
 
 " turn on spell check and set the spell file
@@ -159,8 +165,44 @@ packloadall
 " All messages and errors will be ignored.
 silent! helptags ALL
 
+if has('win32') || has('win64')
+  "pythondll	name of the Python 2 dynamic library
+  set pythondll=python27.dll
+  "pythonhome	name of the Python 2 home directory
+  set pythonhome=
+  "pythonthreedll	name of the Python 3 dynamic library
+  set pythonthreedll=python37.dll
+  "pythonthreehome	name of the Python 3 home directory
+  set pythonthreehome="C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64"
+endif
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+if has('win32') || has('win64')
+  call plug#begin('$HOME\.vim\plugged')
+else  
+  call plug#begin('~/.vim/plugged')
+endif
+
+Plug 'morhetz/gruvbox'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'lyuts/vim-rtags'
+Plug 'mbbill/undotree'
+
+" Initialize plugin system
+call plug#end()
+
 " load project.vimrc if it exists
 let project_settings = "./project.vimrc"
 if filereadable(project_settings)
   exec 'source '.fnameescape(project_settings)
 endif
+
+"set background=dark
+colorscheme gruvbox
+set background=dark
+" set colors
+"colorscheme solarized
+"colorscheme solarized8
+"solarized8 from https://vimawesome.com/plugin/solarized-8
+
