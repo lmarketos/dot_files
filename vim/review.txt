@@ -260,7 +260,8 @@ display the command that will execute when building
 open main.cpp in the project without specifying path to file
 jump to a tag, then another tag, then back to starting point
 open a header file that the cursor is on
-open a header file in a new window
+open a header file in a new split 
+open a header file in a new vert split(a couple commands) 
 open a header file in a new tab
 use tab completion to complete a name in the file
 display completion default options
@@ -304,6 +305,7 @@ sessions
 list all completions of a help topic (ctrl-D after :h num)
 start/end of last change marks [ ] 
 open filename under cursor ctrl_f/ctrl_F
+preview window
 
 spoilers
 ----------
@@ -319,10 +321,11 @@ ctrl-f on command to open it in command history for editing
 ctrl-w N to set terminal buffer to normal mode
 two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
-completion ^x^n; ^x^f; ^x^[; ^n;
+completion ^x^n; ^x^f; ^x^]; ^n;
 navigate completion list ^n ^p
 navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 navigate change list (g; g, '' `` `^ :changes gi)
 :copen :cclose :cl :cc# :cn :cp
 open file under cursor gf ctrl-w+f ctrl-w+gf
+
