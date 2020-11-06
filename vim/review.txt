@@ -284,6 +284,8 @@ still in insert mode delete to the start of line
 repeat the last three line on a command mode command line (works in bash as well)
 
 enter insert mode and then using insert normal mode shift the cursor to the middle of the window.
+visual select a few lines and indent them. Then indent them again with one command.
+Then reselect the same region with one command
 
 
 
@@ -328,4 +330,4 @@ navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_progra
 navigate change list (g; g, '' `` `^ :changes gi)
 :copen :cclose :cl :cc# :cn :cp
 open file under cursor gf ctrl-w+f ctrl-w+gf
-
+reselect visual selection - gv; repeat visual command .
