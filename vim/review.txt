@@ -331,3 +331,4 @@ navigate change list (g; g, '' `` `^ :changes gi)
 :copen :cclose :cl :cc# :cn :cp
 open file under cursor gf ctrl-w+f ctrl-w+gf
 reselect visual selection - gv; repeat visual command .
+edit command: ^w, û
