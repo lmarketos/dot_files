@@ -287,7 +287,14 @@ enter insert mode and then using insert normal mode shift the cursor to the midd
 visual select a few lines and indent them. Then indent them again with one command.
 Then reselect the same region with one command
 
-
+using command mode, print the first two lines of the file
+using command mode, print the last line of the file
+using command mode, print the last visual selection
+using command mode, print the current line
+using command mode, print the line that mark 'a' is on
+using command mode, print the whole file
+using command mode, copy the line 2 lines below the current line to 1 above the current line
+using command mode, move this line to the end of the file
 
 
 to add
@@ -332,3 +339,4 @@ navigate change list (g; g, '' `` `^ :changes gi)
 open file under cursor gf ctrl-w+f ctrl-w+gf
 reselect visual selection - gv; repeat visual command .
 edit command: ^w, û
+command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m
