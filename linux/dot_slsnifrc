@@ -1,0 +1,30 @@
+#
+# configuration file for slsnif
+#
+# lines that begin with '#' are treated as comments
+#
+# set this to ON for displaying total bytes transmitted
+TOTALBYTES ON
+#
+# set this to ON for displaying timestamps
+TIMESTAMP  ON
+#
+# set this to ON for displaying hexadecimal ascii values
+DISPLAYHEX ON
+#
+# set this to ON in order to disable device locking
+NOLOCK     OFF
+#
+# these are color definitions, valid values are:
+#    black, red, green, yellow, blue, magenta, cyan, white,
+#    brightblack, brightred, brightgreen, brightyellow,
+#    brightblue, brightmagenta, brightcyan, and brightwhite.
+#
+# color for normal output
+COLOR      brightyellow
+# color for timestamp
+TIMECOLOR  green
+# color for total bytes transmitted
+BYTESCOLOR red
+#
+# end of rc-file

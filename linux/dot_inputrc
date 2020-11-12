@@ -1,0 +1,36 @@
+# This is the init file for readline
+#
+# Reread with C-x C-r
+#
+
+$include /etc/inputrc
+
+set bell-style visible
+
+set editing-mode emacs
+
+set show-all-if-ambiguous on
+
+# uncomment to turn off tab completion for readline!!!
+#TAB:
+
+$if Bash
+
+# edit the path
+"\C-xp": "export PATH=${PATH}\e\C-e\C-a\ef\C-f"
+
+# edit lib path
+"\C-xl": "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}\e\C-e\C-a\ef\C-f"
+
+# Use the arrow keys to search for command completion
+# Move around in history with Ctrl-P and Ctrl-N
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# fix left & right (if broken...)
+#"\e[C": forward-char
+#"\e[D": backward-char
+
+set completion-ignore-case on
+
+$endif

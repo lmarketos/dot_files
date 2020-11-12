@@ -1,0 +1,108 @@
+! as necessary, reload with:
+! $ xrdb ~/.Xdefaults
+
+!!! BEGIN EMACS !!!
+
+!! to see current font in emacs, switch to scratch and execute:
+!! (frame-parameter nil 'font)                                 '
+
+!! "emacs" resources refers to the program/binary name
+!! "Emacs" resources refer to any instantiation of the emacs application
+
+!!Emacs.font: Bitstream Vera Sans Mono-6
+Emacs.FontBackend: xft
+
+Emacs*menuBar: off
+Emacs*verticalScrollBars: off
+Emacs*toolBar: off
+
+Emacs*geometry: 80x50
+!!! END EMACS  !!!
+
+xosview*background: gray40
+
+gnuplot*background: gray80
+gnuplot*textColor: black
+gnuplot*borderColor: black
+gnuplot*axisColor: black
+gnuplot*line1Color: red
+gnuplot*line2Color: blue
+gnuplot*line3Color: DarkGreen
+gnuplot*line4Color: cyan
+gnuplot*line5Color: magenta
+gnuplot*line6Color: orange
+gnuplot*line7Color: green
+gnuplot*line8Color: sienna
+
+
+
+URxvt*geometry: 80x52
+
+URxvt*background: black
+URxvt*foreground: green
+
+URxvt*cursorColor: green
+URxvt*cursorBlink: false
+
+URxvt*pointerColor: white
+
+URxvt*visualBell: true
+
+URxvt*scrollBar: true
+URxvt*scrollBar_right: true
+URxvt*scrollstyle: plain
+URxvt*secondaryScroll: true
+
+URxvt*mapAlert: true
+
+URxvt*scrollTtyKeypress: true
+URxvt*scrollTtyOutput: false
+
+URxvt*scrollWithBuffer: true
+URxvt*saveLines: 10000
+
+URxvt*inheritPixmap: false
+URxvt*internalBorder: 5
+URxvt*externalBorder: 0
+
+URxvt.font:xft:Bitstream Vera Sans Mono:pixelsize=12:antialias=false
+
+URxvt.hold: false
+
+URxvt.perl-ext-common : default,tabbed,selection,option-popup,selection-popup
+
+URxvt.urlLauncher     : firefox
+
+URxvt.tabbed.tabbar-fg: 5
+URxvt.tabbed.tabbar-bg: 0
+URxvt.tabbed.tab-fg:    14
+URxvt.tabbed.tab-bg:    0
+
+
+URxvt.fading: 10
+URxvt.tintColor: #FCFCFC
+URxvt.shading: 100
+
+
+URxvt.utmpInhibit: false
+
+
+
+
+
+xterm*geometry: 80x52
+xterm*background: black
+xterm*foreground: green
+xterm*cursorColor: green
+xterm*pointerColor: white
+xterm*visualBell: true
+xterm*scrollBar: true
+xterm*scrollBar_right: true
+xterm*scrollTtyKeypress: true
+xterm*scrollTtyOutput: true
+xterm*scrollWithBuffer: true
+xterm*saveLines: 10000
+xterm*inheritPixmap: false
+xterm*internalBorder: 5
+xterm*externalBorder: 0
+xterm*linespace: 2

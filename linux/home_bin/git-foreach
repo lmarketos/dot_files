@@ -1,0 +1,482 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Dale Rowley, Jeremy M. Nett
+#
+# Invoke a git command on multiple repositories
+#
+# This file is source controlled in stuff/UsefulConfiguration/user_environment/home_bin
+#
+# -----------------------------------------------------------------------
+
+
+# a list of tempory files created by this script; used to cleanup at the end
+# of the script, or if SIGINT is received
+temporary_fnames=""
+
+# just print repo names and then exit
+print_repo_names=0
+
+# if non-zero, keep going even if the git command on a given repository failed
+keep_going=0
+
+# if set to zero, then don't try to run the command through git
+is_git_command=1
+
+# this is prepended to any git command; if a dry run, gets set to 'echo'
+dry_run_cmd=""
+
+# the name of a text file with a list of git repositories
+filename_args=""
+
+# repositories to be excluded from any actions
+exclude_repos=""
+
+# concise prints from git-foreach
+concise="echo"
+
+
+
+#
+# Help for this script
+#
+function usage()
+{
+    echo `basename $0`" : invoke a git command on a set of repositories"
+    echo
+    echo
+    echo "Usage:"
+    echo
+    echo `basename $0`" [options] <repo1 name> ... <repoN name> -- <git command>"
+    echo "    run git <git command> in each of the named repositories"
+    echo
+    echo `basename $0`" [options] -- <git command>"
+    echo "    run git <git command> in each of the git repos in the current directory"
+    echo
+    echo `basename $0`" [options] -f <repo_list_file> <git command>"
+    echo "    run git <git command> in each of the repositories listed"
+    echo "    in the <repo_list_file> text file"
+    echo
+    echo `basename $0`" [options] -f makefile <git command>"
+    echo "    run git <git command> in each of the repositories that are traversed by"
+    echo "    the makefile, provided that the makefile is compliant with JBuildSetup"
+    echo
+    echo "Options:"
+    echo
+    echo "-e  Specify a repository name to exclude from the set of repositories for which"
+    echo "    an action is performed."
+    echo
+    echo "-f  Specify a text file or a JBuildSetup-style makefile in which to determine a"
+    echo "    set of repositories to act upon."
+    echo
+    echo "-k  Normally, this script exits when a git command returns a non-zero exit"
+    echo "    status.  This option instructs the script to continue processing subsequent"
+    echo "    repositories."
+    echo
+    echo "-n  This option instructs the script to generate all git commands, but instead"
+    echo "    of actually exeucting them, just print them out.  A \"dry run\"."
+    echo
+    echo "-p  Print repo names, and then exit"
+    echo
+    echo "-x  Indicate that <git command> is not a git command, so don't try and run it"
+    echo "    through git. For example, '`basename $0` -x -- echo %d' will just step"
+    echo "    into each dir and run 'echo <dir_name>'."
+    echo
+    echo
+    echo "NOTE: Every occurrence of '%d' in <git command> will be replaced by the name of"
+    echo "      the git repository (see examples below)."
+    echo
+    echo
+    echo "Examples:"
+    echo
+    echo `basename $0`" -- clone ${USER}@lit3lisa:/gitroot/%d"
+    echo "    step into each subdirectory that is a git repo and"
+    echo "    run 'git clone ${USER}@lit3lisa:/gitroot/<dir_name>' where <dir_name>"
+    echo "    is replaced by the subdirectory name"
+    echo
+    echo `basename $0`" -f makefile status"
+    echo "    step into each repository that would be built by the given makefile"
+    echo "    and run 'git status'"
+    echo
+    echo `basename $0`" -f makefile clone ${USER}@lit3lisa:/gitroot/%d"
+    echo "    step into each repository that would be built by the given makefile"
+    echo "    and run 'git clone ${USER}@lit3lisa:/gitroot/<dir_name>'"
+    echo "    where <dir_name> is replaced by the repository/directory name"
+    echo
+    echo `basename $0`" -f makefile clone git://lit3lisa/%d"
+    echo "    clone all modules (via git protocol instead of through ssh) that would"
+    echo "    be built by the makefile"
+    echo
+    echo `basename $0`" -f makefile pull"
+    echo "    run 'git pull' for each of the repositories required to build makefile"
+    echo "    Updates are pulled from the 'origin' (default) remote repository."
+    echo
+    echo `basename $0`" -f makefile pull ${USER}@machine:/home/${USER}/src/%d"
+    echo "    run 'git pull '${USER}@machine:/home/${USER}/src/<dir_name>'"
+    echo
+    echo `basename $0`" -f makefile -e foo pull"
+    echo "    run 'git pull' in each of the repositories required to build makefile,"
+    echo "    EXCLUDING the repository named foo."
+    echo
+    echo
+    echo "Additional notes:"
+    echo
+    echo "- For access to the shared repositories on lit3lisa through the foreign national"
+    echo "  network, the git protocol must be used instead of ssh.  For other access,"
+    echo "  ssh is the prefered method."
+    echo
+    echo "- This script can be either explicitly executed via \""`basename $0`"\","
+    echo "  or executed through git via \"git "`basename $0 | sed 's/^git-//'`"\""
+    echo
+}
+
+
+# Given a JBuildSetup makefile, determine the git repositories needed to build
+# against the makefile. Return the list in MAKEFILE_DIRS variable.
+function get_flist_for_makefile()
+{
+    if [[ -z "$1" || ! -f "$1" ]]; then
+        echo "*** ERROR: invalid -f makefile argument: '$1'"
+        exit -1
+    fi
+
+    local keywords="LIB_SUBDIRS APP_SUBDIRS NML_SUBDIRS TEST_SUBDIRS EXTRA_CVS"
+    local dirs=""
+    local item
+
+    # run 'make show' and parse the output list of dirs for each of the keywords
+    for item in $keywords; do
+        dirs+=`make -f $1 show | sed "/^$item/!d; s/^$item://" | sed 's/ /\n/g' | sed 's/.*BuildSetup.*/JBuildSetup/; s,/.*$,,g'`
+    done
+
+    # return a unique list of directories
+    MAKEFILE_DIRS=`echo "$dirs" | sort | uniq`
+}
+
+
+# Determine if a directory is a git repository.  If a directory is specifed,
+# that directory is examined, otherwise the current working directory is
+# examined.  If the directory is a git repository, 1 is returned, 0 otherwise.
+function is_git_repo()
+{
+    local d="."
+
+    if [ -n "$1" ]; then
+        if [[ ! -d $1 ]]; then
+            return 0
+        fi
+
+        d=$1
+    fi
+
+    local git_dir=`cd $1 > /dev/null 2>&1; git rev-parse --git-dir 2>/dev/null`
+
+    # git-rev-parse should return '.git' if it's a non-bare repo,
+    # or '.' if it's a bare repo.
+    if [[ "$git_dir" == ".git" || "$git_dir" == "." ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
+
+# Returns 1 if the return value of the given git command should be ignored for
+# purposes of this script, 0 otherwise.  Used to workaround some commands with
+# silly return values, such as git-status, that would otherwise cause this
+# script to halt unless -k is provided.
+function ignore_return()
+{
+    # TODO: I think git-status return values have been fixed in recent versions of git
+    if [ "status" == "$1" -o "git-status" == "$1" ]; then
+        return 1
+    fi
+
+    return 0
+}
+
+
+# Return 1 if $1 is in $2, where $2 is a whitespace-separated list of items.
+function is_in_list()
+{
+    local x
+    for x in $2; do
+        if [[ "$1" == "$x" ]]; then
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+
+
+# parse command line options intended for *this* script
+while [ -n "$1" ]; do
+    case $1 in
+        -c)
+            concise='false '
+            shift
+            ;;
+        
+        -e)
+            shift
+            exclude_repos+=" $1"
+            shift
+            ;;
+
+        -f)
+            shift
+            filename_args+=" $1"
+            shift
+            ;;
+
+        -h|--help)
+            usage
+            shift
+            exit 0
+            ;;
+
+        -k)
+            keep_going=1
+            shift
+            ;;
+
+        -n)
+            dry_run_cmd=echo
+            shift
+            ;;
+
+        -p)
+            print_repo_names=1
+            shift
+            ;;
+
+        -x)
+            is_git_command=0
+            shift
+            ;;
+
+        --)
+            break;
+            ;;
+
+        -*)
+            echo "*** ERROR: unknown argument: $1"
+            shift
+            exit -1
+            ;;
+
+        *)
+            break;
+            ;;
+    esac
+done
+
+
+# process files given with the -f flag (makefiles or text files containing a
+# list of git repositories)
+subdirs=""
+for x in $filename_args; do
+    if [ -f "$x" ]; then
+
+        echo $x | grep -qi makefile
+
+        if [ "0" -eq "$?" ]; then
+            # it is a JBuild-style makefile
+            get_flist_for_makefile $x
+            subdirs="$MAKEFILE_DIRS"
+        else
+            # it is a regular text file
+            subdirs=`cat $x`
+        fi
+    else
+        # ask SconsSetup to print a list of dirs it would step into to build project $x
+        output=`scons -Q project=$x printDirs=1 2>&1 1>/dev/null`
+
+        if [[ "$?" == 0 && -d `echo "$output" | head -n1` ]]; then
+            subdirs="$output"
+        else
+            echo "*** ERROR: not a file or scons project: "$x
+            exit -1
+        fi
+    fi
+done
+
+
+# see if additional repositories are specified on the command line before the
+# '--' argument
+is_in_list "--" "$*"
+if [[ $? == 1 ]]; then
+    for x in "$@"; do
+        if [[ "--" == "$x" ]]; then
+            shift
+            break
+        fi
+
+        subdirs+=$'\n'$x
+        shift
+    done
+fi
+
+# the commandline args ($1,$2,...) should now only contain the git command to be executed
+
+# warn and exit if git command appears to be using old git-foreach syntax
+# TODO: we'll eventually remove this whole IF statement
+if [[ $is_git_command == "1" ]]; then
+    if [[ "$1" == "clone" ||
+          "$1" == "fetch" ||
+          "$1" == "push"  ||
+          "$1" == "pull" ]]; then
+
+        foundToken=`expr match "$*" '^.*%d.*$'`
+        foundColon=`expr match "$2" '^.*:.*$'`    # distinguish between 'git pull alias' and 'git pull user@url:/path/to/repo'
+
+        if [[ "$foundToken" == "0" && ( "$foundColon" != "0" || $1 == "clone" ) ]]; then
+            echo
+            echo "Clippy says:"
+            echo "It looks like you're using the old git-foreach syntax. You said:"
+            echo
+            echo "    $*"
+            echo
+            echo "when you probably meant:"
+            echo
+            echo "    $1 ${2}/%d ${*:3}"
+            echo
+            echo "(Run '`basename $0` -h' for more info.)"
+            echo
+
+            read -p "Clippy is rarely wrong. Continue anyway? (y/n) " RESPONSE
+
+            if [[ "$RESPONSE" != "y" && "$RESPONSE" != "Y" ]]; then
+                echo
+                echo "Clippy looks forward to bothering you again soon!"
+                exit 1
+            fi
+        fi
+    fi
+fi
+
+
+# if the list of subdirs is still empty, then just add all subdirs
+if [[ -z "$subdirs" ]]; then
+    dirlist=`ls -1`
+
+    for x in $dirlist; do
+        is_git_repo "$x"
+
+        if [[ "1" == "$?" ]]; then
+            subdirs+=$'\n'"$x"
+        fi
+    done
+fi
+
+# sort and remove duplicate repository names from the list
+subdirs=`echo "$subdirs" | sed '/^[ \t]*#/d' | sort | uniq | sort -f`
+
+
+# if -p option was given, just print the list of repos and exit
+if [[ "0" -ne "$print_repo_names" ]]; then
+    for x in $subdirs; do
+        is_in_list "$x" "$exclude_repos"
+
+        if [[ "1" -eq "$?" ]]; then
+            echo "EXCLUDE $x"
+        else
+            echo "$x"
+        fi
+    done
+    exit 0
+fi
+
+
+# determine if the return value of the git command should be ignored for the
+# purposes of this script
+ignore_return $1
+ignore=$?
+
+
+# now, invoke 'git XXX' for each of the repositories specified
+for dir in $subdirs; do
+
+    $concise "----------------------------------------------------------------------"
+
+    is_in_list $dir $exclude_repos
+    if [[ "1" -eq "$?" ]]; then
+        $concise "Repository $dir EXCLUDED"
+        $concise 
+        continue
+    fi
+
+    if [ "echo" != "$concise" ]; then
+        printf "%30s : " $dir
+    elif [[ -n "$dry_run_cmd" ]]; then
+        echo "Repository $dir (dry-run)"
+    else
+        echo "Repository $dir"
+    fi
+
+    is_git_repo $dir
+    is_git=$?
+
+    # if dir is not a git repo, then skip it, unless we're running git-clone
+    if [[ "0" -eq "$is_git" && "clone" != "$1" ]]; then
+        echo "*** WARNING: $dir does not appear to be a git repository. Skipping..."
+        $concise
+        $concise
+        continue
+    # if it is a git repo, then cd into it
+    elif [[ "1" -eq "$is_git" ]]; then
+        if [[ "clone" == "$1" ]] ; then
+            echo "*** NOTE: skipping clone of repository $dir as this directory already exists"
+            $concise 
+            $concise 
+            continue;
+        fi
+
+        cd $dir
+    fi
+
+    #pwd
+
+    # for all commandline args ($@) replace '%d' token with current directory name
+    args=( "${@/\%d/$dir}" )
+
+    # if it's a git command, then prepend 'git' to $@
+    if [[ "1" -eq $is_git_command ]]; then
+        args=("git" "${args[@]}")
+    fi
+
+    if [[ -f $HOME/.colorgit.sed ]]; then
+        set -o pipefail
+        $dry_run_cmd "${args[@]}" 2>&1 | sed -rf $HOME/.colorgit.sed
+    else
+        $dry_run_cmd "${args[@]}"
+    fi
+    exit_val=$?
+    $concise "git-${1} returned "$exit_val
+
+    # if the command failed, check if -k (keep-going) was given, or if this is
+    # a command whose return value should be ignored (such as git-status)
+    if [[ "0" != "$exit_val" && "0" == "$ignore" ]]; then
+        $concise "*** ERROR: '${args[@]}' failed for ${dir}"
+
+        if [[ "0" == "$keep_going" ]]; then
+            exit $exit_val
+        fi
+    fi
+
+    # step back up out of the dir, unless we're running git-clone
+    if [[ "clone" != "$1" ]]; then
+        cd ../
+    fi
+
+    $concise
+    $concise
+
+done
+
+exit 0

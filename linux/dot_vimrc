@@ -1,0 +1,356 @@
+syntax on                                       " enable syntax highlighting
+filetype plugin indent on                       " enable filetype-specific features
+
+set synmaxcol=200                               " avoid slow drawing for files with very long lines
+set nocompatible                                " omnicppcomplete expects this to be set
+"set number                                     " show line numbers
+set showmode                                    " display 'INSERT' on the bottom line when in insert mode
+set ignorecase                                  " ignore case when searching
+"set autoindent                                 " use indent from previous line
+"set smartindent                                " auto indentation for programming
+"set cindent                                    " auto indentation for programming - overrides smartindent
+set cinoptions=g0,(0                            " options for indenting code the way I like it
+set cinkeys-=0#                                 " prevent cindent from changing indentation when line starts with '#' (this is annoying since '#' is a comment char in many other files)
+set showmatch                                   " show matching braces
+set matchpairs+=<:>                             " highlight matching angle brackets and use '%' to jump between them
+set expandtab                                   " replace tabs with spaces
+set tabstop=4                                   " tabwidth
+set shiftwidth=4                                " tabwidth
+set textwidth=80                                " cause auto-formatting to wrap text
+set formatoptions=cq                            " make auto-formatting only apply to comments (c) and allow formatting with keystrokes 'gq'
+set pastetoggle=<F2>                            " use F2 as shortcut to toggle paste mode (tells vim not to interpret and indent text that is pasted)
+"set clipboard=unnamed,autoselect                " yank/put/visual-select to global "* (clipboard) register by default (instead of unnamed register; requires vim to be compiled with +xterm_clipboard - run ':version' to check this)
+set hlsearch                                    " set up highlight searching
+set incsearch                                   " set up incremental searching
+set backspace=2                                 " allow backspacing to backspace to the previous line
+set nowrap                                      " don't wrap the text if it goes off the screen
+" listchars sets the character to display when wrap is off and when there is
+" text going off of the screen to the right or left. Also, if ':set list', then
+" it displays the 'tab:' string for all tabs and the "trail:' string for
+" trailing white space, and 'eol:' string at the end of each line.
+set listchars=precedes:<,extends:>
+"set list
+"set listchars=tab:>-,precedes:<,extends:>
+set sidescroll=50                               " scroll this many characters horizontally when the cursor moves off the screen
+set ruler                                       " display the status line at the bottom of the screen (if statusline option isn't set)
+set statusline=%<%f%m%r%h%w\ [%{&ff}]\ [%Y]\ [\%03.3b,0x\%02.2B]\ %([%{Tlist_Get_Tagname_By_Line()}]%)%=%l,%c%V\ %p%%
+set laststatus=0                                " when to display the statusline if there is only 1 window
+set showcmd                                     " display incomplete commands
+set title
+set titlestring=%<%t\ %r%m
+set titlelen=20                                 " restrict titles to be 20 chars at most so prevent terminal tabs from taking up too much room
+" I usually expect vim to ask whether I want to reload a file if it has changed;
+" it's annoying when it does this automatically when I don't want it to.
+set noautoread
+set viminfo='50,s20                             " remember marks in the last 50 files that were edited, don't store registers greater than 20 KB in .viminfo
+set printexpr=''                                " Disable printing to avoid accidental printing (since I never print from vi anyway)
+" add the doxygen comment string '//!' to the list of strings that vi recognizes as comments
+" but since the '//' comment string is already defined, we have to remove it and re-add it after
+" the doxygen comment string since they have the same starting characters (see ':help format-comments')
+set comments-=://
+set comments+=://!,://
+"set cursorline                                 " Highlight the line the cursor is on (this slows down drawing though)
+"set colorcolumn=+1                              " Draw a vertical line at textwidth+1 (requires vim to be compiled with +syntax)
+set autochdir                                   " chdir to the dir of the file that is currently open
+set path=.,,                                    " something is adding /usr/include to the search path, which makes word completion take a long time
+"setlocal spell spelllang=en_us                 " enable spell-checking
+set hidden                                      " allow switching to another buffer if current buffer is modified and not saved
+
+" vim folding stuff
+"set foldmethod=syntax "automatically create folds based on syntax corresponding to the file type
+"set nofoldenable  "don't fold stuff automatically when opening a new file
+" folding commands:
+" zi    toggle foldenable
+" za    open/close current fold
+" zA    open/close current fold recursively
+" zX    reset all folds to the way they would be after opening the file
+" zj/zk move down/up to the next fold
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            Autocommands
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" jump to the last known position
+" TODO: Another plugin is already doing this? Why does it jump to start of line
+"       instead of to the last column position?
+"au BufReadPost * if line("`\"") > 0 && line("`\"") <= line("$") | exe "normal g`\"" | endif
+
+" change statusline color based on insert/normal mode
+au InsertEnter * hi StatusLine cterm=none ctermfg=black ctermbg=red
+au InsertLeave * hi StatusLine cterm=none ctermfg=black ctermbg=cyan
+
+" enable SCons syntax highlighting for SConstruct and SConscript files
+au BufRead SCons* set filetype=scons
+
+" these commands provide nice formatting for editing binary
+" BMP files (open them using "vim -b *.bmp")
+augroup Binary
+au!
+au BufReadPre  *.bmp let &bin=1
+au BufReadPost *.bmp if &bin | %!xxd
+au BufReadPost *.bmp set ft=xxd | endif
+au BufWritePre *.bmp if &bin | %!xxd -r
+au BufWritePre *.bmp endif
+au BufWritePost *.bmp if &bin | %!xxd
+au BufWritePost *.bmp set nomod | endif
+augroup END
+
+" add the doxygen comment string '//!' to the list of strings that vi recognizes as comments
+" but since the '//' comment string is already defined, we have to remove it and re-add it after
+" the doxygen comment string since they have the same starting characters (see ':help format-comments')
+" Also, the ftplugin overrides this setting, so we have to set it using an autocmd
+" TODO: probably better to use the '.vim/after' folder to resolve this problem.
+autocmd FileType * set comments-=://
+autocmd FileType * set comments+=://!,://
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:netrw_list_hide= '^\..*'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            Key Mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ab teh the
+
+" swap g and G since going to end of file is a frequent action
+noremap G g
+noremap g G
+" the mapping above applies to 'Select' mode, which we don't want because it
+" causes problems with certain plugins that use Select mode, so undo it
+sunmap  g
+sunmap  G
+
+" make it a little easier to copy/paste to/from the clipboard
+nmap vy "*yy
+vmap vy "*y
+nmap vp "*p
+nmap vP "*P
+
+" <c-d> closes a terminal, so make it do the same for vi
+nmap <c-d>  :qa<cr>
+nmap '<c-d> :wqa<cr>
+nmap qq :q<cr>
+
+" close the current buffer; if it's the last buffer then exit vim
+map  <m-7>  :if len(filter(range(1,bufnr('$')),'buflisted(v:val)'))=="1"<cr>qa<cr>else<cr>bd<cr>endif<cr><esc>
+imap <m-7>  <esc><m-7>
+map  '<m-7> :w<cr><m-7>
+" go to next/prev buffer
+map  <m-9>  :bp<cr>
+imap <m-9>  <esc><m-9>
+map  '<m-9> :w<cr>:bp<cr>
+map  <m-0>  :bn<cr>
+imap <m-0>  <esc><m-0>
+map  '<m-0> :w<cr>:bn<cr>
+" save the current buffer
+map  <m-->  :w<cr>
+imap <m-->  <esc><m-->
+
+" if currently editing a .h/.hpp file, the open the corresponding .c/.cpp file. Else if
+" currently editing a .c/.cpp file, then open the corresponding .h/.hpp file.
+function! OpenOther()
+    let extension = expand("%:e")
+    let base = expand("%:r")
+    if extension == "h" || extension == "hpp"
+        if filereadable(base . '.cpp')
+            edit %:r.cpp
+        elseif filereadable(base . '.c')
+            edit %:r.c
+        endif
+    elseif extension == "cpp" || extension == "c"
+        if filereadable(base . '.h')
+            edit %:r.h
+        elseif filereadable(base . '.hpp')
+            edit %:r.hpp
+        endif
+    endif
+endfun
+
+map  <m-o> :call OpenOther()<cr>
+imap <m-o>  <esc><m-o>
+map  '<m-o> :w<cr><m-o>
+
+" use netrw plugin to show a list of files in the current dir so we can pick one to edit
+nmap <m-.> :Explore<cr>
+
+" run sudo to force-write a file that was opened without write permissions
+nmap `w :w !sudo tee % > /dev/null
+
+" replace all tabs with 'tabwidth' spaces
+nmap <m-t> :retab<cr>
+" strip all trailing whitespace
+nmap <m-w> :%s/\s\+$//g<cr>
+
+" join c++ comment lines (joins lines and removes the next '//')
+" (the 'lwb' just makes sure we are positioned on the first '/'
+"  since this is not always the case)
+nmap [j Jlwbdw_
+" from current cursor position, put the rest of the line on the line above
+nmap [s i<cr><esc>kddpk
+
+" align the second method parameter under the first
+nmap [R 0f,lr<cr>i                                                                       <esc>k0f(ljdwf,l[r
+" put the next method parameter on the next line, move to the next line, and repeat
+nmap [r 0f,lr<cr>[r
+" for lines that look like 'something { something; something; ... }', put braces
+" and statements on separate lines
+nmap [o 0f{i<cr><esc>0f{wi<cr><esc>f}i<cr><esc>k[O
+" move same-line statements (eg, 'something; something;') onto seperate lines
+nmap [O f;f;F;wi<cr><esc>[O
+
+" execute a macro in register '1' on all lines in a visually selected block. (To
+" record the macro, press 'q1' and then the macro keys.)
+" Note: for each line in the selected range, vi places the cursor in the first
+"       column of the line and then executes the macro
+nmap [q :norm @1<cr>
+" repeat last @ command (to replay a macro)
+nmap , @@
+
+" shortcut to apply cpp-syntax highlighting to a file (if it wasn't already done automatically by vim)
+nmap [z :syntax clear<cr>:runtime! syntax/cpp.vim<cr>
+nmap [Z :set nocindent<cr>
+
+" like *, but prepend '::' to search for the function definition
+nmap [* */OA[7~::<cr>
+" like *, but only search within the current method (outer {} block)
+nmap ]* ma[[V]}<esc>`a*/<up>\%V<cr>
+
+" visually-select everything within the outermost {} block
+nmap ]t ma[[V]}
+" visually-select everything within the innermost {} block
+nmap ]b ma[{V]}
+" format everything within the outermost {} block
+nmap =t ]t=`azz
+" format everything within the innermosst {} block
+nmap =b ]b=`azz
+
+" do this instead of <c-f> so that we can go back with ctrl-O
+nmap <space> Lz<cr>
+nmap <backspace> Hz-
+" make the carriage return insert a new line and the quit insert mode
+nmap <cr> o<esc>
+" at the end of the first line of a function call, insert a CR and align the next line properly
+imap `<cr> <cr>                                                                         <esc>k0f(wjcw
+
+" when searching or jumping, center the new line in middle of screen
+nmap n nzz
+nmap N Nzz
+nmap [{ [{zz
+nmap ]} ]}zz
+nmap <c-o> <c-o>zz
+nmap <c-i> <c-i>zz
+
+" this mapping enters an opening bracket, a carriage return, a closing bracket,
+" and then moves the cursor between the opening and closing brackets
+imap {{ {<cr>}<esc>ko
+" this mapping adds braces around a visually-selected block and then formats it.
+" This is useful when I want to put a block of text inside braces (such as
+" inside an IF statement).
+vmap {{ <ESC>`<ko{<ESC>`>o}<ESC>`<k=`.
+" assume the cursor is on or inside the beginning of a {} block. Remove the
+" surrounding braces and unindent the lines.
+nmap <m-{> <ESC>j[{V]}<dd]}dd<c-o>
+
+" insert open-close parens around the current word or Word
+imap <m-(> <esc>Ea)<esc>Bi(<left>
+imap <m-)> <esc>ea)<esc>bi(<left>
+
+" scroll slowly horizontally (doesn't work if ':set wrap')
+nmap <c-l> 1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>1zl:sleep 10m<cr>
+nmap <c-h> 1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>1zh:sleep 10m<cr>
+" scroll slowly vertically
+"nmap <c-k> <c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>:sleep 20m<cr><c-y>
+"nmap <c-j> <c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>:sleep 20m<cr><c-e>
+
+" move the cursor up and down faster
+map <c-j> jjjj<c-e><c-e><c-e><c-e>
+map <c-k> kkkk<c-y><c-y><c-y><c-y>
+map <m-j> jjjj
+map <m-k> kkkk
+" delete the current/next word in insert mode
+imap <m-j> <esc>mzBd`zxi
+imap <m-k> <esc>ldwi
+imap <m-K> <del>
+" jump to the beginning of the current/next word in insert mode
+imap <m-h> <esc>bi
+imap <m-l> <esc>lwi
+" jump to the beginning/end of the current line in insert mode
+imap <m-;> <esc>_i
+imap <m-'> <esc>$a
+" move to the end of the next/previous line while in insert mode
+imap <c-j> <esc>j$a
+imap <c-k> <esc>k$a
+
+" open up .vimrc (helpful for looking for forgotten key mappings)
+nmap <c-g> :edit ~/.vimrc<cr>
+" source the .vimrc
+nmap <m-g> :source ~/.vimrc<cr>
+
+" mappings for :cnext and :cprev (useful after the :make command)
+" (default for c-n and c-p are cursor up and cursor down)
+nmap <c-n> :cnext<cr>
+nmap <c-p> :cprev<cr>
+
+"map <F1> F1 is mapped to vim help by default
+"map <F2> F2 is currently mapped to the paste-toggle function
+"map <F3> F3 is currently mapped to the tab/whitespace-highlighting toggle function
+" The ! tells it to toggle the current setting, so use F4 to toggle wrapping
+nmap <F4> :set wrap!<cr>
+
+" turn highlighting off (after doing a highlighted search)
+nmap <F5> :noh<cr>
+" do a :ptag on the word where the cursor is sitting while in insert mode
+imap <F5> <esc><c-w>}a
+" insert the date
+nmap <F6> :r !date +"\%D \%r"<cr>ji<cr><cr><ESC>kki
+imap <F6> <esc>ma:r !date +"\%D \%r"<cr>d$`apjdd`ai
+
+
+" Move to first character in the line. If a comment character then uncomment the
+" line, move to the next line, repeat until no more comments
+nmap <F10> _f/hxxj<F10>
+" mapping for <s-F10> to do the same as <F10> but going up instead of down
+nmap [34~ _f/hxxk[34~
+
+" comment a block using the correct comment leaders based on file type (xml, cpp, etc.)
+" pass in 1 to comment stuff out, 0 to uncomment stuff
+" TODO: replace this function with a standard vim plugin
+function! Commentify(doit)
+  let startComment = ""
+  let endComment = ""
+  if &ft == "xml"
+    let startComment = "<!--"
+    let endComment = "-->"
+  elseif &ft == "cpp" || &ft == "c" || &ft == "java"
+    let startComment = "//"
+  elseif &ft == "sh"
+    let startComment = "#"
+  endif
+
+  if a:doit == 1
+    " comment stuff out
+    execute "normal \<esc>'<_\<c-v>'>I" . startComment . "\<esc>"
+    if endComment != ""
+      execute "normal '<\<c-v>'>$A" . endComment . "\<esc>"
+    endif
+  else
+    " uncomment stuff
+    execute "normal \<ESC>:'<,'>s,\\(^\\s*\\)" . startComment . ",\\1,\<cr>:noh\<cr>'<"
+    if endComment != ""
+      execute "normal :'<,'>s," . endComment . "$,,\<cr>:noh\<cr>'<"
+    endif
+  endif
+endfun
+
+vmap <F11> :<c-u>call Commentify(0)<cr>
+" Comment out a block that was selected in visual mode.
+vmap <F12> :<c-u>call Commentify(1)<cr>
+
+" Uncomment this line and then move to the next line.
+" This is useful for undoing the actions of the <F12> mapping.
+nmap <F11> V<F11>j
+" Comment this line and then move to the next line.
+" This is useful for commenting out several lines in a row.
+nmap <F12> V<F12>hj
+

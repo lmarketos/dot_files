@@ -1,0 +1,6 @@
+format short g
+addpath("~/matlab")
+deg2rad = pi/180;
+d2r = pi/180;
+rad2deg = 180/pi;
+r2d = 180/pi;

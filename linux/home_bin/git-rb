@@ -1,0 +1,432 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# Helper for remote branches.  Similar to
+# http://github.com/webmat/git_remote_branch, but does not use ruby, and is
+# more capable and flexible.
+#
+# This file is source controlled in stuff/UsefulConfiguration/user_environment/home_bin
+#
+# -----------------------------------------------------------------------
+
+# TODO
+# - when tracking, look for desired branch name in list of remote branches; do
+#   not do anything if the desired branch does not exist; tell user to do a -
+#   fetch or pull
+
+
+# This script assumes that for remote branch tracking, the local branch name
+# is always equal to the remote branch name, and vice-versa.
+
+
+# this is prepended to any git command; if a dry run, gets set to echo
+unset git_cmd_prefix
+
+
+
+#
+# Help for this script
+#
+function usage()
+{
+    echo `basename $0`" : helper script for remote branch tracking with git"
+    echo
+    echo
+    echo "Usage:"
+    echo
+    echo `basename $0`" publish"
+    echo "    push current local branch to remote origin"
+    echo    
+    echo `basename $0`" publish <branch name>>"
+    echo "    push local branch <branch name> to remote origin"
+    echo    
+    echo `basename $0`" publish <branch name> <destination>"
+    echo "    push local branch <branch name> to remote <destination>"
+    echo
+    echo `basename $0`" delete <branch name>"
+    echo "    delete branch <branch name> from local and remote origin"
+    echo
+    echo `basename $0`" delete <branch name> <destination>"
+    echo "    delete branch <branch name> from local and remote <destination>"
+    echo
+    echo `basename $0`" track"
+    echo "    track current local branch from the remote branch with the same name at origin"
+    echo
+    echo `basename $0`" track <branch name>"
+    echo "    track branch <branch name> from the remote branch of the same name at origin"
+    echo
+    echo `basename $0`" track <branch name> <source>"
+    echo "    track branch <branch name> from the remote branch of the same name at <source>"
+    echo
+    echo
+    echo "Options:"
+    echo
+    echo "-h "
+    echo "    Show help."
+    echo
+    echo "-n "
+    echo "    This option instructs the script to generate all git commands, but instead"
+    echo "    of actually exeucting them, just print them out.  A \"dry-run.\""
+    echo
+    echo
+    echo "Examples:"
+    echo
+    echo `basename $0`" publish new_feature"
+    echo "    push the local branch named new_feature to origin"
+    echo "    new_feature need not necessarily be the currently checked-out branch of the local repository"
+    echo
+    echo `basename $0`" delete new_feature"
+    echo "    delete the local and remote branch new_feature from origin"
+    echo
+    echo `basename $0`" track new_feature"
+    echo "    checkout and track the branch new_feature from origin"
+    echo
+    echo
+    echo "- This script can be either explicitly executed via \""`basename $0`"\","
+    echo "  or executed through git via \"git "`basename $0 | sed 's/^git-//'`"\""
+    echo
+}
+
+
+
+# Determine if a directory is a git repository.  If a directory is specifed,
+# that directory is examined, otherwise the current working directory is
+# examined.  If the directory is a git repository, 1 is returned, 0 otherwise.
+function is_git_repo()
+{
+    local rv=0
+
+    local d="."
+    
+    if [ -n "$1" ]; then
+        d=$1
+    fi
+
+    if [ -d "${d}/.git" ]; then
+        # non-bare repository
+        rv=1
+        
+    elif [ -d "${d}/objects" -a -d "${d}/refs" ]; then
+        # bare repository
+        rv=1
+        
+    fi
+
+    return $rv
+}
+
+
+
+# Push (publish) the current local branch to a remote, and setup the local
+# branch to track the new remote branch.  There are two optional arguments:
+# 1 (optional): branch to publish, defaults to current branch
+# 2 (optional): destination for git-push, defaults to origin
+# The currently checked-out branch need not be the branch name to publish.
+function publish_branch()
+{
+    local branch_name
+    local destination
+    
+    case $# in
+
+        0)
+            branch_name=`git branch | sed '/^\*/!d;s/\* *//'`
+            destination="origin"
+            ;;
+        
+        1)
+            branch_name=$1
+            shift
+            destination="origin"
+            ;;
+        
+        2)
+            branch_name=$1
+            shift
+            destination=$1
+            shift
+            ;;
+
+        *)
+            echo "*** ERROR: invalid command line"
+            return -1
+            ;;
+        
+    esac
+
+    if [ -n "$branch_name" ]; then
+
+        echo "Publishing local branch ${branch_name} to remote ${destination}"
+        
+        # push the local branch to the remote
+        $git_cmd_prefix git push "${destination}" "${branch_name}:refs/heads/${branch_name}"
+        if [ "0" -ne "$?" ]; then
+            echo "*** ERROR: git-push failed for ${destination}"
+            return -1
+        fi
+
+        # setup tracking
+        $git_cmd_prefix git config "branch.${branch_name}.remote" "${destination}" && \
+            $git_cmd_prefix git config "branch.${branch_name}.merge" "refs/heads/${branch_name}"
+        if [ "0" -ne "$?" ]; then
+            echo "*** ERROR: git-config failed"
+            return -1
+        fi
+
+    else
+        
+        echo "*** ERROR: unable to determine current local branch name"
+        return -1
+        
+    fi
+
+    return 0
+}
+
+
+
+
+# Delete the specified local and remote tracking branches from a remote.  There are two arguments:
+# 1 (required): the branch name to delete
+# 2 (option): <repository> argument to git-push, defaults to origin
+#
+# The branch name to delete cannot be the currently checked-out local branch.
+# It is a required argument so that there is not an ambiguous case as to which
+# branch to call "git branch -d" from for local deletion.  First, the remote
+# branch is deleted.  The local branch is the deleted by calling "git branch
+# -d".  If this call fails because the branch has not been merged, then remote
+# tracking from the branch is deleted, and a warning is printed to the user.
+# The user may then forcefully delete the local branch with "git branch -D"
+function delete_branch()
+{
+    local branch_name
+    local destination
+
+    case $# in
+
+        1)
+            branch_name=$1
+            shift
+            destination="origin"
+            ;;
+
+        2)
+            branch_name=$1
+            shift
+            destination=$1
+            shift
+            ;;
+
+        *)
+            echo "*** ERROR: invalid command line"
+            return -1
+            ;;
+            
+    esac
+
+    local cur_branch=`git branch | sed '/^\*/!d;s/\* *//'`
+    if [ -z "$cur_branch" ]; then
+        echo "*** ERROR: unable to determine current local branch name"
+        return -1
+    fi
+
+    if [ "$branch_name" == "$cur_branch" ]; then
+        echo "*** ERROR: the branch to delete cannot be the same as the current branch"
+        return -1
+    fi
+
+    echo "Deleting branch ${branch_name} from local and remote ${destination}"
+    
+    # delete the remote branch
+    $git_cmd_prefix git push "${destination}" ":refs/heads/${branch_name}"
+    if [ "0" -ne "$?" ]; then
+        echo "*** ERROR: the remote branch ${branch_name} could not be deleted from remote ${push-to}"
+        return -1
+    fi
+
+    # attempt to delete the local branch
+    $git_cmd_prefix git branch -r -d "${branch_name}"
+    if [ "0" -ne "$?" ]; then
+
+        # if deleting the local branch failed, remove remote tracking
+        # information and warn the user
+
+        $git_cmd_prefix git config --unset "branch.${branch_name}.remote" 2> /dev/null
+        $git_cmd_prefix git config --unset "branch.${branch_name}.merge" 2> /dev/null
+
+        echo "*** WARNING: failed to remove local branch ${branch_name}.  Perhaps it is not merged?"
+        echo "If you wish to delete the branch and loose all changes from it, invoke"
+        echo "    $ git branch -r -D ${branch_name}"
+    fi
+    
+    return 0
+}
+
+
+
+# Track a remote branch locally.  If the local branch does not exist, it is
+# checked out.  If the local branch does exist, then remote tracking
+# configuration is setup for the branch.  There are two arguments:
+# 1 (optional): the branch name to track, defaults to current branch
+# 2 (option): <repository> argument to git-checkout, defaults to origin
+function track_branch()
+{
+    local branch_name
+    local source
+
+    case $# in
+
+        0)
+            branch_name=`git branch | sed '/^\*/!d;s/\* *//'`
+            source="origin"
+            ;;
+
+        1)
+            branch_name=$1
+            shift
+            source="origin"
+            ;;
+
+        2)
+            branch_name=$1
+            shift
+            source=$1
+            shift
+            ;;
+
+        *)
+            echo "*** ERROR: invalid command line"
+            return -1
+            ;;
+        
+    esac
+
+    local is_existing=0
+    for x in `git branch`; do
+        if [ "$x" == "$branch_name" ]; then
+            is_existing=1
+            break;
+        fi
+    done
+
+    echo "Tracking branch ${branch_name} from remote ${source}"
+    
+    if [ "1" -eq "$is_existing" ]; then
+
+        # branch_name exists as a local branch, add tracking information
+
+        $git_cmd_prefix git config "branch.${branch_name}.remote" "${source}"  && \
+            $git_cmd_prefix git config "branch.${branch_name}.merge" "refs/heads/${branch_name}"
+        if [ "0" -ne "$?" ]; then
+            echo "*** ERROR: git-config failed"
+            return -1
+        fi
+
+        # now checkout the branch
+        $git_cmd_prefix git checkout "${branch_name}"
+        if [ "0" -ne "$?" ]; then
+            echo "*** ERROR: git-checkout failed"
+            return -1
+        fi
+        
+    else
+
+        # branch_name does not exist as a local branch, check it out as a
+        # tracking branch
+
+        $git_cmd_prefix git checkout --track -b "${branch_name}" "${source}/${branch_name}"
+        if [ "0" -ne "$?" ]; then
+            echo "*** ERROR: git-checkout failed"
+            return -1
+        fi
+        
+    fi
+
+    return 0
+}
+
+
+
+# parse command line options intended for *this* script
+while [ -n "$1" ]; do
+    case $1 in
+
+        -h)
+            usage
+            shift
+            exit 0
+            ;;
+        
+        -n)
+            git_cmd_prefix=echo
+            shift
+            ;;
+
+        -*)
+            echo "*** ERROR: unknown argument: $1"
+            shift
+            exit -1
+            ;;
+        
+        *)
+            break;
+            ;;
+    esac
+done
+
+
+rv=-1
+
+
+is_git_repo
+if [ "1" -ne "$?" ]; then
+    echo "*** ERROR: must be executed from a git repository"
+    exit -1
+fi
+
+
+if [ -n "$1" ]; then
+
+    case $1 in
+
+        publish)
+            shift
+            publish_branch "$@"
+            rv=$?
+            ;;
+
+        delete)
+            shift
+            delete_branch "$@"
+            rv=$?
+            ;;
+
+        track)
+            shift
+            track_branch "$@"
+            rv=$?
+            ;;
+
+        *)
+            echo "*** ERROR: unknown command: $1"
+            rv=-1
+            ;;
+        
+    esac
+    
+else
+
+    usage
+    echo
+    echo "*** ERROR: what do you want to do?"
+    rv=-1
+    
+fi
+
+
+exit $rv

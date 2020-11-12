@@ -1,0 +1,4 @@
+echo
+echo "*** Logging out "`whoami`" @ "`hostname`" at "`date`" ***"
+echo
+sudo -K

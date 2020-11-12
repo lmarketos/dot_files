@@ -1,0 +1,6 @@
+Add the following to ~/.ddd/init:
+
+Ddd*XmText.background:             gray
+Ddd*XmTextField.background:        gray
+Ddd*XmText.foreground:             NavyBlue
+Ddd*XmTextField.foreground:        NavyBlue

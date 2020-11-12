@@ -1,0 +1,41 @@
+[global]
+fullscreen = 1280 x 1024
+ratio = 4:3
+freqtab = us-bcast
+pixsize = 128 x 96
+pixcols = 1
+jpeg-quality = 100
+keypad-ntsc = yes
+keypad-partial = yes
+osd = yes
+osd-position = 30 , 20
+use-wm-fullscreen = yes
+
+# [Station name]
+# capture = overlay | grabdisplay | on | off
+# input = Television | Composite1 | S-Video | ...
+# norm = PAL | NTSC | SECAM | ...
+# channel = #
+# fine = # (-128..+127)
+# key = keysym | modifier+keysym
+# color = #
+# bright = #
+# hue = #
+# contrast = #
+
+[defaults]
+group = main
+norm = ntsc
+input = television
+capture = over
+color = 46%
+bright = 46%
+hue = 46%
+contrast = 46%
+
+[SVideo]
+input = S-Video
+
+[Composite]
+input = composite1
+

@@ -1,0 +1,10 @@
+NOTE: See the ~/.bashrc file for the order in which the subdirectories are
+processed.
+
+The basic idea for this bash configuration setup was taken from bash-it:
+
+    http://github.com/revans/bash-it.git
+
+However, since bash-it mostly contains stuff that is not relevant/useful to us,
+then the content of this directory has almost nothing in common with the
+original bash-it content.

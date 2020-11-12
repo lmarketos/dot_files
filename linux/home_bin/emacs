@@ -1,0 +1,176 @@
+#!/bin/bash
+
+# display an informational message
+function msg()
+{
+    echo "$@"
+
+    if [ -n "$KDE_FULL_SESSION" ]; then
+        kdialog --sorry "$@"
+    fi
+}
+
+
+# set font
+case `hostname -s` in
+    lit3n4011e|lit3n4321e|t1*|t2*|t3*|lmco-toughbook)
+        font='Bitstream Vera Sans Mono-6'
+        ;;
+    *)
+        unset font
+        ;;
+esac
+
+EMACS_FUNCTIONS=${HOME}/.bash/functions/emacs.functions.bash
+
+# source .functions
+if [ -z "$SUDO_USER" ]; then
+    pushd ~${SUDO_USER}/ > /dev/null 2>&1
+    source ${EMACS_FUNCTIONS} > /dev/null 2>&1
+    popd > /dev/null 2>&1
+    
+else
+    source ${EMACS_FUNCTIONS} > /dev/null 2>&1
+fi
+
+
+# find the emacs binary
+
+bin=`emacs_bin`
+if [ -z "$bin" ]; then
+    msg 'cannot find emacs binary'
+    exit -1
+elif [ ! -x "$bin" ]; then
+    msg "emacs binary is not executable: $bin"
+    exit -1
+fi
+
+
+# if a common account, we are not using the emacs server, so just run emacs and get out of here 
+if [ -n "$IS_COMMON_ACCT" ]; then
+    if [ -n "$font" ]; then
+        exec -a emacs $bin -fn "$font" "$@"
+        rv=$?
+    else
+        exec -a emacs $bin "$@"
+        rv=$?
+    fi
+    exit $rv
+fi
+
+
+for x in "$@"; do
+    case "$x" in
+
+        --no-window-system|-nw)
+            # do nothing - these arguments are accepted/handled below
+            ;;
+        
+        -*)
+            # some other argument - call emacs directly and get out of here
+            if [ -n "$font" ]; then
+                exec -a emacs $bin -fn "$font" "$@"
+                rv=$?
+            else
+                exec -a emacs $bin "$@"
+                rv=$?
+            fi
+            exit $rv
+            ;;
+    esac
+done
+
+
+user=`whoami`
+
+
+# determine if emacs is already running, or if it needs to be started
+pids=`pgrep -u $user '^emacs'`
+mypid=$$
+
+running=0
+
+for x in $pids; do
+    if [ "$mypid" -ne "$x" ]; then
+        running=1
+        break
+    fi
+done
+
+
+if [ "1" -eq "$running" ]; then
+    server_file=$EMACS_SERVER_FILE
+    if [ -z "$server_file" ]; then
+        server_file=$TMPDIR
+        if [ -z "$server_file" ]; then
+            server_file=/tmp
+        fi
+
+        euid=`id -u`
+        server_file=${server_file}"/emacs"${euid}"/server"
+    fi
+
+    if [ ! -S "$server_file" ]; then
+        echo "emacs appears to be running, but the server files does not exist... check emacs"
+        echo "server file: "$server_file
+        exit -1
+    fi
+
+    test_str=`emacsclient -e '(emacs-version)' | sed 's/"//g;s/[0-9].*$//;s/^ *//;s/ *$//'`
+    if [ "GNU Emacs" != "$test_str" ]; then
+        echo "emacs appears to be running, but the server is not responsive... check emacs"
+        echo "server file: "$server_file
+        echo "test string = \""$test_str"\""
+        exit -1
+    fi
+fi
+
+
+if [ "0" -eq "$running" ]; then
+    # emacs is not running, start it
+
+    # if text mode desired, null DISPLAY
+    for x in "$@"; do
+        if [ "--no-window-system" == "$x" -o "-nw" == "$x" ]; then
+            unset DISPLAY
+            break;
+        fi
+    done
+    
+    if [ -n "$DISPLAY" ]; then
+
+        if [ -n "$font" ]; then
+            exec -a emacs $bin -fn "$font" "$@" &
+            start_rv=$?
+        else
+            exec -a emacs $bin "$@" &
+            start_rv=$?
+        fi
+        
+    else
+
+        exec -a emacs $bin -nw "$@"
+        start_rv=$?
+
+    fi
+    
+    if [ "0" -ne "$start_rv" ]; then
+        msg "emacs failed to start"
+        exit -1
+    fi
+else
+
+    if [ -n "$DISPLAY" -a "$#" -eq "0"  ]; then
+
+        # X, and no command line arguments
+        which wmctrl > /dev/null 2>&1
+        if [ "0" -eq "$?" ]; then
+            wmctrl -a emacs
+        fi
+
+    else
+        echo "calling edit"
+        echo edit "$@"
+        edit "$@"
+    fi
+fi

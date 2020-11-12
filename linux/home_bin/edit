@@ -1,0 +1,258 @@
+#!/bin/bash
+
+#
+# edit file(s) in emacs via emacsclient
+#
+
+
+function usage()
+{
+    echo "Edit files with emacs via emacsclient"
+    echo
+    echo
+    echo "Usage:"
+    echo "    $0 [-h] [-k] [-w] \\"
+    echo "        [ [+f] [-f] [-m] [-x] [-nw|-t|-tty] <file 1> ] \\"
+    echo "        [ [+f] [-f] [-m] [-x] [-nw|-t|-tty] <file 2> ]  ..."
+    echo
+    echo "-h "
+    echo "    Show help."
+    echo
+    echo "-k "
+    echo "    Ignore closed file descriptor, do not redirect to epipe"
+    echo
+    echo "-w "
+    echo "   Wait for user to finish editing, per file; other per-file arguments (below) are ignored"
+    echo
+    echo "For each file specified, the following arguments may precede the filename and affect how the file is handled:"
+    echo
+    echo "+f "
+    echo "   to edit readonly"
+    echo
+    echo "-f "
+    echo "   to edit R/W"
+    echo
+    echo "-m"
+    echo "   make a new frame"
+    echo
+    echo "-x "
+    echo "   open in an X display"
+    echo
+    echo "-nw, -t, -tty "
+    echo "   open a frame in the terminal"
+    echo
+    echo
+    echo "Special cases:"
+    echo
+    echo "1: exactly two files specified: split frame"
+    echo
+    echo "2: pipe -- in this case, processing is deferred to epipe unless -k is specified"
+    echo
+    echo "Examples:"
+    echo
+}
+
+
+
+function do_wait()
+{
+    # if wmctrl is available, use it to return focus to the calling window when finished here
+    unset windowid
+    which wmctrl > /dev/null 2>&1
+    if [ "0" -eq "$?" ]; then
+        have_wmctrl=1
+        windowid=`wmctrl -a :ACTIVE: -v 2>&1 | sed '/^Using window/!d;s/.*: *//'`
+    else
+        have_wmctrl=0
+    fi
+    
+    while [ -n "$1" ]; do
+
+        case $1 in
+            -*)
+                # ignore
+                ;;
+
+            *)
+                emacsclient -a emacs "$1"
+                ;;
+        esac
+
+        shift
+        
+    done
+
+    if [ -n "$windowid" ]; then
+        wmctrl -ia $windowid
+    fi
+}
+
+
+# if a common account, we are not using the emacs server, so just run emacs and get out of here 
+if [ -n "$IS_COMMON_ACCT" ]; then
+    emacs "$@"
+    rv=$?
+    exit $rv
+fi
+
+
+# Look for arguments that are in effect at the script level (i.e., not acting on a per-file basis
+can_redirect=1
+wait=0
+while [ -n "$1" ]; do
+    case $1 in
+        -h)
+            usage
+            exit 0
+            ;;
+        -k)
+            can_redirect=0
+            ;;
+        -w)
+            wait=1
+            ;;
+        *)
+            break
+            ;;
+    esac
+    shift
+done
+
+
+# Redirect to epipe if appropriate.  So for example, one could do "cat file | edit"
+if [ ! -t 0 -a "1" == "$can_redirect" ]; then
+    epipe "$@"
+    exit $?
+fi
+
+
+# for each file specified, invoke emacsclient directly
+if [ "0" -ne "$wait" ]; then
+    do_wait "$@"
+    exit 0
+fi
+
+
+# look for and process special case of exactly two files specified
+num_files=0
+has_makeframe=0
+for x in "$@"; do
+    case $x in
+        -m)
+            has_makeframe=1
+            ;;
+        -*)
+            # an argument, not a file or directory name
+            ;;
+        *)
+            let num_files="$num_files+1"
+            ;;
+    esac
+done
+
+if [ "2" -eq "$num_files" -a "0" == "$has_makeframe" ]; then
+    emacsclient -a emacs -e '(delete-other-windows)' > /dev/null
+    emacsclient -a emacs -e '(split-window-horizontally)' > /dev/null
+fi
+
+
+# let's edit some files
+readonly=1
+terminal=0
+
+while [ -n "$1" ]; do
+
+    case $1 in
+
+        +f)
+            readonly=1
+            shift
+            continue
+            ;;
+
+        -f)
+            readonly=0
+            shift
+            continue
+            ;;
+
+        -m)
+            emacsclient -a emacs -e '(custom-make-frame)' > /dev/null
+            shift
+            continue
+            ;;
+
+        -x)
+            terminal=0
+            shift
+            continue
+            ;;
+
+        -nw|-t|-tty)
+            terminal=1
+            shift
+            continue
+            ;;
+    esac
+
+    test_fname="$1"
+    unset fname
+    test_char=`echo "$test_fname" | cut -b 1`
+    case $test_char in
+        /)
+            fname=$test_fname
+            ;;
+
+        *)
+            fname=`pwd`"/$test_fname"
+            ;;
+    esac
+
+   linenum=`echo $fname | rev | awk ' BEGIN { FS=":" } { if (NF > 1) { print $1 } }' | rev`
+   fname=`echo $fname | sed 's/:[0-9]*$//'`
+    
+    unset cmd
+
+    if [ -f "$fname" ]; then
+        # if file exists, then honor read-only or RW
+        if [ "0" -ne "$readonly" ]; then
+            cmd="find-file-read-only"
+        else
+            cmd="find-file"
+        fi
+    else
+
+        # if file does not exist, open RW
+        cmd="find-file"
+    fi
+
+    if [ "0" -ne "$terminal" ]; then
+
+        if [ -n "$linenum" ]; then
+            emacsclient -a emacs -nw -e "($cmd \"$fname\")" "(goto-char (point-min))" "(forward-line (1- $linenum))"
+        else
+            emacsclient -a emacs -nw -e "($cmd \"$fname\")"
+        fi
+        
+    else
+        
+        emacsclient -a emacs -e '(raise-frame)' > /dev/null
+        emacsclient -a emacs -e '(x-focus-frame nil)' > /dev/null
+        
+        b=`emacsclient -a emacs -e "($cmd \"$fname\")"`
+        buffer_name=`echo $b | sed 's/^#<buffer //;s/>$//'`
+        
+        if [ -n "$linenum" ]; then
+            # goto a specified line number in the file; use the buffer name returned above (variable b)
+            emacsclient -a emacs -e "(with-current-buffer \"$buffer_name\" (goto-char (point-min)) (forward-line (1- $linenum)))" > /dev/null
+        fi
+        
+        if [ "2" -eq "$num_files" -a "0" == "$has_makeframe" ]; then
+            emacsclient -a emacs -e '(next-multiframe-window)' > /dev/null
+            num_files=0
+        fi
+        
+    fi
+    
+    shift
+done

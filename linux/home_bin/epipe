@@ -1,0 +1,191 @@
+#!/bin/bash
+
+#
+# Collect stdin, then load into emacs.  Optionally provide the capability for
+# echoing back the result of the edit, allowing for an 'edit the pipe' sort of
+# capability.
+#
+
+# edit the pipe? after emacs has been executed, cat the edited file
+edit_pipe=0
+
+# buffer name to use in emacs
+bufname="*Piped*"
+
+# should a new frame be created
+make_frame=0
+
+# should emacs be raised, and switched to the specified buffer
+switch=0
+
+# tee *input* - input to this script is tee'd to the output; not honored if
+# edit_pipe=1
+tee=0
+
+# temp filename used for input
+unset tmp
+
+
+function cleanup()
+{
+    if [ -n "$tmp" ]; then
+        rm -f $tmp
+    fi
+}
+trap cleanup EXIT KILL
+
+
+
+function show_use()
+{
+    s=`basename $0`
+    
+    echo "$s : piping to emacs via emacsserver"
+    echo
+    echo "Use:"
+    echo
+    echo "    # Execute command cmd, with cmd's stdout piped into an emacs buffer"
+    echo "    $ cmd | epipe [-m] [-s] [-t] [bufname]"
+    echo
+    echo "    # Execute command cmd_1, with cmd_1's stdout piped into an emacs buffer."
+    echo "    # The buffer is edited, and then piped as stdin to cmd_2"
+    echo "    $ cmd_1 | epipe -e [-m] [-s] [bufname] | cmd_2"
+    echo
+    echo "Options:"
+    echo
+    echo "    -e : Specifies that $s has an output pipe, such that the result of editing"
+    echo "         the buffer is piped to the next command in the chain.  This option is"
+    echo "         optional if $s is piped, as this is detected by test -t"
+    echo
+    echo "    -h : Show help and exit"
+    echo
+    echo "    -m : make a frame for bufname"
+    echo
+    echo "    -s : switch to buffer bufname"
+    echo
+    echo "    -t : tee output; when not editing pipe (-e), in addition to placing text"
+    echo "         into bufname, echo to stdout of $s"
+    echo
+    echo "Arguments:"
+    echo
+    echo "    bufname : the buffer name to use in emacs.  Optional, defaults to *Piped*"
+    echo
+    exit 1
+}
+
+
+# parse the command line
+while [ -n "$1" ]; do
+    case $1 in
+        -e)
+            edit_pipe=1
+            ;;
+
+        -h)
+            show_use
+            ;;
+
+        -m)
+            make_frame=1
+            switch=1
+            ;;
+
+        -s)
+            switch=1
+            ;;
+
+        -t)
+            tee=1
+            ;;
+
+        *)
+            bufname='*'$1'*'
+            ;;
+    esac
+    shift
+done
+
+# if running in a pipe, automatically set edit_pipe
+if [ ! -t 1 ]; then
+    edit_pipe=1
+fi
+
+# input will be collected into a temporary file, and then loaded into an emacs
+# bufer
+tmp=`mktemp -t epipe.XXXXXX`
+
+if [ "1" -eq "$edit_pipe" ]; then
+    tee=0
+fi
+
+if [ "1" -eq "$tee" ]; then
+    cat | tee $tmp
+else
+    cat > $tmp
+fi
+
+if [ "0" -eq "$edit_pipe" ]; then
+
+    emacsclient -a emacs -e "(with-current-buffer (get-buffer-create \"$bufname\") (delete-region (point-min) (point-max)) (insert-file \"$tmp\"))"
+
+    if [ "1" -eq "$make_frame" ]; then
+        emacsclient -a emacs -e '(custom-make-frame)'
+    fi
+
+    if [ "1" -eq "$switch" ]; then
+        emacsclient -a emacs -e '(raise-frame)'
+        emacsclient -a emacs -e '(x-focus-frame nil)'
+        emacsclient -a emacs -e "(switch-to-buffer \"$bufname\")"
+    fi
+
+else
+
+    r=0
+
+    # This gets more complicated than it really should be...
+    #
+    # 1. emacsclient -nw will not work here, as it does not have a tty when
+    # epipe is called with its output piped
+    #    
+    # 2. emacsclient likes to print out junk, like "Waiting for Emacs...".  It
+    # is not a simple matter of redirecting emacsclient's output to /dev/null,
+    # since this would render emacsclient useless when it is told to not use
+    # an X window, or when the emacs server is not running under X.
+    #
+    # So... do not support not running in a window system, and redirect output
+    # from emacsclient as appropriate.
+    #
+    # The vipe perl script does all of this the right way... just use it.
+
+    if [ -z "$DISPLAY" ]; then
+        echo "error - need X" >&2
+        cleanup
+        exit -1
+    fi
+
+    # try and figure out if emacs is running under X
+    is_windowing=`emacsclient -a emacs -e '(window-system)'`
+    if [ "nil" == "$is_windowing" ]; then
+        echo "error - need a windowing system" >&2
+        cleanup
+        exit -1
+    fi
+    
+    if [ "1" -eq "$make_frame" ]; then
+        emacsclient -c -a emacs "$tmp" >&2
+        r=$?
+    else
+        emacsclient -a emacs "$tmp" >&2
+        r=$?
+    fi
+
+    if [ "0" -eq "$r" ]; then
+        cat $tmp
+    fi
+
+    cleanup
+    exit $r
+
+fi
+
+cleanup

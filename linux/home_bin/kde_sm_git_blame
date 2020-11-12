@@ -1,0 +1,17 @@
+#!/bin/bash
+
+for x in "$@"; do
+
+    if [ -f "$x" ]; then
+        cur=`pwd`
+        d=`dirname $x`
+        f=`basename $x`
+        
+        cd $d
+        
+        git gui blame $f
+        
+        cd $cur
+    fi
+    
+done

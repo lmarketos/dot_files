@@ -1,0 +1,460 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# "Stashed branching".  When changing/creating branches, store changes in a
+# stash, and save untracked files in special directory under .git.
+#
+# -----------------------------------------------------------------------
+
+
+#
+# This script is rather unsophisticated when it comes to actual
+# branching/checkout.  For example, remote branches.  When a branch is
+# specified to change to, that does not already exists, git-branch is simply
+# called with the desired branch name.  More thought may be needed here.
+#
+
+
+# if non-zero, print out verbose information
+unset verbose
+
+# if set, prefixes git, cp, mv, mkdir, and rm commands
+unset cmd_prefix
+
+# toplevel of repostory directory
+unset repo_dir
+
+# if set, pass -i to cp, mv, mkdir, and rm commands
+unset interactive
+
+
+
+#
+# show a verbose message
+#
+function vmsg()
+{
+    if [ -n "$verbose" ]; then
+        echo "sb: ""$@"
+    fi
+}
+
+
+
+#
+# show an error message and quit
+#
+function die()
+{
+    echo "$@"
+    exit -1
+}
+
+
+
+#
+# show help and how to run this script
+#
+function usage()
+{
+   echo `basename $0`" : stashed branching"
+   echo
+   echo "Usage:"
+   echo
+   echo `basename $0`" [-d] [-D] [-i] [-n] [-v] [branchname]"
+   echo
+   echo "Change from current branch to [branchname].  For the current branch, stash"
+   echo "changes and the index.  For untracked files, place these in a directory under"
+   echo ".git, and remove them from the working tree.  When switching to [branchname],"
+   echo "apply a corresponding stash if it exists, and restore untracked files if they"
+   echo "are present."
+   echo
+   echo "Options:"
+   echo
+   echo "-d"
+   echo "    Delete a branch. The branch must be fully merged in HEAD."
+   echo
+   echo "-D"
+   echo "    Delete a branch irrespective of its merged status."
+   echo
+   echo "-i "
+   echo "    Pass -i to cp, mv, mkdir, and rm commands"
+   echo
+   echo "-n "
+   echo "    Generate all git, cp, mkdir, and mv commands, but instead of actually"
+   echo "    executing them, just print them out.  A \"dry run.\""
+   echo
+   echo "-v "
+   echo "    verbose"
+   echo
+}
+
+
+
+#
+# print out the current branch name
+#
+function get_current_branchname()
+{
+    local t=`mktemp -t git.branches.XXX`
+    git branch >> $t 2> /dev/null
+    local rv=$?
+
+    if [ "0" -eq "$rv" ]; then
+        echo `cat $t | sed '/^[*]/!d;s/^[*] //'`
+    fi
+
+    rm -f $t
+
+    return $rv
+}
+
+
+
+#
+# print out the repo name
+#
+function get_repo_dir()
+{
+    local repo_dir=`pwd`;
+    while [ ! -d "${repo_dir}/.git" -a "/" != "${repo_dir}" ]; do
+        repo_dir=`dirname $repo_dir`
+    done
+    if [ -d "${repo_dir}/.git" ]; then
+        echo $repo_dir
+        return 0
+    fi
+
+    die "not a git repo: "`pwd`
+    return -1
+}
+
+
+
+#
+# Save a stash for the current branch
+#
+function stash_current_branch()
+{
+    local branchname=`get_current_branchname`
+    local stash_message="sb."${branchname}
+
+    vmsg "saving stash for branch "$branchname
+    $cmd_prefix git stash save "$stash_message"
+    if [ "0" -ne "$?" ]; then
+        die "git-stash failed; trying to save a stash for the current branch $branchname"
+    fi
+    
+    return 0
+}
+
+
+
+#
+# Clear stash for specified branch name
+#
+function clear_stash_for_branch()
+{
+    if [ "1" -ne "$#" ]; then return -1; fi
+
+    local branchname=$1
+    
+    # remove the stash for the branch
+    local stash_message="sb."${branchname}
+
+    local took_action=1
+
+    while [ "0" -ne "$took_action" ]; do
+        took_action=0
+        git stash list | while read line; do
+            
+            name=`echo $line | sed 's/:.*$//'`
+            message=`echo $line | sed 's/^.*: On [A-Za-z0-9]*: //'`
+            
+            if [ "$message" == "$stash_message" ]; then
+                vmsg "clearing stash for branch "$branchname
+                $cmd_prefix git stash drop "$name"
+                took_action=1
+                break
+            fi
+        done
+    done
+
+    return 0
+}
+
+
+
+#
+# Apply the stash for the current branch, if it exists
+#
+function apply_stash_for_branch()
+{
+    local branchname=`get_current_branchname`
+    local stash_message="sb."${branchname}
+    
+    git stash list | while read line; do
+
+        name=`echo $line | sed 's/:.*$//'`
+        message=`echo $line | sed 's/^.*: On [A-Za-z0-9]*: //'`
+
+        if [ "$message" == "$stash_message" ]; then
+            vmsg "applying stash for branch "$branchname
+            $cmd_prefix git stash apply "$name"
+        fi
+    done
+
+    return 0
+}
+
+
+
+#
+# Save state of current branch: save stash for index and tracked files, save
+# untracked files to a special directory under .git/sb
+#
+function save_state()
+{
+    local current_branchname=`get_current_branchname`
+
+    # delete existing saved state
+    del_saved_state $current_branchname
+
+    # save index and tracked files via stash
+    stash_current_branch
+
+    # save untracked files
+
+    local sb_dir=${repo_dir}/.git/sb/${current_branchname}
+
+    local num=`git clean -n -d | wc -l`
+    if [ "$num" -gt "0" ]; then
+
+        vmsg "creating directory to save untracked files: "$sb_dir
+        $cmd_prefix mkdir $verbose -p $sb_dir
+        
+        for x in `git clean -n -d | sed '/^Would remove/!d;s/^Would remove //'`; do
+            if [ -d "$x" ]; then
+                vmsg "saving untracked directory "$x
+                $cmd_prefix mkdir $verbose -p ${sb_dir}/${x}
+                dest=`dirname ${sb_dir}/${x}`
+                $cmd_prefix mv $interactive $verbose ${x} ${dest}/.
+                $cmd_prefix rm $interactive -rf ${x}
+            else
+                vmsg "saving untracked file "$x
+                b=`basename $x`
+                d=`dirname $x`
+                $cmd_prefix mkdir $verbose -p ${sb_dir}/${d}
+                $cmd_prefix mv $interactive $verbose $x ${sb_dir}/${d}/${b}
+            fi
+        done
+    fi
+    
+    return 0
+}
+
+
+
+#
+# Delete saved state for specified branch
+# first argument is branchname
+# 
+function del_saved_state()
+{
+    if [ "1" -ne "$#" ]; then return -1; fi
+
+    local specified_branchname=$1
+
+    clear_stash_for_branch $specified_branchname
+
+    # remove the untracked dir under .git/sb
+    sb_dir=${repo_dir}/.git/sb/${specified_branchname}
+    if [ -d "$sb_dir" ]; then
+        vmsg "removing untracked dir "$sb_dir
+        $cmd_prefix rm $interactive -rf $sb_dir
+    fi
+    
+    return 0
+}
+
+
+
+#
+# Apply saved state for current branch
+#
+function restore_saved_state()
+{
+    local current_branchname=`get_current_branchname`
+
+    apply_stash_for_branch    
+
+    # restore untracked files
+
+    local sb_dir=${repo_dir}/.git/sb/${specified_branchname}
+
+    if [ -d "$sb_dir" ]; then
+        for x in `ls -1 $sb_dir`; do
+            if [ -d "${sb_dir}/${x}" ]; then
+                local dest=${repo_dir}/${x}
+                $cmd_prefix mkdir $verbose -p $dest
+                $cmd_prefix cp $interactive $verbose -R ${sb_dir}/${x}/* ${dest}/.
+            else
+                local dest=${repo_dir}/${x}
+                local dest_dir=`dirname $dest`
+                if [ ! -d "$dest_dir" ]; then
+                    mkdir $verbose -p $dest_dir
+                fi
+                $cmd_prefix cp $interactive $verbose ${sb_dir}/${x} ${dest}
+            fi
+        done
+    fi
+}
+
+
+
+##############################################################################
+# Main script
+##############################################################################
+
+
+#
+# parse the command line
+#
+
+# if non-zero, delete a branch by passing -d to git-branch
+delete_must_merge=0
+
+# if non-zero, delete a branch by passing -D to git-branch
+delete_branch=0
+
+# the specified branch name to create and change to, or delete
+unset specified_branchname
+
+while [ -n "$1" ]; do
+    case $1 in
+
+        -d)
+            delete_must_merge=1
+            shift
+            ;;
+
+        -D)
+            delete_branch=1
+            shift
+            ;;
+
+        -h|--help)
+            usage
+            shift
+            exit 0
+            ;;
+
+        -i)
+            interactive="-i"
+            shift
+            ;;
+
+        -n)
+            cmd_prefix=echo
+            shift
+            ;;
+
+        -v)
+            verbose=-v
+            shift
+            ;;
+
+        *)
+            specified_branchname=$1
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$specified_branchname" ]; then
+    usage
+    exit 0
+fi
+
+
+
+# the desired branchname should not be the current branchname; if so, quit
+current_branchname=`get_current_branchname`
+if [ "$specified_branchname" == "$current_branchname" ]; then
+    die "the specified branchname is the same as the current branchname: "$specified_branchname
+fi
+
+vmsg "current branch: "$current_branchname
+
+
+
+# locate the repository that owns the current working directory -- work up
+# until .git is found
+repo_dir=`get_repo_dir`
+
+vmsg "repository directory: "$repo_dir
+pushd $repo_dir > /dev/null 2>&1
+
+
+
+if [ "0" -ne "$delete_must_merge" -o "0" -ne "$delete_branch" ]; then
+
+    # delete a branch
+    
+    if [ "0" -ne "$delete_must_merge" ]; then
+        $cmd_prefix git branch -d $specified_branchname
+        
+    elif [ "0" -ne "$delete_branch" ]; then
+        $cmd_prefix git branch -D $specified_branchname
+        
+    fi
+    exit_rv=$?
+
+    if [ "0" -ne "$exit_rv" ]; then
+        die "failed to delete branch "$specified_branchname
+    fi
+
+    del_saved_state $specified_branchname
+    
+else
+
+    # get current branch names, and see if the desired branch name already exists;
+    # if not, create it
+    have_branch=0
+    for x in `git branch | sed 's/^[*]//;s/^ *//'`; do
+        if [ "$x" == "$specified_branchname" ]; then
+            have_branch=1
+            break
+        fi
+    done
+    if [ "0" -eq "$have_branch" ]; then
+        $cmd_prefix git branch $specified_branchname
+        if [ "0" -ne "$?" ]; then
+            die "git-branch failed for branch name "$specified_branchname
+        fi
+    fi
+
+    # save state for the current branch
+    save_state
+
+    # checkout the new branch
+    vmsg "checking out branch "$specified_branchname
+    $cmd_prefix git checkout $specified_branchname
+    if [ "0" -ne "$?" ]; then
+        die "git-checkout failed for branch name "$specified_branchname
+    fi
+
+    # apply the saved state for the new branch
+    restore_saved_state $specified_branchname
+fi
+
+
+popd > /dev/null 2>&1
+
+
+exit 0

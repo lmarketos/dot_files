@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+case "$#" in
+    0)
+        echo "must specify a file to attach"
+        exit -1
+        ;;
+    1)
+        ;;
+    *)
+        echo "only one file is supported at this time"
+        exit -1
+        ;;
+esac
+
+
+if [ -d "$1" ]; then
+    echo "attaching directories is not currently supported"
+    exit -1
+elif [ ! -f "$1" ]; then
+    echo "specified file does not exist: $1"
+    exit -1
+fi
+
+
+cmd=`mktemp -t thunderbird.attach.XXX`
+
+if [ "1" -eq "$#" ]; then
+    echo -n "subject='file attachment: "`basename $1`"'" >> $cmd
+else
+    echo -n "subject='file attachments'" >> $cmd
+fi
+
+echo -n ",body='Please see attached'" >> $cmd
+
+#echo -n ",attachment='file://$1'" | sed 's/ \//,file:\/\/\//g' >> $cmd
+#echo -n ",attachment='file://$1'" >> $cmd
+
+test_fname=`echo $1 | sed 's/^\///'`
+
+attach_fname=""
+if [ "$1" == "${test_fname}" ]; then
+    attach_fname=`pwd`"/${1}"
+else
+    attach_fname=$1
+fi
+
+echo "attaching file "$attach_fname
+echo -n ",attachment='file://${attach_fname}'" >> $cmd
+
+thunderbird -compose `cat $cmd`
+
+rm -f $cmd

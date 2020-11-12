@@ -1,0 +1,17 @@
+(setq skip-splash-screen false)
+
+(setq tab-width 4)
+
+(setq expand-tabs true)
+
+(setq beep false)
+
+
+(setq standard-indent 4)
+
+(setq transient-mark-mode true)
+
+
+;; see also "none"
+(setq backup-method simple)
+

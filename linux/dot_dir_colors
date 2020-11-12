@@ -1,0 +1,212 @@
+# Configuration file for dircolors, a utility to help you set the
+# LS_COLORS environment variable used by GNU ls with the --color option.
+#
+# You can copy this file to .dir_colors in your $HOME directory to override
+# the system defaults.
+#
+
+# COLOR needs one of these arguments: 'tty' colorizes output to ttys, but not
+# pipes. 'all' adds color characters to all output. 'none' shuts colorization
+# off.
+COLOR tty
+
+# Extra command line options for ls go here.
+# Basically these ones are:
+#  -F = show '/' for dirs, '*' for executables, etc.
+#  -T 0 = don't trust tab spacing when formatting ls output.
+OPTIONS -F -T 0
+
+# Below, there should be one TERM entry for each termtype that is colorizable
+TERM linux
+TERM linux-c
+TERM mach-color
+TERM console
+TERM con132x25
+TERM con132x30
+TERM con132x43
+TERM con132x60
+TERM con80x25
+TERM con80x28
+TERM con80x30
+TERM con80x43
+TERM con80x50
+TERM con80x60
+TERM cons25
+TERM gnome
+TERM xterm
+TERM xterm-color
+TERM xterm-256color
+TERM xterm-debian
+TERM color-xterm
+TERM color_xterm
+TERM kterm
+TERM rxvt
+TERM rxvt-unicode
+TERM screen
+TERM screen.linux
+TERM screen-w
+TERM vt100
+TERM dtterm
+TERM ansi
+TERM Eterm
+
+# EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
+EIGHTBIT 1
+
+# Below are the color init strings for the basic file types. A color init
+# string consists of one or more of the following numeric codes:
+# Attribute codes:
+# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+# Text color codes:
+# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Background color codes:
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+NORMAL 00           # global default, although everything should be something.
+FILE 00             # normal file
+DIR 00;38;5;50      # directory
+LINK 01;38;5;247    # symbolic link.  (If you set this to 'target' instead of a
+                    # numerical value, the color will match the file pointed to)
+FIFO 40;33          # pipe
+SOCK 01;35          # socket
+DOOR 01;35          # door
+BLK 40;33;01        # block device driver
+CHR 40;33;01        # character device driver
+ORPHAN 01;05;37;41  # orphaned syminks
+MISSING 01;05;37;41 # ... and the files they point to
+
+SETUID 00;38;5;196  # file that is setuid (u+s)
+SETGID 00;38;5;196  # file that is setgid (g+s)
+
+STICKY_OTHER_WRITABLE 30;42 # dir that is sticky and other-writable (+t,o+w)
+
+OTHER_WRITABLE 01;38;5;51   # dir that is other-writable (o+w) and not sticky
+
+STICKY 37;44 # dir with the sticky bit set (+t) and not other-writable
+
+# This is for files with execute permission:
+EXEC 00;38;5;34
+
+# List any file extensions like '.gz' or '.tar' that you would like ls
+# to colorize below. Put the extension, a space, and the color init string.
+# (and any comments you want to add after a '#')
+
+# executables
+.cmd 01;38;5;34
+.exe 01;38;5;34
+.com 01;38;5;34
+.btm 01;38;5;34
+.bat 01;38;5;34
+.sh  01;38;5;34
+.csh 01;38;5;34
+.env 01;38;5;34
+
+# archives / compressed
+.tar  01;38;5;197
+.tgz  00;38;5;196
+.arj  00;38;5;196
+.taz  00;38;5;196
+.lzh  00;38;5;196
+.zip  00;38;5;197
+.z    00;38;5;196
+.Z    00;38;5;196
+.gz   00;38;5;196
+.bz2  01;38;5;161
+.bz   01;38;5;161
+.tbz  01;38;5;161
+.tbz2 01;38;5;161
+.tz   00;38;5;197
+.deb  00;38;5;198
+.rpm  00;38;5;198
+.jar  00;38;5;198
+.rar  00;38;5;198
+.ace  00;38;5;196
+.zoo  00;38;5;196
+.cpio 00;38;5;196
+.7z   00;38;5;196
+.rz   00;38;5;196
+
+# image formats
+.jpg    00;38;5;127
+.JPG    00;38;5;127
+.jpeg   00;38;5;127
+.gif    00;38;5;127
+.bmp    00;38;5;127
+.ppm    00;38;5;127
+.pgm    00;38;5;127
+.pnm    00;38;5;127
+.pbm    00;38;5;127
+.tga    00;38;5;127
+.xbm    00;38;5;127
+.xpm    00;38;5;127
+.tif    00;38;5;127
+.tiff   00;38;5;127
+.png    00;38;5;127
+.mng    00;38;5;127
+.xcf    00;38;5;127
+.pcx    00;38;5;127
+
+# video formats
+.mpg    01;38;5;201
+.mpeg   01;38;5;201
+.m2v    01;38;5;201  # MPEG-2 Video only
+.avi    01;38;5;201
+.mkv    01;38;5;201  # Matroska (http://matroska.org/)
+.ogm    01;38;5;201  # Ogg Media File
+.mp4    01;38;5;201  # "Offical" container for MPEG-4
+.m4v    01;38;5;201  # MPEG-4 Video only
+.mp4v   01;38;5;201  # MPEG-4 Video only
+.mov    01;38;5;201  # Quicktime (http://developer.apple.com/qa/qtw/qtw99.html)
+.qt     01;38;5;201  # Quicktime (http://developer.apple.com/qa/qtw/qtw99.html)
+.wmv    01;38;5;201  # Windows Media Video
+.asf    01;38;5;201  # Advanced Systems Format (contains Windows Media Video)
+.rm     01;38;5;201  # Real Media
+.rmvb   01;38;5;201  # Real Media Variable Bitrate
+.flc    01;38;5;201  # AutoDesk Animator
+.fli    01;38;5;201  # AutoDesk Animator
+.gl     01;38;5;201
+.dl     01;38;5;201
+
+# Audio files
+.mp3    01;38;5;141
+.wav    01;38;5;141
+.mid    01;38;5;141
+.midi   01;38;5;141
+.au     01;38;5;141
+.ogg    01;38;5;141
+.flac   01;38;5;141
+.aac    01;38;5;141
+.wma    01;38;5;141
+
+# Document files
+.pdf    01;38;5;184
+.ps     01;38;5;184
+
+.patch  01;38;5;138
+.diff   01;38;5;138
+
+.ppt    00;38;5;112
+.pptx   00;38;5;112
+.odp    00;38;5;112
+.tex    00;38;5;114
+.doc    00;38;5;114
+.docx   00;38;5;114
+.odt    00;38;5;114
+.xls    00;38;5;184
+.ods    00;38;5;184
+
+.txt    01;38;5;179
+.log    01;38;5;179
+.conf   01;38;5;179
+.cfg    00;38;5;179
+
+# Source code files
+.cpp    00;38;5;105
+.cxx    00;38;5;105
+.cc     00;38;5;105
+.c      00;38;5;105
+.h      01;38;5;111
+.hh     01;38;5;111
+.hpp    01;38;5;111
+.tcc    01;38;5;109
+.txx    01;38;5;109
+

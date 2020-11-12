@@ -1,0 +1,237 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2011 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# Magical ssh wrapper
+#
+# -----------------------------------------------------------------------
+
+
+
+function show_use
+{
+    prog=`basename $0`
+    echo "${prog}: magical wrapper for ssh"
+    echo
+    echo "This script is a wrapper for ssh that allows for multi-hops, in some cases"
+    echo "figuring out the necessary hops.  There are three main use cases:"
+    echo
+    echo "1- A single, directly reachable host is specified.  In this case, this script"
+    echo "invokes ssh as-is.  Arguments are passed through to ssh.  Examples:"
+    echo
+    echo "    # ssh into remote host bar as user foo, and execute the command blah -f"
+    echo "    # executes the command \"ssh foo@bar blah -f\""
+    echo "    \$ $prog foo@bar blah -f"
+    echo
+    echo "    # ssh into remote host bar as user foo, passing -A to ssh"
+    echo "    # executes the command \"ssh -A foo@bar\""
+    echo "    \$ $prog -A foo@bar"
+    echo
+    echo
+    echo "2- Multiple hops are specified.  Hops are specified by a colon-delimeted list"
+    echo "of specifications of user@host, ordered in the way to proceed through the list"
+    echo "of hosts.  Specified arguments are passed to all invokations of ssh on the"
+    echo "different machines.  Any number of hops can be specified.  Examples:"
+    echo
+    echo "    # ssh into host2 as user2, by way of host1 as user1"
+    echo "    # executes the command \"ssh -t user1@host1 ssh user2@host2"
+    echo "    \$ $prog user1@host1:user2@host2"
+    echo
+    echo "    # ssh into host2 as user 2, by way of host1 as user1.  Execute the"
+    echo "    # command blah -f on host2.  Pass -A to each invocation of ssh"
+    echo "    # executes the command \"ssh -A -t user1@host1 ssh -A user2@host2 blah -f"
+    echo "    \$ $prog -A user1@host1:user2@host2 blah -f"
+    echo
+    echo
+    echo "3- A single unreachable host is specified.  In this case, one or more hops are"
+    echo "attempted to be guessed at, using the CAST wireless networking scheme.  This"
+    echo "process is sped up if LMAS_SYSTEM_NAME is set appropriately.  Examples:"
+    echo
+    echo "    # From t1, ssh into t3am1 as the user cast, and execute the command foo"
+    echo "    # executes the command \"ssh -t cast@t1am1 ssh cast@t3am1-aux foo\""
+    echo "    \$ $prog cast@t3am1"
+    echo
+    echo "    # From t1, ssh into t3am2 as the user cast, passing the argument -A to"
+    echo "    # all invocations of ssh"
+    echo "    # executes the command \"ssh -A -t cast@t1am1 ssh -A -t cast@t3am1-aux ssh -A cast@t3am2"
+    echo "    \$ $prog -A cast@t3am2"
+    echo
+    echo
+
+    exit -1
+}
+
+
+
+function log
+{
+    if [ -n "$SSHX_VERBOSE" ]; then
+        echo `basename $0`" : "$*
+    fi
+}
+
+
+
+#
+# parse the command line
+#
+# an array of -options to pass on to ssh invocations
+unset options
+# host argument (i.e. user@remote, user@remote1:user@remote2, remote1, etc.)
+unset host_arg
+# command to issue on final host, as an array
+unset command
+for arg in "$@"; do
+    if [ -z "$host_arg" ]; then
+        case "$arg" in
+            -*)
+                options=( "${options[@]}" "$arg" )
+                ;;
+            *)
+                host_arg="$arg";
+                ;;
+        esac
+    else
+        command=( "${command[@]}" "$arg" )
+    fi
+done
+
+
+# build up ssh_command, which at the end of this script will be all of the
+# arguments to pass to a single invocation of ssh
+ssh_command=( "${options[@]}" )
+
+
+# determine if $host_arg is of the multi-hop variety
+n=`echo "$host_arg" | awk 'BEGIN { FS=":" } { print NF }'`
+
+
+if [ "0" -eq "$n" ]; then
+    # no remote host, so the user must need some help
+    show_use
+
+elif [ "1" -eq "$n" ]; then
+    # one host; either this the host to use, or we should try to figure out
+    # one or more hops to get the user there
+    user=`echo $host_arg | awk 'BEGIN { FS="@" } { print $1 }'`
+    host=`echo $host_arg | awk 'BEGIN { FS="@" } { print $2 }'`
+    if [ -z "$host" ]; then
+        host=$user
+        unset user
+    fi
+
+    reached=0
+
+    if [ "cs" == "$host" ]; then
+        # some hosts cannot be pinged (disabled, behind a firewall, etc.),
+        # don't waste our time trying to find hops, the user must specify them
+        # if necessary for these hosts
+        log 'specified host is known to not be pingable'
+        reached=1
+    else
+        # here, see if the destination is directly reachable
+        ping -c 1 -W 1 -w 1 $host > /dev/null 2>&1
+        if [ "$?" -eq "0" ]; then
+            log "reached host $host"
+            reached=1
+        fi
+    fi
+
+    if [ "1" -eq "$reached" ]; then
+        # host is reachable, specify user@host and move on
+        ssh_command=( "${ssh_command[@]}" "$host_arg" )
+
+    else
+        # Cannot reach specified host, try to find a hop out of one of these
+        # hosts.  Assume that we are in one of these vehicles, so we are
+        # trying to get to the respective am1 board to get out onto the
+        # wireless, to reach an am1 board on another vehicle
+        try_hosts="t1am1 t2am1 t3am1 t4am1"
+
+        # if vehicle name is set, start with a good host to try
+        if [ -n "$LMAS_SYSTEM_NAME" -a "sim" != "$LMAS_SYSTEM_NAME" ]; then
+            try_hosts="${LMAS_SYSTEM_NAME}am1 $try_hosts"
+        else
+            log "LMAS_SYSTEM_NAME not set to a vehicle name; doing so would speed up multi-hop resolution"
+        fi
+
+        for x in $try_hosts; do
+            ping -c 1 -W 1 -w 1 $x > /dev/null 2>&1
+            if [ "$?" -eq "0" ]; then
+                # Found a hop point.  As we are here, we must be on a CAST or
+                # CAST-like vehicle network, so be even smarter here and add a
+                # hop point if the destination is not am1 or am1-aux
+
+                log "found hop point $x"
+
+                board=`echo $host | sed 's/[a-zA-Z]*[0-9]*//'`
+                log "board = $board"
+
+                if [ "am1" == "$board" -o "am1-aux" == "$board" ]; then
+                    # go directly to am1/am1-aux
+                    if [ -n "$user" ]; then
+                        hop="${user}@${x}"
+                        final="${user}@${host}-aux"
+                    else
+                        hop="${x}"
+                        final="${host}-aux"
+                    fi
+                    ssh_command=( "${ssh_command[@]}" "-t" "$hop" "ssh" "${options[@]}" "$final" )
+                else
+                    # need to go through am1-aux to get to the final destination
+                    prefix=`echo $host | sed 's/[a-zA-Z]*[0-9]*$//'`
+
+                    if [ -n "$user" ]; then
+                        hop="${user}@${x}"
+                        intermediate="${user}@${prefix}am1-aux"
+                        final="${user}@${host}"
+                    else
+                        hop="${x}"
+                        intermediate="${prefix}am1-aux"
+                        final="${host}"
+                    fi
+
+                    ssh_command=( "${ssh_command[@]}" "-t" "$hop" "ssh" "${options[@]}" "-t" "$intermediate" "ssh" "${options[@]}" "$final" )
+                fi
+
+                reached=1
+                break;
+            else
+                log "host $x could not be reached"
+            fi
+        done
+
+        if [ "1" -ne "$reached" ]; then
+            # no hop was found; the best we can do is either fail here, or
+            # keep going with the ssh command to the host that seems
+            # unreachable.  Prefer the second.
+            ssh_command=( "${ssh_command[@]}" "$host_arg" )
+        fi
+    fi
+else
+    log 'multihop specified'
+    # multiple hops specified - form up the command line to ssh
+    hops=`echo $host_arg | sed 's/:/ /g'`
+    hop_count=1
+    for this_hop in $hops; do
+        log 'hop ' $this_hop
+        if [ "1" -eq "$hop_count" ]; then
+            ssh_command=( "${ssh_command[@]}" "-t" "$this_hop" )
+        elif [ "$n" -eq "$hop_count" ]; then
+            ssh_command=( "${ssh_command[@]}" "ssh" "${options[@]}" "$this_hop" )
+        else
+            ssh_command=( "${ssh_command[@]}" "ssh" "${options[@]}" "-t" "$this_hop" )
+        fi
+        let hop_count="$hop_count+1"
+    done
+fi
+
+# tack on the command that is to be executed on the final host
+ssh_command=( "${ssh_command[@]}" "${command[@]}" )
+
+log ssh "${ssh_command[@]}"
+exec ssh "${ssh_command[@]}"

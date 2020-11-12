@@ -1,0 +1,16 @@
+#!/bin/sh
+
+git diff --quiet HEAD > /dev/null 2>&1
+if [ "0" -ne "$?" ]; then
+   echo "DIRTY"
+   exit -1
+fi
+
+n=`git clean -n -d | wc -l`
+if [ "0" -ne "$n" ]; then
+   echo "DIRTY"
+   exit -1
+fi
+
+echo "clean"
+

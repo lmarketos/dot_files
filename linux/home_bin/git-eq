@@ -1,0 +1,154 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# Show tags and branches that are equal to a ref
+#
+# -----------------------------------------------------------------------
+
+
+
+function usage
+{
+    echo `basename $0`" : show tags and branches that are equal to a ref"
+    echo
+    echo
+    echo "Usage:"
+    echo
+    echo `basename $0`" <ref>"
+    echo "    show both tags and branches that are equal to ref"
+    echo
+    echo `basename $0`" [-b] <ref>"
+    echo "    show only branches that are equal to ref"
+    echo
+    echo `basename $0`" [-t] <ref>"
+    echo "    show only tags that are equal to ref"
+    echo
+    echo "<ref> defaults to HEAD if not specified"
+    echo
+    echo
+    echo "Options:"
+    echo
+    echo "-b "
+    echo "    Show only tags"
+    echo
+    echo "-t "
+    echo "    Show only branches"
+    echo
+    echo
+    echo "Examples:"
+    echo
+    echo `basename $0`" "
+    echo "    show tags and branches equal to HEAD"
+    echo
+    echo `basename $0`" -t"
+    echo "    show tags equal to HEAD"
+    echo
+    echo `basename $0`" -b foo"
+    echo "    show branches equal to the branch or tag named \"foo\""
+    echo
+
+}
+
+
+compare_ref="HEAD"
+
+do_default=1
+do_tags=1
+do_branches=1
+verbose=1
+
+
+if [ "$#" -gt "0" ]; then
+    do_tags=0
+    do_branches=0
+    verbose=0
+
+    while [ -n "$1" ]; do
+
+        case $1 in
+
+            -h)
+                usage
+                exit 0
+                ;;
+
+            -t)
+                do_default=0
+                do_tags=1
+                ;;
+
+            -b)
+                do_default=0
+                do_branches=1
+                ;;
+
+            -*)
+                usage
+                exit -1
+                ;;
+
+            *)
+                compare_ref=$1
+                ;;
+        esac
+
+        shift
+    done
+fi
+
+
+if [ "1" -eq "$do_default" ]; then
+    do_tags=1
+    do_branches=1
+    verbose=1
+fi
+
+
+unset prefix
+if [ "1" -eq "$verbose" ]; then
+    prefix='    '
+fi
+
+
+if [ "1" -eq "$do_tags" ]; then
+    if [ "1" -eq "$verbose" ] ; then
+        echo "TAGS:"
+    fi
+    have_tags=0
+    for x in `git tag -l`; do
+        git diff --quiet "$compare_ref" "$x"
+        if [ "0" -eq "$?" ]; then
+            echo "$prefix""$x"
+            have_tags=1
+        fi
+    done
+    if [ "0" -eq "$have_tags" -a "1" -eq "$verbose" ]; then
+        echo "    (none)"
+    fi
+fi
+
+
+if [ "1" -eq "$do_branches" ]; then
+    if [ "1" -eq "$verbose" ] ; then
+        echo "BRANCHES:"
+    fi
+    cur_branch=`git branch | grep '^*' | awk '{ print $2 }'`
+    have_branches=0
+    for x in `git branch -a | sed 's/* //;s/^ *//' | awk '{ print $1 }'`; do
+        if [ "$x" != "$cur_branch" ]; then
+            git diff --quiet "$compare_ref" "$x"
+            if [ "0" -eq "$?" ]; then
+                echo "$prefix""$x"
+                have_branches=1
+            fi
+        fi
+    done
+    if [ "0" -eq "$have_branches" -a "1" -eq "$verbose" ]; then
+        echo "    (none)"
+    fi
+fi

@@ -1,0 +1,39 @@
+This directory is for sharing bash themes. To use a theme, just source it in
+your custom/*.bash script. For example:
+
+    source $BASH/custom/verbose.bash
+
+
+Theme-related settings could include:
+
+PS1                 What to display for the command prompt
+PROMPT_COMMAND      Command(s) to execute prior to issuing a bash prompt
+LS_COLORS           Usually set by running "eval `dircolors -b $HOME/.dir_colors`"
+
+
+To quickly view a sample of all of the themes, try this: (TODO)
+
+
+NOTE: These may be useful in PS1:
+    \a      an ASCII bell character (07)
+    \d      the date in "Weekday Month Date" format
+    \e      an ASCII escape character (033)
+    \h      the hostname up to the first `.'
+    \H      the hostname
+    \j      the number of jobs currently managed by the shell
+    \l      the basename of the shell's terminal device
+    \n      newline
+    \r      carriage return
+    \t      the current time in 24-hour HH:MM:SS format
+    \T      the current time in 12-hour HH:MM:SS format
+    \@      the current time in 12-hour am/pm format
+    \u      the username of the current user
+    \v      the version of bash (e.g., 2.00)
+    \V      the release of bash, version + patchlevel
+    \w      the current working directory
+    \W      the basename of the current working dir
+    \!      the history number of this command
+    \#      the command number of this command
+    \$      if the effective UID is 0, a #, otherwise a $
+    \\      a backslash
+

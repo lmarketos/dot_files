@@ -1,0 +1,11 @@
+#! /bin/bash
+#
+# NOTE: This file is used by the static_ip() bash function to configure a
+# network interface with a static IP address. Network daemons (eg,
+# knetworkmanager) should be disabled before running static_ip().
+
+export LOCAL_STATIC_IP_ADDRESS='192.168.0.1'
+export LOCAL_STATIC_HOSTNAME='localhost'
+export LOCAL_STATIC_NETMASK='255.255.0.0'
+export LOCAL_STATIC_BROADCAST_ADDR='192.168.255.255'
+export LOCAL_STATIC_DEVICE='eth0'

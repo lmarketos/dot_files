@@ -1,0 +1,71 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" -a "$#" -ne "2" ]; then
+    echo $0" -- simplify sshfs mounting"
+    echo
+    echo "Usage:"
+    echo 
+    echo $0" user@host"
+    echo "    - using sshfs, mount home directory of user@host at the mount point"
+    echo "          $HOME/remotes/user@host"
+    echo
+    echo $0" user@host:/some/dir/to/mount"
+    echo "    - using sshfs, mount home directory of user@host at the mount point"
+    echo "          $HOME/remotes/user@host__some_dir_to_mount"
+    echo
+    echo "specify -n as the first argument for a dry run"
+    echo
+    exit -1
+fi
+
+#
+# parse the command line
+#
+
+prefix=
+if [ "-n" == "$1" ]; then
+    prefix=echo
+    shift
+fi
+
+remote_user=`echo $1 | awk ' BEGIN { FS="@" } { print $1 }'`
+parse=`echo $1 | awk ' BEGIN { FS="@" } { print $2 }'`
+remote_host=`echo $parse | awk ' BEGIN { FS=":" } { print $1 }'`
+remote_dir=`echo $parse | awk ' BEGIN { FS=":" } { print $2 }'`
+
+if [ -z "$remote_host" ]; then
+    remote_host=$remote_user
+    remote_user=`whoami`
+fi
+
+#
+# create the mount point
+#
+
+if [ -z "$remote_dir" ]; then
+    mount_subdir="$remote_user""@""$remote_host"
+else
+    s=`echo $remote_dir | sed 's/\//_/g'`
+    mount_subdir="$remote_user""@""$remote_host""__""$s"
+fi
+
+full_mount_dir="$HOME""/remotes/""$mount_subdir"
+
+if [ ! -d "$full_mount_dir " ]; then
+    $prefix mkdir -p "$full_mount_dir"
+fi
+
+echo "using mount point: "$full_mount_dir
+
+#
+# mount using fuse and ssfs
+#
+
+sshfs_arg="$remote_user""@""$remote_host"
+if [ -z "$remote_dir" ]; then
+    sshfs_arg="$sshfs_arg"":"
+else
+    sshfs_arg="$sshfs_arg"":""$remote_dir"
+fi
+
+$prefix sshfs "$sshfs_arg" "$full_mount_dir"

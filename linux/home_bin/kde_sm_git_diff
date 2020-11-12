@@ -1,0 +1,32 @@
+#!/bin/bash
+
+for x in "$@"; do
+
+    cur=`pwd`
+    
+    if [ -d "$x" ]; then
+
+        cd $x
+
+        if [ -d ".git" ]; then
+            git diff
+            
+        else
+            git diff .
+            
+        fi
+        
+    else
+    
+        d=`dirname $x`
+        f=`basename $x`
+        
+        cd $d
+        
+        git diff $f
+        
+    fi
+    
+    cd $cur
+    
+done

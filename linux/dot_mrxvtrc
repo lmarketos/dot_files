@@ -1,0 +1,120 @@
+!! Setting 'saveLines' to a value larger than 65000 will cause it to be ignored
+Mrxvt.saveLines:                    65000
+Mrxvt.protectSecondary:             True
+Mrxvt.holdExit:                     0
+
+Mrxvt.scrollBar:                    False
+Mrxvt.scrollbarRight:               True
+Mrxvt.scrollbarStyle:               rxvt
+
+Mrxvt.scrollTtyOutputInhibit:       True
+Mrxvt.scrollTtyKeypress:            True
+Mrxvt.scrollWithBuffer:             True
+
+Mrxvt.showMenu:                     False
+Mrxvt.transparent:                  False
+Mrxvt.transparentTabbar:            True
+Mrxvt.bottomTabbar:                 False
+Mrxvt.foreground:                   white
+Mrxvt.background:                   black
+Mrxvt.tabForeground:                magenta
+Mrxvt.itabForeground:               white
+Mrxvt.itabBackground:               black
+Mrxvt.syncTabTitle:                 True
+Mrxvt.hideButtons:                  True
+!! 0 == completely transparent window
+Mrxvt.backgroundFade:               0
+!! Fade X% when losing focus
+Mrxvt.fading:                       30
+!! This prevents mrxvt from converting Meta-x to \ex (eg, ESCx)
+Mrxvt.meta8:                        True
+Mrxvt.cursorBlink:                  False
+
+!! This line avoids problems with MRXVT not being able to find the fonts
+Mrxvt.multichar_encoding:           noenc
+!Mrxvt.font:                        -bitstream-bitstream vera sans mono-medium-r-normal--15-0-0-0-m-0-ascii-0
+!Mrxvt.font:                        7x14
+!Mrxvt.font:                        8x16
+
+!!! Stuff for XFT fonts (but they render very slowly)
+Mrxvt.xft:                         true
+Mrxvt.xftNomFont:                  true
+Mrxvt.xftFont:                     Bitstream Vera Sans Mono
+Mrxvt.xftmFont:                    Bitstream Vera Sans Mono
+! Font to use in the tabs
+Mrxvt.xftPFont:                    Bitstream Vera Sans Mono
+Mrxvt.xftAntialias:                true
+Mrxvt.xftWeight:                   medium
+Mrxvt.xftSlant:                    roman
+Mrxvt.xftHinting:                  true
+Mrxvt.xftAutoHint:                 true
+Mrxvt.xftGlobalAdvance:            true
+Mrxvt.xftWidth:                    normal
+Mrxvt.xftRGBA:                     rgb
+Mrxvt.xftSize:                     9
+! Font size to use in the tabs
+Mrxvt.xftPSize:                    9
+Mrxvt.textShadow:                  black
+Mrxvt.textShadowMode:              none
+
+Mrxvt.minVisibleTabs:              10
+
+!!! Someone else's color prefs
+!Mrxvt.color0:                      black
+!Mrxvt.color1:                      #40e0d0
+!Mrxvt.color2:                      #87cefa
+!Mrxvt.color3:                      #ffff00
+!Mrxvt.color4:                      #d1eeee
+!Mrxvt.color5:                      #eed8ae
+!Mrxvt.color6:                      #b4eeb4
+!Mrxvt.color7:                      gray
+!Mrxvt.color8:                      gray40
+!Mrxvt.color9:                      #ee6363
+!Mrxvt.color10:                     #c5f779
+!Mrxvt.color11:                     #fff796
+!Mrxvt.color12:                     #00b2ee
+!Mrxvt.color13:                     #cf9ebe
+!Mrxvt.color14:                     #71bebe
+!Mrxvt.color15:                     white
+
+
+!Mrxvt.macro.Ctrl+Meta+t:           Dummy
+Mrxvt.macro.Ctrl+Meta+k:            Close 0
+Mrxvt.macro.Meta+i:                 NewTab
+Mrxvt.macro.Meta+n:                 GotoTab +1
+Mrxvt.macro.Meta+p:                 GotoTab -1
+Mrxvt.macro.Ctrl+Shift+Left:        MoveTab -1
+Mrxvt.macro.Ctrl+Shift+Right:       MoveTab +1
+!Mrxvt.macro.Ctrl+U:                Paste
+
+! Equivalent Konsole shortcuts
+Mrxvt.macro.Ctrl+Shift+n:           NewTab
+Mrxvt.macro.Ctrl+Meta+n:            NewTab
+Mrxvt.macro.Shift+Right:            GotoTab +1
+Mrxvt.macro.Shift+Left:             GotoTab -1
+
+! Disable these annoying shortcuts that change terminal font size
+Mrxvt.macro.Ctrl+Shift+plus:        Dummy
+Mrxvt.macro.Ctrl+Shift+underscore:  Dummy
+Mrxvt.macro.Ctrl+equal:             Dummy
+Mrxvt.macro.Ctrl+minus:             Dummy
+
+! Disable these shortcuts that switch tabs
+Mrxvt.macro.Alt+6:                  Dummy
+Mrxvt.macro.Alt+7:                  Dummy
+Mrxvt.macro.Alt+8:                  Dummy
+Mrxvt.macro.Alt+9:                  Dummy
+Mrxvt.macro.Alt+0:                  Dummy
+
+! save scrollback buffer to file
+Mrxvt.macro.Alt+s:                  PrintScreen -s /usr/local/bin/sponge mrxvt_output.txt
+
+
+
+!! Scrolling
+Mrxvt.macro.Primary+Shift+Prior:    Scroll -1p
+Mrxvt.macro.Primary+Shift+Next:     Scroll +1p
+Mrxvt.macro.Primary+Shift+Home:     Scroll -1000000
+Mrxvt.macro.Primary+Shift+End:      Scroll +1000000
+
+

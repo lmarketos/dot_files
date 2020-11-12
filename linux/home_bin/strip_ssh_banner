@@ -1,0 +1,135 @@
+#!/usr/bin/perl -w
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# Strip out issue.net
+#
+# -----------------------------------------------------------------------
+
+# The purpose of this script is to strip off the contents of issue.net.  This
+# can contain some standard boilerplate text, but may also be preceeded by
+# random junk, and trailed by blank lines.
+
+use strict;
+
+my @issue = (
+    "Lockheed Martin Missiles and Fire Control\n",
+    "\n",
+    "This system is the property of this corporation/organization, and is intended\n",
+    "for the use of authorized users only. All activities of individuals using this\n",
+    "computing system with or without authority or in excess of their authority, \n",
+    "may be monitored and recorded by appropriate company personnel. If any such\n",
+    "monitoring reveals possible evidence of criminal activity that may be in \n",
+    "violation of state or federal law, the company may provide such evidence to \n",
+    "law enforcement officials and/or use it for further legal action taken by this\n",
+    "corporation/organization\n",
+    "\n",
+    "Reminder: Information transmitted to a foreign person on this network may be \n",
+    "subject to US Export Control laws. Contact your Export Coordinator for \n",
+    "assistance.\n");
+
+# current line number of input
+my $num=0;
+
+# if currently matching contents of issue.net
+my $matching=0;
+
+# current index into @issue
+my $issue_index=0;
+
+# lines that may need to be printed
+my @saved_lines;
+
+# look at up to the first 10 lines; if the header is found, strip the header,
+# and any preceeding lines.  If the header is not found, print out all lines;
+# therefore, save lines until this decision is made
+while(my $line = <>)
+{
+    # did not find anything in the first 10 lines, print the current line, and
+    # get out of here
+    if($num > 10)
+    {
+        print @saved_lines;        
+        print $line;
+        @saved_lines = ();        
+        last;
+    }
+
+    if($line eq $issue[$issue_index])
+    {
+        # found the header
+        $matching=1;
+        @saved_lines = ();
+        $issue_index++;
+        last;
+    }
+    else
+    {
+        # did not find the header, save this line in case it needs to be
+        # printed later
+        @saved_lines = (@saved_lines, $line);
+    }
+    
+    $num++;
+}
+
+if($matching)
+{
+    # has the first non-blank line been found
+    my $nonblank=0;
+        
+    while(my $line = <>)
+    {
+        # if no more left of issue, get out
+        if($issue_index >= @issue)
+        {
+            if($line !~ /^ *\n/)
+            {
+                print $line;
+                $nonblank=1
+            }
+
+            last;
+        }
+
+        if($line ne $issue[$issue_index])
+        {
+            # print the line
+            if ( $line !~ /^ *\n/ )
+            {
+                print $line;
+            }
+            
+            last;
+        }
+        else
+        {
+            # suppress the line
+            $issue_index++;
+        }
+    }
+
+    # suppress input until first non-blank line is found
+    if(!($nonblank))
+    {
+        while(my $line = <>)
+        {
+            if($line !~ /^ *\n/)
+            {
+                print $line;
+                last;
+            }
+        }
+    }
+}
+else
+{
+    print @saved_lines;        
+}
+
+# print everything left
+print <>

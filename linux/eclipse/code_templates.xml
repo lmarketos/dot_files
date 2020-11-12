@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.constructorcomment_context" deleted="false" description="Comment for created constructors" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.constructorcomment" name="constructorcomment">//!</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.destructorcomment_context" deleted="false" description="Comment for created destructors" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.destructorcomment" name="destructorcomment">//!</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.filecomment_context" deleted="false" description="Comment for created C/C++ files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.filecomment" name="filecomment">//! /////////////////////////////////////////////////////////////////////////////
+//!
+//! @attention
+//! Copyright &amp;copy; ${year}, LOCKHEED MARTIN CORPORATION as an unpublished work.
+//! All rights reserved. This computer software is PROPRIETARY INFORMATION of
+//! Lockheed Martin Corporation and shall not be reproduced, disclosed or used
+//! without written permission of Lockheed Martin Corporation.
+//! 
+//! @file
+//!
+//! //////////////////////////////////////////////////////////////////////////////</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.typecomment_context" deleted="false" description="Comment for created classes" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.typecomment" name="typecomment">//!</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.fieldcomment_context" deleted="false" description="Comment for fields" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.fieldcomment" name="fieldcomment">//!</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.methodcomment_context" deleted="false" description="Comment for methods" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.methodcomment" name="methodcomment">//! [General explanation of what the function does]
+//! @param aParam1 [explanation of what this param is]
+//! @param aParam2 [explanation ... (special note for a default value)]
+//! @return [explanation of return value]
+//! @post [exception-safety guarantee]
+//! @throw exception1 [what will trigger this exception]
+//! @throw exception2 [trigger... all exceptions thrown directly by this
+//! function should be listed]</template><template autoinsert="false" context="org.eclipse.cdt.core.cxxSource.contenttype_context" deleted="false" description="Default template for newly created C++ source files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cppsourcefile" name="Default C++ source template">${filecomment}
+
+${includes}
+
+${namespace_begin}
+
+${declarations}
+
+${namespace_end}</template><template autoinsert="false" context="org.eclipse.cdt.core.cxxSource.contenttype_context" deleted="false" description="Default template for newly created C++ test files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cpptestfile" name="Default C++ test template">${filecomment}
+
+${includes}
+
+${namespace_begin}
+
+${declarations}
+
+${namespace_end}</template><template autoinsert="false" context="org.eclipse.cdt.core.cxxHeader.contenttype_context" deleted="false" description="Default template for newly created C++ header files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cppheaderfile" name="Default C++ header template">${filecomment}
+
+#ifndef ${include_guard_symbol}
+#define ${include_guard_symbol}
+
+${includes}
+
+${namespace_begin}
+
+${declarations}
+
+${namespace_end}
+
+#endif // ${include_guard_symbol}</template><template autoinsert="false" context="org.eclipse.cdt.core.cSource.contenttype_context" deleted="false" description="Default template for newly created C source files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.csourcefile" name="Default C source template">${filecomment}
+
+${includes}
+
+${declarations}</template><template autoinsert="false" context="org.eclipse.cdt.core.cHeader.contenttype_context" deleted="false" description="Default template for newly created C header files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cheaderfile" name="Default C header template">${filecomment}
+
+#ifndef ${include_guard_symbol}
+#define ${include_guard_symbol}
+
+${includes}
+
+${declarations}
+
+#endif // ${include_guard_symbol}</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.namespace_context" deleted="false" description="Beginning of namespace declaration" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.namespace_begin" name="namespace_begin">namespace ${namespace_name} {</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.namespace_context" deleted="false" description="End of namespace declaration" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.namespace_end" name="namespace_end">} // namespace ${namespace_name}</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.class_context" deleted="false" description="Code in created class definitions" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.class_body" name="class_body">${declarations}</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.methodbody_context" deleted="false" description="Code in created method stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.methodbody" name="methodbody">	//! @todo Auto-generated method stub
+	${body_statement}</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.constructorbody_context" deleted="false" description="Code in created constructor stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.constructorbody" name="constructorbody">	//! @todo Auto-generated constructor stub
+	${body_statement}</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.destructorbody_context" deleted="false" description="Code in created destructor stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.destructorbody" name="destructorbody">	${body_statement}
+	//! @todo Auto-generated destructor stub</template><template autoinsert="true" context="org.eclipse.cdt.core.asmSource.contenttype_context" deleted="false" description="Default template for newly created assembly files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.asmsourcefile" name="Default assembly template">${filecomment}
+</template><template autoinsert="true" context="org.eclipse.core.runtime.text.contenttype_context" deleted="false" description="Default template for newly created text files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.textfile" name="Default text file template">${file_name}
+ Created on: ${date}
+     Author: ${user}
+
+</template><template autoinsert="false" context="org.eclipse.core.runtime.text.contenttype_context" deleted="false" description="template sconscript for an application" enabled="true" name="SConscript for application">#! /usr/bin/scons -u
+# -----------------------------------------------------------------------
+# @attention
+# Copyright &amp;copy; ${year}, LOCKHEED MARTIN CORPORATION as an unpublished work.
+# All rights reserved. This computer software is PROPRIETARY INFORMATION of
+# Lockheed Martin Corporation and shall not be reproduced, disclosed or used
+# without written permission of Lockheed Martin Corporation.
+# -----------------------------------------------------------------------
+
+# The 'buildUtil' module contains helper utilities to ensure that certain steps
+# in our build process are consistent across all modules that we will build.
+import buildUtil
+import os.path
+
+# IMPORTANT - Always use a standard construction environment
+env = buildUtil.GetEnv()
+
+# Get compiler flags for our dependencies.
+# Note: Only *direct* dependencies need be listed here.
+# See AddFlagsForDepends() documentation in buildUtil.py for more info.
+#buildUtil.AddFlagsForDepends(env, [ 'lib1', 'lib2' ])
+
+# Add compiler flags that are required by this module.  Note: The
+# AddFlagsForDepends() call above will add flags needed for those dependencies.
+#env.AppendUnique( CPPDEFINES = ['FOO', 'BAR=13' ] )     # -DFOO -DBAR=13
+
+# Define the name of the lib/jar/executable that will be built.  Default to use
+# the name of the directory where the app is stored (ie, the tail of the PWD).
+target = os.path.basename(os.getcwd())
+
+
+# Build an executable from all of the .cpp files and install it
+app = env.Program(target = target,
+                  source = Glob('*.cpp'))
+
+buildUtil.InstallBin(env, app)
+
+</template><template autoinsert="false" context="org.eclipse.core.runtime.text.contenttype_context" deleted="false" description="template SConscript for a library" enabled="true" name="SConscript for library">#! /usr/bin/scons -u
+# -----------------------------------------------------------------------
+# @attention
+# Copyright &amp;copy; ${year}, LOCKHEED MARTIN CORPORATION as an unpublished work.
+# All rights reserved. This computer software is PROPRIETARY INFORMATION of
+# Lockheed Martin Corporation and shall not be reproduced, disclosed or used
+# without written permission of Lockheed Martin Corporation.
+# -----------------------------------------------------------------------
+
+# The 'buildUtil' module contains helper utilities to ensure that certain steps
+# in our build process are consistent across all modules that we will build.
+import buildUtil
+
+# IMPORTANT - Always use a standard construction environment
+env = buildUtil.GetEnv()
+
+# Get compiler flags for our dependencies.
+# Note: Only *direct* dependencies need be listed here.
+# See AddFlagsForDepends() documentation in buildUtil.py for more info.
+#buildUtil.AddFlagsForDepends(env, [ 'lib1', 'lib2' ])
+
+# Add compiler flags that are required only for this module.  Note: The
+# AddFlagsForDepends() call above will add flags needed for those dependencies,
+# so it should rarely be necessary to manually add flags as shown below. If it
+# is necessary, and if the flags should also be used to compile anything that
+# links with this library (eg, -D defines that are used in headers), then the
+# flags must also be passed in to the DefineDependency() call below. See SCons
+# manpage for documentation of the variables listed below.
+#env.AppendUnique( CPPDEFINES = [ 'FOO', 'BAR=13' ],              # -DFOO -DBAR=13
+#                  CXXFLAGS   = [ '-fPIC', '-pipe' ],             # add misc C++ compiler flags
+#                  CPPPATH    = [ '#foo/bar', 'foo/baz' ],        # -I/path/to/src/top/level/foo/bar -Ifoo/baz
+#                  CCFLAGS    = [ '-isystem/usr/foo/include' ],   # use -isystem instead of -I for system-level headers that scons should not scan for dependencies (since system-level files rarely change; this helps scons run faster, and&gt;
+#                  LIBPATH    = [ '/usr/foo/lib' ],               # -L/usr/foo/lib
+#                  LIBS       = [ 'foo' ],                        # -lfoo
+#                  LINKFLAGS  = [ '-Wl,-rpath=/usr/foo/lib' ] )   # add misc flags needed by the linker
+
+# Define the name of the lib/jar/executable that will be built.
+# GetTargetNameFromPWD() just returns the name of the current directory for now.
+target = buildUtil.GetTargetNameFromPWD()
+
+# Add this module to the build system's dependency database, and define what
+# compile flags others must use if they depend on this library. See
+# DefineDependency() documentation in buildUtil.py for more info.
+buildUtil.DefineDependency(target, env)
+
+
+# Build a shared library from all of the .cpp files and install it
+lib = env.SharedLibrary(target = target,
+                        source = Glob('*.cpp'))
+
+buildUtil.InstallLib(env, lib)
+</template></templates>

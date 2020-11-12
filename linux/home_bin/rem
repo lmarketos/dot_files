@@ -1,0 +1,34 @@
+#! /bin/bash
+
+removeDirs=0
+if [[ "$1" == "-h" ]]; then
+    echo "This script is the same as the 'rm' command, but it"
+    echo "lists everything and asks for confirmation before it"
+    echo "deletes anything."
+    echo "Usage: $0 [-d] <files_to_delete>"
+    echo "      -d  remove directories too (if this isn't specified,"
+    echo "          then directory arguments will be ignored)."
+    exit 0
+elif [[ "$1" == "-d" ]]; then
+    removeDirs=1
+    shift
+fi
+
+#list all files that were passed in as arguments (ie, $1, $2, ...)
+ls -ad --color=auto "$@"
+
+if [[ "$removeDirs" == "1" ]]; then
+    echo -n "Remove all? (INCLUDING DIRS!!)  (y/n) "
+else
+    echo -n "Remove all? (Directories will not be removed.) (y/n) "
+fi
+read RESPONSE
+
+if test "$RESPONSE" = "y"; then
+    if [[ "$removeDirs" == "1" ]]; then
+        rm -rvf "$@";
+    else
+        rm "$@";
+    fi
+fi
+

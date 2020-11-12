@@ -1,0 +1,34 @@
+echo "**********************************************************************"
+echo ""
+echo "using ~/.kermrc"
+echo ""
+echo "**********************************************************************"
+
+set parity none
+set stop-bits 1
+set serial 8n1
+
+set modem type none
+
+set carrier-watch off
+
+set flow none
+
+set duplex full
+
+set disconnect off
+
+
+echo "You must now specify a port & speed.  For example:"
+echo
+echo "    set line /dev/usb/ttyUSB0"
+echo "    set speed 19200"
+echo
+echo "    set line /dev/ttyS1"
+echo "    set speed 115200"
+echo
+echo "tip: use \"show communications\" to see settings"
+echo "tip: use \"connect\" to exit interactive commands and get to the serial port"
+echo "tip: use Ctrl-\\ C to get back to interactive commands"
+echo
+

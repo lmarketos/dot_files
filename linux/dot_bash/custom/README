@@ -1,0 +1,24 @@
+This directory is where users should put their own scripts to override or add to
+the default bash configuration defined in the other directories.
+
+Examples of things you may want to do in this directory:
+
+1) Override important environment variables. For example:
+
+    export EDITOR=
+    export FCEDIT=          # editor to use to edit bash commands (see 'help fc')
+    export XEDITOR=
+    export GIT_EDITOR=      # editor to use to edit git log messages, etc.
+    export PAGER=
+    export MANPAGER=        # pager to use for viewing man pages
+
+2) Copy-paste useful things from .bash/*/*optional* scripts.
+
+3) Personal aliases and functions that other users probably aren't interested in
+   (if others might be interested in them, please request them to be included in
+   the standard .bash/*/*.bash scripts).
+
+4) Source one of the scripts in the .bash/themes directory.
+
+5) Temporary or project-specific stuff that you don't want to mix with other configs.
+

@@ -1,0 +1,242 @@
+#!/bin/bash
+
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# Create an empty repository on a server, push the current repository to the
+# copy, and then change the origin of the current repository to be the
+# repository on the server.
+#
+# -----------------------------------------------------------------------
+
+
+
+# if non-zero, a specified local repository that is not actually a git
+# repository is made to be a git repository via git-init
+MAKE_REPO=0
+
+# group for the repository on the server
+SHARED_GROUP=perceptek
+
+# hostname for the server
+SHARED_HOST=lit3lisa
+
+# directory on the server in which to place the respository
+SHARED_DIR=/gitroot
+
+# user name on the server
+SHARED_USER=`whoami`
+
+
+
+# ----------------------------------------------------------------------
+
+# used to prefix git, ssh, and scp commands, used for "dry-run"
+unset cmd_prefix
+
+
+
+function usage()
+{
+    echo `basename $0`" : create a shared git repository on a server"
+    echo
+    echo
+    echo "Usage:"
+    echo
+    echo `basename $0`" [-a] [-d DIR] [-g GROUP] [-n] [-o HOST] [-u USER] [repo 1] ... [repo N]"
+    echo
+    echo "This script performs actions for each of the repositories [repo 1] ... [repo N"
+    echo "specified on the command line.  If no repositories are specified, the current"
+    echo "directory is used by default."
+    echo
+    echo
+    echo "Options:"
+    echo
+    echo "-a"
+    echo "    If a specified local repository is not actually a git repository, make"
+    echo "    it a git repository first via git-init."
+    echo
+    echo "-d DIR"
+    echo "    Create the repository on the server in the directory specified by DIR."
+    echo "    If not specified, the default value of \"${SHARED_DIR}\" will be used."
+    echo
+    echo "-g GROUP "
+    echo "    Set group ownership of the repository on the server to be GROUP."
+    echo "    If not specified, the default value of \"${SHARED_GROUP}\" will be used."
+    echo
+    echo "-n "
+    echo "    This option instructs the scripts to generate all git, scp, and ssh"
+    echo "     commands, but instead of actually executing them, just print them out."
+    echo "     A \"dry run.\""
+    echo
+    echo "-o HOST "
+    echo "    Use the server specified by HOST to copy repositories to.  If not specified,"
+    echo "    the default value of \"${SHARED_HOST}\" will be used."
+    echo
+    echo "-u USER "
+    echo "    Access the server as user USER.  If not specified, the current user's name"
+    echo "    is used."
+    echo
+}
+
+
+
+# show an error message and quit
+function die()
+{
+    echo "$@"
+    exit -1
+}
+
+
+
+# parse the command line
+while [ -n "$1" ]; do
+
+    case $1 in
+
+        -a)
+            MAKE_REPO=1
+            shift
+            ;;
+        
+        -d)
+            shift
+            SHARED_DIR=$1
+            shift
+            ;;
+        
+        -g)
+            shift
+            SHARED_GROUP=$1
+            shift
+            ;;
+        
+        -h|--help)
+            usage
+            shift
+            exit 0
+            ;;
+
+        -n)
+            cmd_prefix=echo
+            shift
+            ;;
+
+        -o)
+            shift
+            SHARED_HOST=$1
+            shift
+            ;;
+
+        -u)
+            shift
+            SHARED_USER=$1
+            shift
+            ;;
+        
+        *)
+            break;
+            ;;
+        
+    esac
+    
+done
+
+
+
+# repositories to operate on
+unset dirs
+
+if [ -n "$1" ]; then
+    while [ -n "$1" ]; do
+        dirs=$dirs" "$1
+        shift
+    done
+else
+    dirs="."
+fi
+
+
+
+working_dir=`pwd`
+
+
+for d in $dirs; do
+
+    cd $working_dir
+    
+    is_repo=0
+    if [ -d "${d}/.git" ]; then
+        # non-bare repository
+        is_repo=1
+    elif [ -d "${d}/objects" -a -d "${d}/refs" ]; then
+        # bare repository
+        is_repo=1
+    fi
+
+    if [ "0" -eq "$is_repo" ]; then
+        if [ "0" -ne "$MAKE_REPO" ]; then
+
+            cd $d
+
+            git init || die "*** ERROR: git-init failed"
+            git add . || die "*** ERROR: git-add failed"
+            git commit -m 'repository creation' || die "*** ERROR: git-commit failed"
+            
+            cd $working_dir
+            
+        else
+            die "*** ERROR: directory $d is not a git repository; either make it so yourself or specify -a on the command line"
+        fi
+    fi
+
+    cd $d
+    repo=`pwd`
+    name=`basename $repo`
+
+    # create an empty repository
+    t=`mktemp -d -t publish.XXX`
+    if [ "0" -ne "$?" ]; then
+        die "*** ERROR: mktemp failed"
+    fi
+    cd $t
+    $cmd_prefix git init --bare --shared=group || die '*** ERROR: git-init failed'
+
+    # copy the empty repository to the server
+    cd ..
+    echo "*** Copying bare repository to the server ${SHARED_HOST} via scp ${SHARED_USER}@${SHARED_HOST}"
+    $cmd_prefix scp -r -p $t ${SHARED_USER}@${SHARED_HOST}:${SHARED_DIR}/${name} || die '*** ERROR: scp failed'
+    echo "*** Changing group ownership of repository via ssh ${SHARED_USER}@${SHARED_HOST}"
+    $cmd_prefix ssh ${SHARED_USER}@${SHARED_HOST} "chgrp -R $SHARED_GROUP ${SHARED_DIR}/${name}" || die '*** ERROR: chgrp failed'
+    rm -rf $t
+
+    # change the origin of the current repository to point to the repository on the sserver
+    cd $repo
+
+    $cmd_prefix git remote rm origin > /dev/null 2>&1
+    $cmd_prefix git remote add origin ${SHARED_USER}@${SHARED_HOST}:${SHARED_DIR}/${name} || die '*** ERROR: git-remote failed'
+    $cmd_prefix git config branch.master.remote origin || die '*** ERROR: git-config failed'
+    $cmd_prefix git config branch.master.merge refs/heads/master || die '*** ERROR: git-config failed'
+
+    # push content to the repostory on the server; git-push arguments --all and --tags may be useful to streamline this
+    $cmd_prefix git push origin refs/heads/*:refs/heads/* || die '*** ERROR: git-push failed for heads'
+    $cmd_prefix git push origin refs/tags/*:refs/tags/* || die '*** ERROR: git-push failed for tags'
+
+    # .git/refs/remotes/origin/HEAD may be missing for some reason; without
+    # it, shortcuts like "git merge origin" do not work.  Create it.  This may
+    # really indicate a missing step above.
+    if [ ! -f ".git/refs/remotes/origin/HEAD" ]; then
+        if [ -z "$cmd_prefix" ]; then
+            echo 'ref: refs/remotes/origin/master' > .git/refs/remotes/origin/HEAD
+        else
+            echo 'echo ref: refs/remotes/origin/master > .git/refs/remotes/origin/HEAD'
+        fi
+    fi
+    
+    $cmd_prefix git remote show origin
+done

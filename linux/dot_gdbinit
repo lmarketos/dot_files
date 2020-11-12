@@ -1,0 +1,54 @@
+# gdb init file
+
+echo --- begin ~/.gdbinit ---\n
+
+#show version
+#set prompt (gdb) >>
+#set history filename ~/.gdb_history
+#set history save on
+#set verbose on
+#set complaints 10
+
+
+define jmn
+  set print pretty on
+  set print object on
+  set print static-members on
+  set print vtbl on
+  set print demangle on
+  set demangle-style gnu-v3
+end
+
+
+# use "set args" to set program arguments
+define prun
+  set auto-solib-add 1
+  tbreak main
+  run
+  set auto-solib-add 0
+end
+
+
+echo setting LD_BIND_NOW\n
+set env LD_BIND_NOW=1
+
+echo loading stl-views.gdb
+source ~/bin/stl-views.gdb
+
+echo \n
+echo \n
+echo b main
+echo \n
+echo \n
+echo info functions\n
+echo info sharedlibrary\n
+echo info source\n
+echo info sources\n
+echo \n
+echo \n
+echo try:\n
+echo set ags\n
+echo prun\n
+echo \n
+
+echo --- end ~/.gdbinit ---\n

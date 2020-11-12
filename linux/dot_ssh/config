@@ -1,0 +1,21 @@
+# Comment out this entry by default since the 'User *' prevents ssh from
+# assuming the remote hostname is the same as the current hostname (ie, it
+# forces you to always explicitly provide the username).
+#Host *
+#User *
+#ForwardX11 yes
+#ForwardX11Trusted yes
+#ForwardAgent yes
+
+#-----------------------------------
+# Other potentially-useful options:
+
+#Compression yes
+
+# 1 is fastest, 9 is slowest
+#CompressionLevel 1
+
+#FallBackToRsh no
+#KeepAlive yes
+
+#ServerAliveInterval 300

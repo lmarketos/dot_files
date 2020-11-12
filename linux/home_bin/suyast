@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+#   Description:
+#    Launches the gui version of yast as root, using sudo and
+#    xhost.  Optionally adds ability to launch specific modules.
+#
+#   Author: jeffrey.eberl@lmco.com
+#
+
+
+# Print Help
+function use()
+{
+    echo `basename $0`" [optional arguments to yast2]"
+    echo;
+    echo "Interesting options include: " 
+    echo "edit your proxy settings     -> "`basename $0`" proxy"
+    echo "Repo Manager                 -> "`basename $0`" repositories"
+    echo "Online Update                -> "`basename $0`" online_update"
+    echo "Software Manager             -> "`basename $0`" --install or -i"
+    echo "Install an rpm               -> "`basename $0`" -i /path/to/rpm.rpm"
+    echo "Install a package by name    -> "`basename $0`" -i program_name"
+#   echo "List all modules             -> "`basename $0`" -l"
+}
+
+# parse command line options intended for *this* script
+while [ -n "$1" ]; do
+    case $1 in
+
+        -h)
+            use
+            shift
+            exit 0
+            ;;
+
+        *)
+            break;
+            ;;
+    esac
+done
+
+# Get the password from the user.
+sudo echo Password Accepted
+
+# Don't export X unless we got the password right
+xhost + local:root@
+
+# Password should be cached, so this should work.
+sudo -E /sbin/yast2 $@&

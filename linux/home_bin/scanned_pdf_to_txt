@@ -1,0 +1,26 @@
+#!/bin/bash
+
+input=$1
+
+if [ -z "$input" ]; then
+    echo "error - specify pdf"
+    exit -1
+fi
+
+output=( "${input/.pdf/.txt}" )
+
+DPI='300'
+PDF_DPI="-r ${DPI}"
+TIFF_DPI="-R ${DPI}"
+
+rm -f "${output}"
+
+pdftoppm ${PDF_DPI} "$input" foo
+
+for x in `ls -1 foo*.ppm`; do
+    ppm2tiff ${TIFF_DPI} "$x" out.tif
+    tesseract out.tif tmp.txt
+    cat tmp.txt.txt >> "$output"
+done
+
+rm -f foo*.ppm out.tif tmp.txt.txt

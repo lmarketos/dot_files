@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" ]; then
+    echo $0" -- simplify sshfs umount"
+    echo
+    echo "Usage:"
+    echo 
+    echo $0" user@host"
+    echo "    - using sshfs, unmount home directory of user@host at the mount point"
+    echo "          $HOME/remotes/user@host"
+    echo
+    echo $0" user@host:/some/dir/to/mount"
+    echo "    - using sshfs, unmount home directory of user@host at the mount point"
+    echo "          $HOME/remotes/user@host_sim_dir_to_mount"
+    echo
+    exit -1
+fi
+
+d=`sshfs_create -n "$*" | sed '/^using mount point: /!d;s/.*: //'`
+fusermount -u "$d"
+if [ "0" -eq "$?" ]; then
+    c=`ls -1A "$d" | wc -l`
+    if [ "0" -eq "$c" ]; then
+        echo "removing empty mount point: "$d
+        rm -rf "$d"
+    else
+        echo "WARNING!  Mount point is not empty!"
+        echo $d
+    fi
+fi
+

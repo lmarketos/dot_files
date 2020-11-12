@@ -1,0 +1,14 @@
+#!/bin/bash
+
+for x in "$@"; do
+    cur=`pwd`
+    if [ -d "$x" ]; then
+        cd $x
+        git gui citool
+    else
+        d=`dirname $x`
+        cd $d
+        git gui citool
+    fi  
+    cd $cur
+done

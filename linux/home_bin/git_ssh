@@ -1,0 +1,197 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+#
+# Copyright 2009 Lockheed Martin Corporation.
+#
+# Author: Jeremy M. Nett
+#
+# ssh wrapper for git
+# - invokes strip_ssh_banner to remove ssh banners (/etc/issue.net)
+# - optionally uses control mastering to speed up operations over multiple
+#   repositories
+#
+# -----------------------------------------------------------------------
+
+
+
+# it may be possible just to redirect stderr to a file, and then if ssh did
+# not return with an exit code indicating an error, just delete the file;
+# otherwise, print out the file, header included; this would save the effort
+# of strip_ssh_banner
+
+
+# set to non-zero to enable a log for this script
+enable_logging=0
+
+# log filename for this script
+u=`whoami`
+log_filename=/tmp/git_ssh_log-${u}.txt
+
+# set to non-zero to enable ssh control mastering
+do_control_mastering=1
+
+# -----------------------------------------------------------------------
+
+
+# write a message to the log for this script
+function log()
+{
+    if [ "0" -ne "$enable_logging" ]; then
+        echo `date`" : ""$@" >> $log_filename
+    fi
+}
+
+
+log "------------------------------------------------------------------------------"
+log "BEGIN $0"
+log "$@"
+log
+
+# cleanup of stale ssh control mastering sockets
+if [ "1" -eq "$do_control_mastering" -a -d "~/.ssh" ]; then
+    pushd ~/.ssh > /dev/null 2>&1
+    p=`pwd`
+    sockets_open=`lsof +D $p | sed '1d;/git-ssh/!d' | awk ' { print $8 } '`
+    for x in `ls -1 git-ssh-* 2> /dev/null`; do
+        open=0
+        for y in $sockets_open; do
+            if [ "${p}/${x}" == "$y" ]; then
+                log "socket $x is open"
+                open=1
+                break
+            fi
+        done
+        if [ "0" -eq "$open" ]; then
+            log "removing stale socket $x"
+            rm $x
+        fi
+    done
+    popd > /dev/null 2>&1
+    unset p
+    unset sockets_open
+    unset x
+    unset y
+fi
+
+# parsed remote user and host that ssh will be accessing
+unset remote_user
+unset remote_host
+
+if [ "0" -ne "$do_control_mastering" ]; then
+
+    # try and figure out the remote user and host that ssh will be accessing
+    for x in "$@"; do
+        test_remote_user=`echo $x | awk ' BEGIN { FS="@" } { print $1 } '`
+        test_remote_host=`echo $x | awk ' BEGIN { FS="@" } { print $2 } '`
+        if [ -n "$test_remote_user" -a -n "$test_remote_host" ]; then
+            remote_user=$test_remote_user
+            remote_host=$test_remote_host
+            break
+        fi
+    done
+
+    if [ -n "$remote_user" -a -n "$remote_host" ]; then
+        do_control_mastering=1
+    else
+        # if it was not possible to figure out the remote user and host, then
+        # we cannot do control mastering
+        do_control_mastering=0
+        unset remote_user
+        unset remote_host
+    fi
+fi
+
+# the socket filename for ssh control mastering
+unset control_master_socket
+
+if [ -n "$remote_user" -a -n "$remote_host" -a -d "$HOME/.ssh" -a "0" -ne "$do_control_mastering" ]; then
+
+    this_host=`hostname -s`
+    control_master_socket=~/.ssh/git-ssh-${remote_user}-${remote_host}-${this_host}
+
+    need_setup=0
+
+    if [ ! -S "$control_master_socket" ]; then
+        need_setup=1
+        log "control master socket does not exist; need to setup"
+    else
+        ssh -O check -S $control_master_socket ${remote_user}@${remote_host} < /dev/null > /dev/null 2>&1
+        c=$?
+        if [ "0" -ne "$c" ]; then
+            need_setup=1
+            log "control master socket file exists, but master not responsive; need to setup"
+        fi
+    fi
+    
+    if [ "1" -eq "$need_setup" ]; then
+        log "setting up control mastering socket: "${control_master_socket}
+        log "remote user = "${remote_user}
+        log "remote host = "${remote_host}
+        rm -f $control_master_socket
+
+        # note: redirection of stdout and stderr to /dev/null is necessary to
+        # prevent possible hangs; this seems like a bug with ssh...?
+        ssh -o TCPKeepAlive=yes -o ServerAliveCountMax=10 -o ServerAliveInterval=15 -fMNnx -S $control_master_socket ${remote_user}@${remote_host} < /dev/null > /dev/null 2>&1
+        rv=$?
+        pid=$$
+        if [ "0" -ne "$rv" ]; then
+            log "problem starting ssh socket master session, exit code $rv"
+            exit -1
+        else
+            log "ssh socket master session started, exit code $rv pid $pid"            
+        fi
+
+        count=0
+        good=0
+        while [ "1" -ne "$good" -a "$count" -lt "10" ]; do
+            ssh -O check -S $control_master_socket ${remote_user}@${remote_host} < /dev/null > /dev/null 2>&1
+            c=$?
+            if [ "0" -eq "$c" ]; then
+                log "ssh master is running"
+                good=1
+            else
+                log "waiting for a responsive ssh master..."
+                sleep 1
+                let count="$count+1"
+            fi
+        done
+
+        if [ "1" -ne "$good" ]; then
+            log "failed to verify that ssh master is running"
+            exit -1
+        fi
+    fi
+fi
+
+
+# temp file for storing stderr from ssh; this will be parsed after ssh exits 
+t=`mktemp -t ssh_stderr.XXX`
+
+# exit code from ssh
+unset exit_val
+
+# invoke ssh
+if [ "1" -eq "$do_control_mastering" ]; then
+    log "using control mastering for ssh access: "${control_master_socket}
+    log "remote user = "${remote_user}
+    log "remote host = "${remote_host}
+    ssh -x -S $control_master_socket "$@" 2> $t
+    exit_val=$?
+    log "ssh socket master client exited, exit code $exit_val"
+else
+    ssh "$@" 2> $t
+    exit_val=$?
+    log "ssh client exited, exit code $exit_val"
+fi
+
+# parse stderr from ssh, and invoke strip_ssh_banner to remove /etc/issue.net
+cat $t | strip_ssh_banner >&2
+rm -f $t
+
+log "END $0"
+log
+log
+log
+
+exit $exit_val

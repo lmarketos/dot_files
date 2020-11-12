@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="comment for breaking up a function into sections" enabled="true" name="lm_block_comment">// ------------------------------------------------------------------------
+// ${cursor}
+// ------------------------------------------------------------------------</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="create a new class with a logger and a params class" enabled="true" name="lm_class_with_logger_and_params">#include &lt;Lmas/Configuration/ParamsClass.h&gt;
+#include &lt;Lmas/Logging/Logging.h&gt;
+
+
+DECLARE_PARAMS_CLASS(${class_name}Params,
+    (( ${var_name}, (${type}), (${default_value}), ${var_name}, "${description}" )) );
+
+class ${class_name}
+{
+public:
+    ${class_name}(const boost::property_tree::ptree&amp; aPtree) :
+        mpLog( lmas::GetLoggerInstance("${class_name}") )
+    {
+        mParams.SetAll(aPtree);
+    }
+    
+    ${cursor}
+    
+private:
+    lmas::LoggerPtr mpLog;
+    ${class_name}Params mParams;
+};</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="print a variable" enabled="true" name="lm_debug">LMAS_DEBUG( LMAS_LABEL( ${cursor} ) );</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="print a variable" enabled="true" name="lm_error">LMAS_ERROR( LMAS_LABEL( ${cursor} ) );</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="print a variable" enabled="true" name="lm_info">LMAS_INFO( LMAS_LABEL( ${cursor} ) );</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="find a configuration file" enabled="true" name="lm_locate_file">boost::filesystem::path ${return_var} LocateFile(${var});</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="create a new lmas logger" enabled="true" name="lm_logger">lmas::LoggerPtr mpLog = lmas::GetLoggerInstance("${logger_name}");</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="new main function with typical lmas code" enabled="true" name="lm_main">#include &lt;Lmas/ErrorHandling/CatchAll.h&gt;
+
+
+int main(int argc, char* argv[]) try
+{
+    ${cursor}
+    
+    return EXIT_SUCCESS;
+}
+CATCH_ALL_EXCEPTIONS( return EXIT_FAILURE )</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="create a params class" enabled="true" name="lm_params_class">#include &lt;Lmas/Configuration/ParamsClass.h&gt;
+
+DECLARE_PARAMS_CLASS(${params_class_name},
+    (( ${var_name}, (${type}), (${default_value}), ${var_name}, "${description}" )) );</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="boost program options stub" enabled="true" name="lm_program_options">${type} ${var};
+
+using boost::program_options::value;
+
+boost::program_options::options_description desc("Allowed options");
+desc.add_options()
+    ("help,h", "produce help message")
+    ("${long_name},${short_name}", value&lt;${type}&gt;(&amp;${var})-&gt;required(), "${description}");
+
+boost::program_options::variables_map vm;
+boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(desc).run(), vm);
+
+if (vm.count("help"))
+{
+    LMAS_INFO(desc);
+    return EXIT_SUCCESS;
+}
+
+boost::program_options::notify(vm);</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="create a basic signal handler" enabled="true" name="lm_signal_handler">#include &lt;Lmas/Core/SignalHandler.h&gt;
+
+// -------------------------------------------------------------------
+// for SignalHandler
+// -------------------------------------------------------------------
+bool gQuit = false;
+void HandleSignal(int)
+{
+    LMAS_WARN( "Received interrupt signal, shut down the app" );
+    gQuit = true;
+}
+
+lmas::SignalHandler exitSigHandler(
+        lmas::SignalHandler::INT_MASK  |
+        lmas::SignalHandler::QUIT_MASK |
+        lmas::SignalHandler::TERM_MASK,
+        HandleSignal);</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.templates.c" deleted="false" description="print a variable" enabled="true" name="lm_warn">LMAS_WARN( LMAS_LABEL( ${cursor} ) );</template></templates>

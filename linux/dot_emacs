@@ -1,0 +1,18 @@
+(require 'bytecomp)
+
+;; sometimes when byte compiling, things blow up with the error message:
+;;    symbol's value as a variable is void warning-suppress-types
+;; this is a workaround
+(setq warning-suppress-types nil)
+
+(defun byte-compile-if-newer (file)
+  "Byte compile file.el if newer than file.elc, or if file.elc does not exist"
+  (if (or (file-newer-than-file-p (concat file ".el") (concat file ".elc"))
+          (not (file-exists-p (concat file ".elc"))))
+      (progn
+        (byte-compile-file (concat file ".el"))
+        (message (concat "byte compiled " file " to produce " (concat file ".elc")))
+        )))
+
+(byte-compile-if-newer "~/.emacs_real")
+(load "~/.emacs_real")

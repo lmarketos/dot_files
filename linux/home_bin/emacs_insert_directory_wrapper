@@ -1,0 +1,3 @@
+#!/bin/sh
+# set LC_ALL to en_US so that sorting by name is case-insensitive
+LC_ALL=en_US ls "$@"

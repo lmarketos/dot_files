@@ -1,0 +1,46 @@
+#!/bin/bash
+
+pushd ~/VM > /dev/null 2>&1
+if [ "0" -ne "$?" ]; then
+    echo "*** ERROR: ~/VM does not exist"
+fi
+
+echo "*** restarting vmware server"
+
+echo "stopping..."
+sudo /etc/rc.d/vmware stop
+if [ "0" -ne "$?" ]; then
+    echo "ERROR -- failed to stop vmware service!"
+    exit -1
+fi
+
+echo "issuing SIGINT to vmnet-natd"
+sudo pkill -SIGINT -u root -f 'vmnet-natd'
+
+echo "starting..."
+sudo /etc/rc.d/vmware start
+if [ "0" -ne "$?" ]; then
+    echo "ERROR -- failed to start vmware service!"
+    exit -1
+fi
+
+net=`ls -1 /dev/vmnet* | wc -l`
+if [ "0" -eq "$net" ]; then
+    echo "ERROR -- vmnet devices do not exist in /dev, something is wrong"
+    exit -1
+fi
+
+# nice --adjustment=19 vmplayer "Windows XP Professional.vmx" &'
+vmplayer "Windows XP Professional.vmx" &
+pid=$!
+echo "vmplayer pid: "$pid
+
+echo "*** renice to +19"
+echo renice +19 $pid
+echo
+
+echo "*** ionice"
+echo sudo ionice -c3 -p$pid
+echo
+
+popd > /dev/null 2>&1

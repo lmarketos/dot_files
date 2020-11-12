@@ -1,0 +1,43 @@
+# An alternative hardstatus to display a bar at the bottom listing the
+# windownames and highlighting the current windowname in blue. (This is only
+# enabled if there is no hardstatus setting for your terminal)
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+
+# no startup message
+startup_message off
+
+# auto detach on hangup
+autodetach on
+
+# default scrollback for new windows
+defscrollback 1000
+
+# prefix / escape key will be Ctrl-\
+escape ^\\
+
+# useful commands:
+# Ctrl-\d   detach from screen session
+# Ctrl-\c   create a new tab
+# Ctrl-\n   switch to next tab
+# Ctrl-\p   switch to prev tab
+
+# default name for shell windows
+shelltitle shell
+
+# multiuser
+multiuser on
+acladd root,jeremy
+aclchg root,jeremy +rwx "#?"
+
+vbell on
+vbell_msg "Ding Ding!"
+
+bindkey "^[[1;5D" prev
+bindkey "^[[1;5C" next
+
+# enable scrolling with shift+pgup/pgdown
+termcapinfo xterm* ti@:te@
+termcapinfo rxvt* ti@:te@
+

@@ -1,0 +1,7 @@
+set format "%.3f"
+set key off
+set style data dots
+
+pi=3.1415926532
+d2r = pi/180;
+r2d = 180/pi;

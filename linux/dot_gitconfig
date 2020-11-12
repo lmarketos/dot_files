@@ -1,0 +1,126 @@
+; Git includes this information in every commit so that others will know who
+; authored the commit.
+[user]
+;    name = Full Name
+;    email = user@lmco.com
+
+[difftool]
+    ; Don't print the name of each file and ask for confirmation before running
+    ; difftool to view the diff.
+    prompt = 0
+
+[merge]
+    ; This is the app git will use when running "git-mergetool"
+    tool = meld
+    ; When there are conflicts, in addition to "<<<, ===, >>>" markers, also use
+    ; a "|||" marker to show what was in the common ancestor.
+    conflictstyle = diff3
+
+[push]
+    ; If you run git-push without telling it which branch to push, then by default
+    ; it will push all branches that have matching branch names in the remote repo.
+    ; This isn't usually what we want, so tell it to only push the current branch,
+    ; and only push it to the remote branch that it is tracking (see the .git/config).
+    default = tracking
+
+[format]
+    ; use this shorter format for 'git-log' output (see 'man git-log' for token definitions)
+    pretty = "%C(yellow)%h %Cgreen%ad %Cred%an %Creset%s"
+
+[log]
+    ; use this date format for 'git-log' output (see --date option for more info)
+    date = short
+
+[core]
+    ; tell git to just print git commands output to the console instead of
+    ; automatically opening a pager
+    pager = cat
+    excludesfile = ~/.gitignore
+
+[apply]
+    ; When rebasing or applying patches, don't issue warnings for trailing whitespace in commits
+    whitespace = nowarn
+
+
+; aliases to make it slightly easier to type git commands
+[alias]
+    b  = branch
+    ba = branch -a
+    br = branch -r
+
+    co = checkout
+
+    ci  = commit
+    ca  = commit --amend
+    ; commit with an empty log message
+    ; Should almost never do this!!  Besides, it messes up 'git lol' output.
+    ; cie = commit --cleanup=verbatim -m ''
+    cie = commit -m 'nothing interesting'
+
+    d    = difftool --patience
+    dc   = difftool --cached --patience
+    dno  = diff --name-only
+    dns  = diff --name-status
+    dnsc = diff --name-status --cached
+    ; show a diff of changes introduced by a specific commit
+    dr   = !bash -c 'git difftool $0^ $0'
+    ; just show a list of files that were changed by a specific commit
+    dnsr = log --name-only -n1
+
+    ;usage:   git forkdiff <forked from branch> <forked branch>  [git-diff-options]
+    ;example: git forkdiff origin/master        my_forked_branch --stat
+    forkdiff = !bash -c 'git diff $(git merge-base "$1" "$2") "$2" "${@: 3}" ' -
+
+    ; show log info in a more concise format
+    l  = log --full-history
+    l1 = log --full-history -n 10 --date-order --graph --decorate
+    lm = log --full-history --pretty=medium
+
+    ; only show commits since 1 week ago
+    lw = log --full-history '@{1 week ago}..'
+
+
+    ; show the status of all non-ignored files
+    ls = ls-files -t -c -d -m -o -k -s --directory --exclude-standard
+
+    ; list all of the ignored files
+    li = ls-files -t -o -i --directory --exclude-standard
+
+    ; show status of all files (ignored and non-ignored)
+    la = ls-files -t -c -d -m -o -k -s --directory
+
+    ; show all untracked files/dirs. Note: this includes all empty directories,
+    ; and directories that only contain 'ignored' files, which git-status doesn't report.
+    ; Note: I think 'git clean -d -n' would print the same info.
+    lu = ls-files -o --directory --exclude-standard
+
+    ; should usually use these options to merge topics to master
+    mm = merge --no-ff --no-commit
+
+    ; Should usually run 'git pr' instead of 'git pull'
+    p  = pull -Xpatience
+    pr = pull -Xpatience --rebase --stat
+
+    pso = push --set-upstream origin
+
+    rc = rebase --continue
+
+    ; Cat the given revision ($0) of a given file ($1).
+    rev = "!sh -c 'git show $0:`git ls-tree --full-name --name-only $0 \"$GIT_PREFIX/$1\"` | gvim -'"
+
+    s = status -s -b
+
+    sl = stash list
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+    interactive = auto
+    ui = auto
+
+[color "status"]
+    added = green
+    changed = red
+    untracked = magenta
+

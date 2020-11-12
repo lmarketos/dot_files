@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+"""#############################################################################
+
+@Copyright 2016 LOCKHEED MARTIN CORPORATION as an unpublished work.
+ All rights reserved. This computer software is PROPRIETARY INFORMATION of
+ Lockheed Martin Corporation and shall not be reproduced, disclosed or used
+ without written permission of Lockheed Martin Corporation.
+
+@file Helper script that create the recommended LMAS directory layout.
+
+##############################################################################"""
+from __future__ import print_function
+import argparse
+import os
+import sys
+
+LAYOUT = [ os.environ.get('LMAS_COTS_DIR', 'cots'),
+           os.environ.get('LMAS_DATA_DIR', 'data'),
+           'debug',
+           os.environ.get('LMAS_PARAMS_DIR', 'etc'),
+           'release',
+           'src',
+           os.environ.get('LMAS_VAR_DIR', 'var')
+         ]
+
+LMAS_BASE_DIR = os.environ.get('LMAS_BASE_DIR', os.path.join(os.path.expanduser('~'), 'local'))
+
+
+def create_link(link):
+  """ Create a symbolic link, as defined by the given tuple where the first index
+      represents the src and the second index represents the target.  If a symbolic link
+      already exists for the target, it is removed.  If the target exists and is not a
+      symbolic link, then a warning message is sent to stderr and the link is not
+      created."""
+  src, target = link
+  if os.path.islink(target):
+      os.remove(target)
+
+  if not os.path.exists(target):
+    try:
+      os.symlink(src, target)
+    except OSError as e:
+      eprint('WARN: Unable to create link {} -> {}: {}'.format(src, target, e))
+  else:
+    eprint('WARN: "{}" exists and is not a link! Unable to create.'.format(target))
+
+
+def create_dir(path):
+  """Creates the given directory if it does not exist."""
+  if not os.path.exists(path):
+    os.makedirs(path)
+  else:
+    eprint('WARN: Skipping "{}," already exists.'.format(path))
+
+
+def eprint(*args, **kwargs):
+  """Print function to direct output to stderr."""
+  print(*args, file=sys.stderr, **kwargs)
+
+
+def generate_build_link(project):
+  """Generates the build link tuple for the given project"""
+  return ('release', os.path.join(project, 'build'))
+
+
+def generate_project_link(project):
+  """Generates the LMAS_BASE_DIR link tuple for the given project"""
+  return (project, LMAS_BASE_DIR)
+
+
+def generate_layout(project):
+  """Generates the default project directory layout for the given project name.  All LMAS_*_DIR
+     environmental variables are honored during creation.  If a directory resolves to an absolute
+     path that is not relative to LMAS_BASE_DIR, the directory creation is skipped and a warning
+     message printed."""
+  layout = []
+  for directory in LAYOUT:
+    dir_expanded = os.path.expanduser(os.path.expandvars(directory))
+    if not os.path.isabs(dir_expanded):
+      layout.append(os.path.join(project, dir_expanded))
+    elif dir_expanded.startswith(LMAS_BASE_DIR):
+      layout.append(os.path.join(project, os.path.relpath(dir_expanded, LMAS_BASE_DIR)))
+    else:
+      eprint('WARN: Skipping {}, absolute path detected'.format(dir_expanded))
+  return layout
+
+
+def main():
+  """Creates the LMAS recommended project layout for a project and create requested links.
+     This script honors the LMAS_*_DIR environment variable overrides."""
+  parser = argparse.ArgumentParser()
+  parser.add_argument('project', nargs='?', type=str, default=LMAS_BASE_DIR,
+                      help='Path of the project directory to be created '
+                           '(for example, ~/Projects/MyProject) '
+                           'default="%(default)s"')
+  parser.add_argument('-l', '--link', action='store_true',
+                      help="Creates or replaces a symbolic link (typically ~/local) "
+                           "in user's home directory")
+  parser.add_argument('-s', '--show', action='store_true',
+                      help="Shows commands to create directory layout, but does not execute them.")
+  args = parser.parse_args()
+
+  if not os.path.isabs(args.project):
+    args.project = os.path.join(os.getcwd(), args.project)
+
+  layout = generate_layout(args.project)
+  links = [generate_build_link(args.project)]
+  if LMAS_BASE_DIR != args.project and args.link:
+    links.append(generate_project_link(args.project))
+  
+  if args.show:
+    print('\n'.join(['mkdir -p {}'.format(e) for e in layout]))
+    print('\n'.join(['ln -s {0[0]} {0[1]}'.format(e) for e in links]))
+  else:
+    map(create_dir, layout)
+    map(create_link, links)
+
+  return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
