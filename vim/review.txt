@@ -295,6 +295,12 @@ using command mode, print the line that mark 'a' is on
 using command mode, print the whole file
 using command mode, copy the line 2 lines below the current line to 1 above the current line
 using command mode, move this line to the end of the file
+using command mode, add a semi colon to the end of every line in the file
+List all posible completions of :s
+copy the word under the cursor to the command mode line
+copy the WORD-under-the cursor to the command mode line
+open the command-line window directly from normal mode (not ctrl-f in command mode)
+create a command to run two previously executed commands in one line
 
 
 to add
@@ -339,4 +345,4 @@ navigate change list (g; g, '' `` `^ :changes gi)
 open file under cursor gf ctrl-w+f ctrl-w+gf
 reselect visual selection - gv; repeat visual command .
 edit command: ^h, ^w, ^u, ^b, ^e, ^r^f, ^r^p, ^r^w, ^r^a 
-command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m
+command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cmd> | <cmd>;
