@@ -202,10 +202,13 @@ Save the last 5 lines to another file
 Insert the contents of the saved file below this line
 Insert the results of 'ls' below this line
 
-Split the window horizontally keeping this file in both splits
+Split the window horizontally keeping this file in both splits using a command mode command
+Split the window horizontally keeping this file in both splits using a window command
+Change the directory for just one window
 Split the window vertically loading a file in the new split
 Split the window horizontally, loading a new file
-Split that window vertically, opening another new file
+Split that window vertically, opening this file  using a command mode command
+Split that window vertically, opening this file using a window command 
 Move focus between all three by cycling between them
 Move focus between all three by moving
 Make the original window bigger by 3 lines
@@ -302,6 +305,15 @@ copy the WORD-under-the cursor to the command mode line
 open the command-line window directly from normal mode (not ctrl-f in command mode)
 create a command to run two previously executed commands in one line
 
+display a list of the custom defined commands
+sort the lines in this file alphabetically
+run the commands in tmp.vim
+run the commands in tmp.vim on all buffers
+populate the argument list with files from sourcefiles.pml
+print the argument list
+
+
+
 
 to add
 --------
@@ -317,10 +329,12 @@ reg expressions . (escape w/ \)
 reg expressions
 sessions
 :buffdo e
+:buffdo; :argdo; :windo; :cfdo
 list all completions of a help topic (ctrl-D after :h num)
 start/end of last change marks [ ] 
 open filename under cursor ctrl_f/ctrl_F
 preview window
+
 
 spoilers
 ----------
