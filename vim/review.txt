@@ -312,6 +312,11 @@ run the commands in tmp.vim on all buffers
 populate the argument list with files from sourcefiles.pml
 print the argument list
 
+expand the current filename on the command line using tab-complete
+expand the current filename with its full path
+expand the alternate filename with its path relative to home
+expand the current filename with its path releative to .
+expand the current filename to its full path without the filename
 
 
 
@@ -360,3 +365,4 @@ open file under cursor gf ctrl-w+f ctrl-w+gf
 reselect visual selection - gv; repeat visual command .
 edit command: ^h, ^w, ^u, ^b, ^e, ^r^f, ^r^p, ^r^w, ^r^a 
 command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cmd> | <cmd>;
+:e %:p/:./:~/:h
