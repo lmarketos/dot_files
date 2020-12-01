@@ -185,12 +185,14 @@ else
 endif
 
 Plug 'morhetz/gruvbox'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'lyuts/vim-rtags'
 Plug 'mbbill/undotree'
-
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " Initialize plugin system
 call plug#end()
+
+source coc.vim
 
 " load project.vimrc if it exists
 let project_settings = "./project.vimrc"

@@ -55,6 +55,8 @@ Paste from the register 1 then paste each subsequent register in its place using
 delete this line into a named register
  then delete this line appending it to the previous line
 paste the combined line
+delete this line into the black hole register
+paste to ensure the last line isn't in the unnamed register
 
 Use the expression register to enter the result of 2+2
 Use the expression register to enter the results of ls
@@ -82,6 +84,9 @@ Search for words that end in "or"
 Search for words that start with "in"
 Search for "on" as a whole word only.
 Search for "or" not as a while word.
+Search without having to escape () or <>
+Search for f.r without having to escape the . 
+Search for "This" but only highlight "is", not Thi or his.
 
 Turn off/on line numbers
 Turn off/on relative line numbers
@@ -318,6 +323,9 @@ expand the alternate filename with its path relative to home
 expand the current filename with its path releative to .
 expand the current filename to its full path without the filename
 
+open the file browser.
+navigate up a directory (without going to ..)
+switch back to the buffer in the window before opening file browser.
 
 
 to add
@@ -336,9 +344,21 @@ sessions
 :buffdo e
 :buffdo; :argdo; :windo; :cfdo
 list all completions of a help topic (ctrl-D after :h num)
-start/end of last change marks [ ] 
+start/end of last change or yank marks [ ] 
+mark of position before last jump ``
+mark of last change `.
+mark of last insertion `^
+mark start/end of last visual selection `< `>
 open filename under cursor ctrl_f/ctrl_F
 preview window
+gp / gP
+visualbell setting
+:normal over a visual selection
+set files in argument list
+navigate forward and back in argument list files
+:argdo
+:h character-classes
+escape()
 
 
 spoilers
@@ -366,3 +386,6 @@ reselect visual selection - gv; repeat visual command .
 edit command: ^h, ^w, ^u, ^b, ^e, ^r^f, ^r^p, ^r^w, ^r^a 
 command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cmd> | <cmd>;
 :e %:p/:./:~/:h
+:e . / - / ctrl-shift-^
+/\v<Search /\Vf.r (general rule, use \v for reg expr search; \V for non reg expr search; don't use defalt)
+
