@@ -388,4 +388,4 @@ command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cm
 :e %:p/:./:~/:h
 :e . / - / ctrl-shift-^
 /\v<Search /\Vf.r (general rule, use \v for reg expr search; \V for non reg expr search; don't use defalt)
-
+\zs \ze
