@@ -11,7 +11,7 @@ echo "Creating $rootdir"
 mkdir $rootdir
 
 
-dirs="functions vars aliases completion"
+dirs="functions vars aliases completion themes"
 for dir in $dirs; do
     if [ ! -d $rootdir"/"$dir ]
     then
