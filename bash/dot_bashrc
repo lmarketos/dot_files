@@ -9,7 +9,7 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific environment
-PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+PATH="$HOME/local_bin:$HOME/.local/bin:$HOME/bin:$PATH"
 export PATH
 
 # Where to find the bash configuration scripts
