@@ -3,28 +3,41 @@
 #if .bash dir doesn't exist, create it
 rootdir=$HOME"/.bash"
 repobashhome=$PWD
-if [ ! -d $rootdir ] 
-then
-    echo "Creating $rootdir"
-    mkdir $rootdir
+if [ -d $rootdir ] ; then
+  mv $rootdir $rootdir`ls -d $rootdir*".old" | wc -l`".old"
 fi
+
+echo "Creating $rootdir"
+mkdir $rootdir
+
 
 dirs="functions vars aliases completion"
 for dir in $dirs; do
     if [ ! -d $rootdir"/"$dir ]
     then
         echo "Linking $rootdir/$dir to $PWD/bash/$dir"
-        ln -s $PWD"/bash/"$dir $rootdir"/"$dir
+        ln -s $PWD"/bash/dot_mybash/"$dir $rootdir"/"$dir
     fi
 done
 
 customdir=$rootdir"/custom"
-if [ ! -d $customdir ]
-then
-    echo "Creating $customdir"
-    ln -s $PWD"/bash/"$customdir $rootdir"/"$customdir
+if [ ! -d $customdir ]; then
+  echo "Creating $customdir"
+  ln -s $PWD"/bash/dot_mybash/custom" $rootdir"/custom"
 fi
 
 #add tmux.conf
 #add vimrc
+
 #add bin
+if [ -d $HOME"/bin" ]; then
+  mv $HOME"/bin" $HOME"/local_bin"`ls -d $HOME"/local_bin"* | wc -l`
+fi
+ln -sf $PWD"/home_bin" $HOME"/bin"
+
+bashrc=$HOME"/.bashrc" 
+if [ -f $bashrc ] ; then
+  mv $bashrc $bashrc`ls -d $bashrc* | wc -l`".old"
+fi
+ln -sf $PWD"/bash/dot_bashrc" $bashrc
+

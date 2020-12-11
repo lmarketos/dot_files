@@ -6,6 +6,10 @@ import glob
 import argparse
 import subprocess
 
+echo "for reference only"
+sys.exit(1)
+
+
 usage = """
 This script installs the contents of this directory into a target directory
 (default = $HOME). By default, only the minimum set of bash and git
