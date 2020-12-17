@@ -192,7 +192,7 @@ Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " Initialize plugin system
 call plug#end()
 
-source coc.vim
+source ~/.vim/coc.vim
 
 " load project.vimrc if it exists
 let project_settings = "./project.vimrc"
