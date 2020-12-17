@@ -1,0 +1,21 @@
+git log [--stat]
+git branch [-a]
+git status
+git diff [hash1 hash2]
+git checkout <branch>
+git checkout hash
+git add [-A]
+git commit --amend -m "msg"
+git commit --amned (add files)
+git cherry-pick hash
+git reset [--soft][--hard] [hash]
+git clean -df
+git reflog
+git revert hash
+git init
+git config user.name user.email 
+git config --global credential.helper cache/store
+git config --list
+git branch [-a]
+git remote -v
+
