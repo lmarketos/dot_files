@@ -18,4 +18,4 @@ git config --global credential.helper cache/store
 git config --list
 git branch [-a]
 git remote -v
-
+git rebase -i hash
