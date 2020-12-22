@@ -1,3 +1,10 @@
 *~
 */tmp/*
 vim/work.txt
+bash/dot_mybash/custom/oldbashrc
+dot_vim/.netrwhist
+dot_vim/plugged/*
+vim/tags
+vim/*.tmp
+vim/sample_proj/build/*
+
