@@ -2,4 +2,8 @@
 */tmp/*
 vim/work.txt
 */dot_mybash/custom/*
-*/plugged/*
+dot_vim/.netrwhist
+dot_vim/plugged/*
+vim/tags
+vim/*.tmp
+vim/sample_proj/build/*
