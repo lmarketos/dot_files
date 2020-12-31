@@ -155,6 +155,17 @@ function! HeaderToggle() " bang for overwrite when saving vimrc
 endfunction
 nnoremap <Leader>h :call HeaderToggle()<CR>
 
+" make * and # search over visual selection if available
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+
+function! s:VSetSearch(cmdtype)
+  let temp = @s
+  norm! gv"sy
+  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+  let @s = temp
+endfunction
+
 " Load all plugins now.
 " plugins distributed with Vim
 packadd! matchit
@@ -187,8 +198,8 @@ endif
 Plug 'morhetz/gruvbox'
 Plug 'lyuts/vim-rtags'
 Plug 'mbbill/undotree'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " Initialize plugin system
 call plug#end()
 

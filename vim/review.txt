@@ -87,6 +87,12 @@ Search for "or" not as a while word.
 Search without having to escape () or <>
 Search for f.r without having to escape the . 
 Search for "This" but only highlight "is", not Thi or his.
+Search for "this" and then "this" visually selecting the second one
+Search incrementally for alongword and autocomplete it in the search bar after a couple characters
+Search for word but leave the cursor at the end of the word.
+Search for a word then uppercase it, then the next match, then the next
+How many times does word appear in the file?
+Search for word and populate the result in the quickfix list (move between matches and see 2 of 7...)
 
 Turn off/on line numbers
 Turn off/on relative line numbers
@@ -316,6 +322,22 @@ run the commands in tmp.vim
 run the commands in tmp.vim on all buffers
 populate the argument list with files from sourcefiles.pml
 print the argument list
+move to the first argument in list
+move to the next argument in the list
+add a single file to the arglist
+execute a macro on all files in the arglist in parallel
+execute a macro on all files in the arglist in series
+save just the files in the arglist
+save all the open buffers
+
+insert numbers incrementing by 2 using a macro played over a visual selection
+print a macro def on the next line
+edit the macro and store it back in the same register
+
+reload a file from disk, discarding unsaved changes
+
+use a substitution command to swap these two words: two one
+find just the "text inside the quotes"
 
 expand the current filename on the command line using tab-complete
 expand the current filename with its full path
@@ -359,12 +381,18 @@ navigate forward and back in argument list files
 :argdo
 :h character-classes
 escape()
+reg expr: \w, \W, \_s
 
 
 spoilers
 ----------
   walk delete registers --   "1p u.
   :ver
+  gn; gN (after search); ^r^w (autocomplete word under cursor in command bar/search bar)
+  /word/e (offest cursor to end of word after search)
+  gUgn (after search) then .
+  :%s/word//gn
+  :vimgrep /word/g % / :cnext
   \(\<\)\@<!or\(\>\)\@<!
   \(\<or\>\)\@<!\&or
 :set path?
@@ -387,5 +415,12 @@ edit command: ^h, ^w, ^u, ^b, ^e, ^r^f, ^r^p, ^r^w, ^r^a
 command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cmd> | <cmd>;
 :e %:p/:./:~/:h
 :e . / - / ctrl-shift-^
-/\v<Search /\Vf.r (general rule, use \v for reg expr search; \V for non reg expr search; don't use defalt)
+/\v<Search /\Vf.r (general rule, use \v for reg expr search (everything is special except _, alphanumeric); \V for non reg expr search(only ?/\ is special) don't use defalt)
 \zs \ze
+:args; :args *.; :argadd; :args `cat filename`; argdo normal @a;  :first; :next
+:argdo write (or :wa)
+:wall
+:e!
+:let i += 1; ctrl-r=i; :normal @a; :put a; "ad$; 
+s/\v(two) (one)/\2 \1/
+/\v"\zs[^"]+\ze"
