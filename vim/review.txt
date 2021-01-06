@@ -349,6 +349,20 @@ open the file browser.
 navigate up a directory (without going to ..)
 switch back to the buffer in the window before opening file browser.
 
+Substitute s<newline><tab>t for st
+Substitute zz for st in Substitute using submatches
+Substitute zz for st in Substitute using atoms
+Define a search pattern using / then use it in a substitution
+Surround a search pattern with quotes
+Yank this, then search and replace pattern with the text yanked (by value)
+Yank this, then search and replace pattern with the text yanked (by reference)
+Repeat the last substitution ignoring flags
+Repeat the last substitution including flags
+Repeat the last substitution over the whole file (without editing the command)
+Undo and repeat the last subst over the last 5 lines
+smith, john, spam@spam.org
+reverse the order of fields on the last line
+1, 2, 3, 4, 5 use substitution to increment all the numbers on this line 6 7.
 
 to add
 --------
@@ -422,5 +436,15 @@ command mode: 1,$,.,'m,'<,'>,%;.+1;:copy/:co/:t;:move/:m;normal;^d;^r^w;^r^a;<cm
 :wall
 :e!
 :let i += 1; ctrl-r=i; :normal @a; :put a; "ad$; 
+:s/st/s\r\tt/
 s/\v(two) (one)/\2 \1/
 /\v"\zs[^"]+\ze"
+/test :s//notest/
+:s/pattern/"\0"/
+:s/pattern/<C-r>0/
+:s/pattern/\=@0/ (avoids having to escape characters yanked)
+&; :&&; g&
+:.-5.&&
+:s/\v^([^,]*),([^,]*),([^,]*)$/\3,\2,\1/
+:s/\v\d/\=submatch(0)+1/
+
