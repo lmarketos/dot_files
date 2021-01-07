@@ -364,6 +364,12 @@ smith, john, spam@spam.org
 reverse the order of fields on the last line
 1, 2, 3, 4, 5 use substitution to increment all the numbers on this line 6 7.
 
+delete all the blank lines in this file
+delete all the non-blank lines in this file
+put all the lines in the file that start with Search in register a
+sort the "to add" section and the "spoilers" section alphabetically
+
+
 to add
 --------
 gdb commands
@@ -447,4 +453,6 @@ s/\v(two) (one)/\2 \1/
 :.-5.&&
 :s/\v^([^,]*),([^,]*),([^,]*)$/\3,\2,\1/
 :s/\v\d/\=submatch(0)+1/
-
+:g/^\s*$/d :v/^\s*$/d or :g!/^\s*$/d
+:g/^Search/yank A
+:%sort
