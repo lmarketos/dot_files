@@ -269,10 +269,16 @@ indent this line through the end of the file
 
 remake the tags for the project
 build the project
-open the compiler output window
+open the compiler output window (quickfix window)
+build the project but put the output in the location list for this window.
 display the command that will execute when building
 open main.cpp in the project without specifying path to file
 jump to a tag, then another tag, then back to starting point
+display a list of matching tags and jump to one of them
+then jump to the next of the previously matching tags
+jump to tag without moving to it first
+list tags matching a reg expression then jump to one
+make a change to a file, remake the project, then look at the quickfix list for the new build and then the previous build
 open a header file that the cursor is on
 open a header file in a new split 
 open a header file in a new vert split(a couple commands) 
@@ -282,7 +288,7 @@ display completion default options
 use tab completion to complete a filename
 use tab completion to complete a tag
 navigate in completion popup up and down
-toggle the compiler output window (only if errors exist)
+toggle the compiler output window(quickfix window) (only if errors exist)
 list the errors
 jump to an error by number
 move forward and back along errors
@@ -369,6 +375,8 @@ delete all the non-blank lines in this file
 put all the lines in the file that start with Search in register a
 sort the "to add" section and the "spoilers" section alphabetically
 
+search header files under the current directory for the text "class" and put the results in the quickfix list
+
 
 to add
 --------
@@ -402,6 +410,8 @@ navigate forward and back in argument list files
 :h character-classes
 escape()
 reg expr: \w, \W, \_s
+unimpaired plugin ([ and ] for prefixes for related commands)
+:compiler
 
 
 spoilers
@@ -425,10 +435,12 @@ two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
 completion ^x^n; ^x^f; ^x^]; ^n;
 navigate completion list ^n ^p
-navigating tags (ctrl-] ctrl-T :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
+navigating tags (ctrl-] ctrl-T g<C-]> :tnext; :tag <keyword>; :tjump <keyword>
+:tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
 navigate change list (g; g, '' `` `^ :changes gi)
-:copen :cclose :cl :cc# :cn :cp
+:copen :cclose :cl :cc# :cn :cp :cnfile :colder :cnewer
+:lopen :lclose :ll :lc# :ln :lp :lnfile
 open file under cursor gf ctrl-w+f ctrl-w+gf
 reselect visual selection - gv; repeat visual command .
 edit command: ^h, ^w, ^u, ^b, ^e, ^r^f, ^r^p, ^r^w, ^r^a 
@@ -456,3 +468,5 @@ s/\v(two) (one)/\2 \1/
 :g/^\s*$/d :v/^\s*$/d or :g!/^\s*$/d
 :g/^Search/yank A
 :%sort
+g/--------/ .+1,/^\s*$/-1 sort
+:grep -r class *.h
