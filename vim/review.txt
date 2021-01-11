@@ -113,7 +113,7 @@ List all the loaded buffers
 Switch to a buffer by buffer number
 Switch to the previous buffer
 Switch to the next buffer
-Switch to a buffer by name (tab complete)
+Switch to a buffer by name (auto complete)
 Close a buffer that is not this one
 Switch to the first buffer in the list
 
@@ -283,11 +283,20 @@ open a header file that the cursor is on
 open a header file in a new split 
 open a header file in a new vert split(a couple commands) 
 open a header file in a new tab
-use tab completion to complete a name in the file
+use auto completion to complete a name from the buffers in the buffer list
 display completion default options
-use tab completion to complete a filename
-use tab completion to complete a tag
+use auto completion to complete a filename
+use auto completion to complete a tag
+use auto completion to complete a dictionary word
+use auto completion to complete a word from the current buffer only 
+use auto completion to complete a word from an include file
+use line completion to insert this line again
+use auto completion of sequences to add most of this sentence again
+use auto completion of line sequences to add the last few lines again
+use omni completion in a CSS file to complete a property name
 navigate in completion popup up and down
+exit completion popup, after moving up and down, without changing original
+bring up the completion popup after 1 character typed, go back to originally typed character and add characters to refine completion
 toggle the compiler output window(quickfix window) (only if errors exist)
 list the errors
 jump to an error by number
@@ -433,8 +442,10 @@ ctrl-f on command to open it in command history for editing
 ctrl-w N to set terminal buffer to normal mode
 two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
-completion ^x^n; ^x^f; ^x^]; ^n;
+completion ^x^n or ^x^p (current buffer); ^x^f (filename); ^x^] (tag); ^n (generic (all buffers, tags, and include files); ^x^i (included files); ^x^k (dictionary); ^x^l (whole line completion); ^x^o (omni-completion)
+^n^p (bring up completion popup and go back to originally typed string)
 navigate completion list ^n ^p
+repeat ^x^[whatever] command to continue sequence of last autocomplete
 navigating tags (ctrl-] ctrl-T g<C-]> :tnext; :tag <keyword>; :tjump <keyword>
 :tags https://vim.fandom.com/wiki/Browsing_programs_with_tags)
 (command history ctrl-f, ctrl-n, ctrl-p, q:, q/, q?)
