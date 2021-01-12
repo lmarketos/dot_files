@@ -126,7 +126,7 @@ set titlestring=%{getcwd()}\ :\ %<%F%=%l/%L-%P
 set title
 
 " turn on spell check and set the spell file
-set spell spelllang=en_us
+set spell spelllang=en
 set spellfile=~/.vim/spell/en.utf-8.add
 
 function! HeaderToggle() " bang for overwrite when saving vimrc
@@ -196,14 +196,14 @@ else
 endif
 
 Plug 'morhetz/gruvbox'
-Plug 'lyuts/vim-rtags'
-Plug 'mbbill/undotree'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'lyuts/vim-rtags'
+" Plug 'mbbill/undotree'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " Initialize plugin system
 call plug#end()
 
-source ~/.vim/coc.vim
+" source ~/.vim/coc.vim
 
 " load project.vimrc if it exists
 let project_settings = "./project.vimrc"
@@ -212,6 +212,45 @@ if filereadable(project_settings)
 endif
 
 "set background=dark
+" Force to use underline for spell check results
+augroup SpellUnderline
+  autocmd!
+  autocmd ColorScheme *
+    \ highlight SpellBad
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellCap
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellLocal
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellRare
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  augroup END
+  
+"  let g:gruvbox_guisp_fallback = "bg"
+"hi SpellBad ctermfg=NONE ctermbg=NONE cterm=underline
 colorscheme gruvbox
 set background=dark
 " set colors
