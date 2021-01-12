@@ -66,14 +66,14 @@ Use a command line special to enter the results of ls on the line below the curs
 Insert a new line after this line.
 Insert a new line before this line.
 
-Search for 'jump list' in this file, then the next occurence, then the previous
+Search for 'jump list' in this file, then the next occurrence, then the previous
 Search backwards for 'previous', then the previous, then the next
 Substitute preceding for previous without typing previous
 Repeat the previous substitution (1 key, no enter)
 Use a case insensitive search, just for this search, and search for 'Jump' in this file
 Turn on case insensitive search
 Turn on search highlighting
-Turn on incremental seach an search for jump list
+Turn on incremental search an search for jump list
 Turn off the highlighted text for the last search only; n/N should still work
 Turn off case insensitive, highlighting, and incremental search
 Search forward for the identifier in quotes 'tmp'
@@ -132,8 +132,8 @@ Jump to the matching [ where ever it is.
 Jump to the end ] of the file. Then back here using a bookmark.
 Jump to the top, middle, and bottom of the screen.
 lookup man page for 'ls' command.
-Move to the end of this sentence.  Then move to the begining.
-Move to the start of this paragrapha (empty line).  Then move to the end (empty line).
+Move to the end of this sentence.  Then move to the beginning.
+Move to the start of this paragraph (empty line).  Then move to the end (empty line).
 
 Move to the open { of func1 then func2 then func1
 func 1
@@ -200,7 +200,7 @@ Use visual select to insert a # at the start of every selected line
 Use visual select to insert a ; at the end of every selected line
 Use visual block mode to insert a + at the start of selection on each line
 
-Go to the next line is this very long line that will ultimately wrap at least once and normal move cammands will move you to the line after it then go back to the top line
+Go to the next line is this very long line that will ultimately wrap at least once and normal move commands will move you to the line after it then go back to the top line
 Move the cursor to the horizontal middle of the screen on this line, then move it to the end of this line but before the wrap, then move it to this line, then the beginning of this line.
 Use f to find the next.  Then without using a number, find the last.  Yes, this one. Now go to the previous period with one key
 
@@ -325,7 +325,7 @@ using command mode, print the whole file
 using command mode, copy the line 2 lines below the current line to 1 above the current line
 using command mode, move this line to the end of the file
 using command mode, add a semi colon to the end of every line in the file
-List all posible completions of :s
+List all possible completions of :s
 copy the word under the cursor to the command mode line
 copy the WORD-under-the cursor to the command mode line
 open the command-line window directly from normal mode (not ctrl-f in command mode)
@@ -386,6 +386,13 @@ sort the "to add" section and the "spoilers" section alphabetically
 
 search header files under the current directory for the text "class" and put the results in the quickfix list
 
+show posible corrections for the misspelled word on this line.
+move forward and back through the list of misspelled words
+replaec this misspelled word with the first entry (without opening list)
+enter insert mode and write some text including a misspelled word. Correct it with autocomplete.
+add this cromulent word to the dictionary
+remove that cromulent word from the dictionary
+
 
 to add
 --------
@@ -442,6 +449,8 @@ ctrl-f on command to open it in command history for editing
 ctrl-w N to set terminal buffer to normal mode
 two ways to exit history window :q and ctrl-c ctrl-c
 display options built with :ve
+completi
+
 completion ^x^n or ^x^p (current buffer); ^x^f (filename); ^x^] (tag); ^n (generic (all buffers, tags, and include files); ^x^i (included files); ^x^k (dictionary); ^x^l (whole line completion); ^x^o (omni-completion)
 ^n^p (bring up completion popup and go back to originally typed string)
 navigate completion list ^n ^p
@@ -481,3 +490,4 @@ s/\v(two) (one)/\2 \1/
 :%sort
 g/--------/ .+1,/^\s*$/-1 sort
 :grep -r class *.h
+z=; ]s; [s; zg; zw; 1z=; ^x^s (will back up to last misspelled word);
