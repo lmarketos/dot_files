@@ -19,3 +19,18 @@ git config --list
 git branch [-a]
 git remote -v
 git rebase -i hash
+
+git add -p {choose which changes to add (even within one file)
+git reset -p
+git checkout -p
+git log --oneline --decorate --all --graph
+git config --local rerere.enabled true
+git diff --staged
+git diff HEAD
+git difftool
+vimdiff (good for no gui)
+git config --local diff.tool meld {or kdiff3} (for gui)
+.gitattributes file -- one use: categorize file types so they can be set as binary for diffs or set textconv tool for diffing (in git-config)
+git bisect start (run with and w/o script)
+composer (external tool, managing multiple repos for project?)
+gitworkbook.com

@@ -302,7 +302,6 @@ list the errors
 jump to an error by number
 move forward and back along errors
 close the compiler output window
-open file browser
 
 add three to the '5' on this line from the start of the line
 subtract two from 7
@@ -335,6 +334,8 @@ display a list of the custom defined commands
 sort the lines in this file alphabetically
 run the commands in tmp.vim
 run the commands in tmp.vim on all buffers
+print the argument list
+add a file to the argument list
 populate the argument list with files from sourcefiles.pml
 print the argument list
 move to the first argument in list
