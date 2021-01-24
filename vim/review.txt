@@ -443,6 +443,7 @@ spoilers
   \(\<\)\@<!or\(\>\)\@<!
   \(\<or\>\)\@<!\&or
 :set path?
+zi; zm, zr, zM, zm, za, zA, zc, zC, zo, zO
 visual block mode I and A work for each line of selection
 q: to open command history
 q/ to open search history
