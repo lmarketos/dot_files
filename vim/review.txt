@@ -1,7 +1,6 @@
 Move right on this line one character at a time, then move left.
 Move down several lines, one line at a time, then back up to this line.
-Add some text after here on this line.
-  Add some text before the 'A' of 'Add' from anywhere on the line.
+Add some text after here on this line.  Add some text before the 'A' of 'Add' from anywhere on the line.
   Add some text at the start of the line from anywhere on the line.
 Add some text starting from where the last insert ended.
 Put the cursor on 'o' and replace it with an x.
@@ -183,7 +182,11 @@ Reformat the below code
 
 void    test
   { 
+    if a
   print ("hello");
+    else
+      noop
+      endif
   }    
     
     { Reformat just this line.
@@ -191,9 +194,10 @@ void    test
 put the cursor on the 'r' of 'word'. delete the whole word with one command
 put the cursor on the 'r' of 'word'. delete the word and quotes with command
 from the start of the line, delete 'word' without using /
-a (select [ inside { the "quotes" then} each ] of the ) others
-b (select [ outside { the "quotes" then} each ] of the ) others
+a (select [ <inside { 'the "quotes"' then} each> ] of the ) others 
+b (select [ outside { the "quotes" then} each ] of the ) others 
 <head>change the text inside the tag from anywhere on this line</head>
+A. Delete this sentence. Not this one.
 Use visual select to select "to select" on this line.  Extend the selection to the right, then to the left.
 Use visual block mode to select a block in the middle of this text. Extend the selection from all four corners of the selection.
 Use visual select to insert a # at the start of every selected line
@@ -393,6 +397,8 @@ replaec this misspelled word with the first entry (without opening list)
 enter insert mode and write some text including a misspelled word. Correct it with autocomplete.
 add this cromulent word to the dictionary
 remove that cromulent word from the dictionary
+open the file explore in the current directory then switch back to this (one command to switch back)
+open the file explorer in the directory of the current file
 
 
 to add
@@ -493,3 +499,4 @@ s/\v(two) (one)/\2 \1/
 g/--------/ .+1,/^\s*$/-1 sort
 :grep -r class *.h
 z=; ]s; [s; zg; zw; 1z=; ^x^s (will back up to last misspelled word);
+:e . / :E / ctrl_^

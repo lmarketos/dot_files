@@ -2,6 +2,9 @@
 set nocompatible
 set encoding=utf-8
 
+filetype plugin on
+packadd! matchit
+
 "windows specific settings
 if has('win32') || has('win64')
 "allow access to windows clipboard
@@ -57,8 +60,8 @@ set number
 set showmatch
 
 " set column 80 to color (python style guide says no line longer than 79
-set colorcolumn=80
-"set colorcolumn=0
+"set colorcolumn=80
+set colorcolumn=0
 
 " set the ruler on
 set ruler
@@ -74,7 +77,6 @@ set hls
 set is
 
 
-filetype plugin on
 
 "set background=dark
 set t_Co=256
@@ -99,7 +101,7 @@ set foldmethod=syntax
 set foldlevel=20
 
 " open netrw files in previous window
-let g:netrw_browse_split = 4
+" let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 let g:netrw_altv=1
@@ -135,11 +137,11 @@ function! HeaderToggle() " bang for overwrite when saving vimrc
   let extension = split(file_path, '\.')[-1] " '\.' is how you really split on dot
   let err_msg = "There is no file "
 
-  if extension == "c" || extension == "cpp" || extension == "cxx"
-      let next_file = join([file_name, ".h"], "")
+  if extension == "cpp" || extension == "cxx"
+      let next_file = join([file_name, ".hpp"], "")
 
       if filereadable(next_file)
-        :e %<.h
+        :e %<.hpp
       else
           echo join([err_msg, next_file], "")
       endif
@@ -165,6 +167,12 @@ function! s:VSetSearch(cmdtype)
   let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
   let @s = temp
 endfunction
+
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
+nnoremap <Leader>w <C-w><C-w>
 
 " Load all plugins now.
 " plugins distributed with Vim
@@ -200,6 +208,10 @@ Plug 'morhetz/gruvbox'
 " Plug 'mbbill/undotree'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+"Plug 'lyuts/vim-rtags'
+"Plug 'mbbill/undotree'
+
 " Initialize plugin system
 call plug#end()
 
@@ -258,3 +270,53 @@ set background=dark
 "colorscheme solarized8
 "solarized8 from https://vimawesome.com/plugin/solarized-8
 
+" Force to use underline for spell check results
+augroup SpellUnderline
+  autocmd!
+  autocmd ColorScheme *
+    \ highlight SpellBad
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellCap
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellLocal
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+  autocmd ColorScheme *
+    \ highlight SpellRare
+    \   cterm=Underline
+    \   ctermfg=NONE
+    \   ctermbg=NONE
+    \   term=Reverse
+    \   gui=Undercurl
+    \   guisp=Red
+augroup END
+
+set noek
+
+function! InsertGates()
+  let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
+  execute "normal! i#ifndef " . gatename
+  execute "normal! o#define " . gatename . " "
+  execute "normal! Go#endif /* " . gatename . " */"
+  normal! k
+endfunction
+autocmd BufNewFile *.{h,hpp} call <SID>InsertGates()
+
+set noerrorbells
+let g:clang_library_path='/usr/lib64/clang-private/libclang.so.7'
