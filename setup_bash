@@ -28,6 +28,17 @@ fi
 
 #add tmux.conf
 #add vimrc
+vimrc=$HOME"/.vimrc" 
+if [ -f $vimrc ] ; then
+  mv $vimrc $vimrc `ls -d $vimrc* | wc -l`".old"
+fi
+ln -sf $PWD"/dot_vimrc" $vimrc
+
+#add .vim
+if [ -d $HOME"/.vim" ]; then
+  mv $HOME"/.vim" $HOME"/local_dot_vim"`ls -d $HOME"/local_dot_vim"* | wc -l`
+fi
+ln -sf $PWD"/dot_vim" $HOME"/.vim"
 
 #add bin
 if [ -d $HOME"/bin" ]; then
