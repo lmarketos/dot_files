@@ -24,8 +24,21 @@ endif
 
 "use space as leader key. mapped versus setting directly as leader to allow
 "the leader icon to show up in status line
-map <Space> <Leader>
+"map <Space> <Leader>
+:let mapleader = " "
 
+"set kj to Esc to leave insert mode
+:inoremap kj <Esc>
+
+"set enter to execure :noh to remove highlighted searches
+"and remove :noh from the status line
+nnoremap <silent> <space><space> :noh<return>
+
+" key mapping
+" set caps lock to ctrl and unset it when exiting
+"au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
+"au VimLeave * silent! !setxkbmap -option
+"
 " enable syntax highlighting
 syntax enable
 
@@ -107,18 +120,6 @@ let g:netrw_banner=0
 let g:netrw_altv=1
 let g:netrw_winsize=25
 
-"set kj to Esc to leave insert mode
-:imap kj <Esc>
-
-"set enter to execure :noh to remove highlighted searches
-"and remove :noh from the status line
-"nnoremap <silent> <Esc><Esc> :let @/=""<CR>"
-nnoremap <silent> <space><space> :noh<return>
-
-" key mapping
-" set caps lock to ctrl and unset it when exiting
-"au VimEnter * silent! !setxkbmap -option caps:ctrl_modifier
-"au VimLeave * silent! !setxkbmap -option
 
 " set the path to all subdirectories from current directory
 set path=$PWD/**
