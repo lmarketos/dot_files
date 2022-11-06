@@ -1,7 +1,7 @@
 
 # User specific aliases and functions
 ####  Git branch and colors
-COLOR_RED="\033[0;31m"
+COLOR_RED="\033[01;31m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_GREEN="\033[0;32m"
 COLOR_OCHRE="\033[38;5;95m"

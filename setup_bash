@@ -27,6 +27,12 @@ if [ ! -d $customdir ]; then
 fi
 
 #add tmux.conf
+tmuxconf=$HOME"/.tmux.conf" 
+if [ -f $tmuxconf ] ; then
+  mv $tmuxconf $tmuxconf `ls -d $tmuxconf* | wc -l`".old"
+fi
+ln -sf $PWD"/dot_tmux.conf" $tmuxconf
+
 #add vimrc
 vimrc=$HOME"/.vimrc" 
 if [ -f $vimrc ] ; then

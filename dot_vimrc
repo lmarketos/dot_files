@@ -205,10 +205,10 @@ else
 endif
 
 Plug 'morhetz/gruvbox'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"Plug 'prabirshrestha/vim-lsp'
+"Plug 'mattn/vim-lsp-settings'
+"Plug 'prabirshrestha/asyncomplete.vim'
+"Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 " Plug 'lyuts/vim-rtags'
 " Plug 'mbbill/undotree'
@@ -341,4 +341,5 @@ nnoremap <leader>dp :LspPeekDefinition<cr>
 nnoremap <leader>da :LspCodeAction<cr>
 nnoremap <leader>dh :LspHover<cr>
 
-
+"autocmd FileType html imap <C-c> \</<c-x><c-o> 
+imap <C-c> </<c-x><c-o>
