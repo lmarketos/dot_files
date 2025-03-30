@@ -1,0 +1,1 @@
+alias g="gitk --all"
