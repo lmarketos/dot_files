@@ -1,3 +1,3 @@
 #!/bin/bash
 
-eval "$(dircolors ~/.bash/custom/dir_colors.custom)"
+eval "$(dircolors ${XDG_CONFIG_HOME}/bash.d/custom/dir_colors.custom)"
