@@ -16,14 +16,14 @@ export XDG_CONFIG_HOME
 PATH="$XDG_BIN_HOME:$PATH"
 export PATH
 
-MY_BASH="$XDG_CONFIG_HOME/bash"
+MY_BASH="$XDG_CONFIG_HOME/bash.d"
 
 # Default to use the basic theme. This can be overridden by sourcing a different
 # theme from within your own $BASH/custom/*.bash script.
 #
 # IMPORTANT: Do not modify this line to source a different theme because most
 # themes depend on functions that have yet to be sourced in the loop below.
-source "$MY_BASH/themes/basic.bash"
+source $MY_BASH/themes/basic.bash
 
 # Load functions first so they can be used to set other things up.
 # Then load environment variables since other things may depend on them.
