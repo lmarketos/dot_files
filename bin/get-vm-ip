@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+virsh dumpxml $1 | \
+  grep 'mac address' | \
+  cut -d"'" -f2 | \
+  xargs -I % sh -c 'arp -an | grep %' | \
+  cut -d" " -f2 | \
+  sed 's/^.\(.*\).$/\1/'
